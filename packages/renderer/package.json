@@ -1,0 +1,45 @@
+{
+  "name": "@formily/antd-renderer",
+  "version": "1.0.0-alpha.0",
+  "license": "MIT",
+  "main": "lib",
+  "types": "lib/index.d.ts",
+  "engines": {
+    "npm": ">=3.0.0"
+  },
+  "module": "esm",
+  "umd:main": "dist/formily.antd-renderer.umd.production.js",
+  "unpkg": "dist/formily.antd-renderer.umd.production.js",
+  "jsdelivr": "dist/formily.antd-renderer.umd.production.js",
+  "jsnext:main": "esm",
+  "sideEffects": [
+    "dist/*",
+    "esm/*.js",
+    "lib/*.js",
+    "src/*.ts",
+    "*.less",
+    "*.scss",
+    "**/*/style.js"
+  ],
+  "scripts": {
+    "build": "formily-tpl build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/formilyjs/antd.git"
+  },
+  "bugs": {
+    "url": "https://github.com/formilyjs/antd/issues"
+  },
+  "homepage": "https://github.com/formilyjs/antd#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0 || >=17.0.0",
+    "react-dom": ">=16.8.0",
+    "react-is": ">=16.8.0 || >=17.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

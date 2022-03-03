@@ -1,0 +1,60 @@
+{
+  "name": "@formily/antd",
+  "version": "2.0.13",
+  "license": "MIT",
+  "main": "lib",
+  "types": "lib/index.d.ts",
+  "engines": {
+    "npm": ">=3.0.0"
+  },
+  "module": "esm",
+  "umd:main": "dist/formily.antd.umd.production.js",
+  "unpkg": "dist/formily.antd.umd.production.js",
+  "jsdelivr": "dist/formily.antd.umd.production.js",
+  "jsnext:main": "esm",
+  "sideEffects": [
+    "dist/*",
+    "esm/*.js",
+    "lib/*.js",
+    "src/*.ts",
+    "*.less",
+    "*.scss",
+    "**/*/style.js"
+  ],
+  "scripts": {
+    "build": "formily-tpl build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/formilyjs/antd.git"
+  },
+  "bugs": {
+    "url": "https://github.com/formilyjs/antd/issues"
+  },
+  "homepage": "https://github.com/formilyjs/antd#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@types/react": ">=16.8.0 || >=17.0.0",
+    "@types/react-dom": ">=16.8.0 || >=17.0.0",
+    "antd": "^4.0.0",
+    "react": ">=16.8.0 || >=17.0.0",
+    "react-dom": ">=16.8.0",
+    "react-is": ">=16.8.0 || >=17.0.0"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^4.0.0",
+    "@formily/core": "2.0.13",
+    "@formily/grid": "2.0.13",
+    "@formily/json-schema": "2.0.13",
+    "@formily/react": "2.0.13",
+    "@formily/reactive": "2.0.13",
+    "@formily/reactive-react": "2.0.13",
+    "@formily/shared": "2.0.13",
+    "classnames": "^2.2.6",
+    "react-sortable-hoc": "^1.11.0",
+    "react-sticky-box": "^0.9.3"
+  },
+  "devDependencies": {}
+}

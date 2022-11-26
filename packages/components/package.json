@@ -1,6 +1,6 @@
 {
   "name": "@formily/antd",
-  "version": "2.0.13",
+  "version": "3.0.0-alpha.0",
   "license": "MIT",
   "main": "lib",
   "types": "lib/index.d.ts",
@@ -38,23 +38,23 @@
   "peerDependencies": {
     "@types/react": ">=16.8.0 || >=17.0.0",
     "@types/react-dom": ">=16.8.0 || >=17.0.0",
-    "antd": "^4.0.0",
+    "antd": "^5.0.0",
     "react": ">=16.8.0 || >=17.0.0",
     "react-dom": ">=16.8.0",
     "react-is": ">=16.8.0 || >=17.0.0"
   },
   "dependencies": {
     "@ant-design/icons": "^4.0.0",
-    "@formily/core": "2.0.13",
-    "@formily/grid": "2.0.13",
-    "@formily/json-schema": "2.0.13",
-    "@formily/react": "2.0.13",
-    "@formily/reactive": "2.0.13",
-    "@formily/reactive-react": "2.0.13",
-    "@formily/shared": "2.0.13",
+    "@formily/core": "^2.2.0",
+    "@formily/grid": "^2.2.0",
+    "@formily/json-schema": "^2.2.0",
+    "@formily/react": "^2.2.0",
+    "@formily/reactive": "^2.2.0",
+    "@formily/reactive-react": "^2.2.0",
+    "@formily/shared": "^2.2.0",
     "classnames": "^2.2.6",
-    "react-sortable-hoc": "^1.11.0",
-    "react-sticky-box": "^0.9.3"
+    "react-sortable-hoc": "^2.0.0",
+    "react-sticky-box": "^1.0.2"
   },
   "devDependencies": {}
 }

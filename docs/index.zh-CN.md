@@ -25,64 +25,9 @@ footer: Open-source MIT Licensed | Copyright © 2019-present<br />Powered by sel
 ## 安装
 
 ```bash
-$ npm install --save antd moment
-$ npm install --save @formily/core @formily/react @formily/antd
+npm install --save antd moment
+npm install --save @formily/core @formily/react @formily/antd
 
 ```
 
 ## 快速开始
-
-```tsx
-/**
- * defaultShowCode: true
- */
-import React from 'react'
-import { NumberPicker, FormItem, Space } from '@formily/antd'
-import { createForm } from '@formily/core'
-import { FormProvider, FormConsumer, Field } from '@formily/react'
-
-const form = createForm()
-
-export default () => (
-  <FormProvider form={form}>
-    <Space>
-      <Field
-        name="price"
-        title="价格"
-        initialValue={5.2}
-        decorator={[FormItem]}
-        component={[
-          NumberPicker,
-          {
-            placeholder: '请输入',
-            style: {
-              width: 100,
-            },
-          },
-        ]}
-      />
-      <FormItem>×</FormItem>
-      <Field
-        name="count"
-        title="数量"
-        initialValue={100}
-        decorator={[FormItem]}
-        component={[
-          NumberPicker,
-          {
-            placeholder: '请输入',
-            style: {
-              width: 100,
-            },
-          },
-        ]}
-      />
-      <FormConsumer>
-        {(form) => (
-          <FormItem>={` ${form.values.price * form.values.count} 元`}</FormItem>
-        )}
-      </FormConsumer>
-    </Space>
-  </FormProvider>
-)
-```

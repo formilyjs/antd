@@ -1,5 +1,5 @@
-import { useRef, useState, useEffect } from 'react'
 import { isArr, isValid } from '@formily/shared'
+import { useEffect, useRef, useState } from 'react'
 
 interface IProps {
   breakpoints?: number[]
@@ -16,7 +16,7 @@ interface IProps {
 }
 
 interface ICalcBreakpointIndex {
-  (originalBreakpoints: number[], width: number): number
+  (originalBreakpoints: number[] | undefined, width: number): number | undefined
 }
 
 interface ICalculateProps {
@@ -25,12 +25,13 @@ interface ICalculateProps {
 
 interface IUseResponsiveFormLayout {
   (props: IProps): {
-    ref: React.MutableRefObject<HTMLDivElement>
+    ref: React.RefObject<HTMLDivElement>
     props: any
   }
 }
 
 const calcBreakpointIndex: ICalcBreakpointIndex = (breakpoints, width) => {
+  if (!breakpoints) return
   for (let i = 0; i < breakpoints.length; i++) {
     if (width <= breakpoints[i]) {
       return i
@@ -38,16 +39,16 @@ const calcBreakpointIndex: ICalcBreakpointIndex = (breakpoints, width) => {
   }
 }
 
-const calcFactor = <T>(value: T | T[], breakpointIndex: number): T => {
+const calcFactor = <T>(value: T | T[], breakpointIndex?: number): T => {
   if (Array.isArray(value)) {
     if (breakpointIndex === -1) return value[0]
-    return value[breakpointIndex] ?? value[value.length - 1]
+    return value[breakpointIndex || value.length - 1] ?? value[value.length - 1]
   } else {
     return value
   }
 }
 
-const factor = <T>(value: T | T[], breakpointIndex: number): T =>
+const factor = <T>(value: T | T[], breakpointIndex?: number): T =>
   isValid(value) ? calcFactor(value as any, breakpointIndex) : value
 
 const calculateProps: ICalculateProps = (target, props) => {

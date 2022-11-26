@@ -18,7 +18,7 @@ const Demo: React.FC = () => {
       <SchemaField>
         <SchemaField.String
           name="input"
-          title="input box"
+          title="输入框"
           x-decorator="FormItem"
           x-component="Input"
           required
@@ -30,7 +30,7 @@ const Demo: React.FC = () => {
         />
         <SchemaField.String
           name="textarea"
-          title="text box"
+          title="文本框"
           x-decorator="FormItem"
           required
           x-component="Input.TextArea"
@@ -42,7 +42,7 @@ const Demo: React.FC = () => {
         />
       </SchemaField>
       <FormButtonGroup>
-        <Submit onSubmit={console.log}>Submit</Submit>
+        <Submit onSubmit={console.log}>提交</Submit>
       </FormButtonGroup>
     </FormProvider>
   )

@@ -10,28 +10,29 @@ export const genOtherStyle: GenerateStyle = (token) => {
     colorWarning,
     colorBorder,
     colorSuccess,
-    controlHeightSM,
     lineWidth,
     colorPrimaryBorderHover,
     colorPrimary,
-    prefixCls,
+    antCls,
     fontSize,
     marginSM,
     controlHeight,
+    controlHeightSM,
     lineHeight,
     controlOutlineWidth,
     controlOutline,
     colorPrimaryHover,
+    colorTextSecondary,
   } = token
 
   const hover = (color = colorPrimaryBorderHover): CSSProperties => ({
     borderColor: color,
-    borderRightWidth: lineWidth,
+    borderInlineEndWidth: lineWidth,
   })
 
   const active = (color = colorPrimary): CSSProperties => ({
     borderColor: color,
-    borderRightWidth: lineWidth,
+    borderInlineEndWidth: lineWidth,
     outline: 0,
     boxShadow: `${controlOutlineWidth} 0 ${controlOutline} ${colorPrimaryHover}`,
   })
@@ -41,130 +42,228 @@ export const genOtherStyle: GenerateStyle = (token) => {
       '&-layout-vertical': {
         display: 'block',
 
-        [`${componentCls}-label`]: {
+        [`${antCls}-label`]: {
           minHeight: controlHeight - 10,
-          lineHeight: lineHeight,
+          lineHeight,
         },
       },
 
-      [`textarea${prefixCls}-input`]: {
-        height: 'auto',
-      },
-
-      [`input[type='radio'], input[type='checkbox']`]: {
-        width: fontSize,
-        height: fontSize,
-      },
-
-      [`${componentCls}-feedback-layout-popover`]: {
-        marginBottom: 8,
-      },
-
-      [`${componentCls}-label-tooltip-icon`]: {
-        marginLeft: 4,
-        color: token.colorTextSecondary,
-        display: 'flex',
-        alignItems: 'center',
-        maxHeight: controlHeight,
-
-        span: {
-          display: 'inline-block',
+      '&-success': {
+        [`${antCls}-select-selector,
+          ${antCls}-cascader-picker,
+          ${antCls}-picker,
+          ${antCls}-input,
+          ${antCls}-input-number,
+          ${antCls}-input-affix-wrapper,
+          ${antCls}-input-affix-wrapper,
+          ${antCls}-input`]: {
+          borderColor: `${colorSuccess} !important`,
+        },
+        [`${antCls}-select-selector,
+        ${antCls}-cascader-picker,
+        ${antCls}-picker,
+        ${antCls}-input,
+        ${antCls}-input-number,
+        ${antCls}-input-affix-wrapper,
+        ${antCls}-input-affix-wrapper:hover,
+        ${antCls}-input:hover`]: {
+          borderColor: `${colorSuccess} !important`,
+        },
+        [`${antCls}-input-affix-wrapper-focused,
+        ${antCls}-input-affix-wrapper:focus,
+        ${antCls}-input-focused,
+        ${antCls}-input:focus`]: {
+          borderColor: `${colorSuccess} !important`,
+          borderInlineEndWidth: '1px !important',
+          outline: 0,
         },
       },
 
-      [`${prefixCls}-upload`]: {
-        background: 'transparent',
-      },
+      '&-warning': {
+        [`${antCls}-select-selector,
+          ${antCls}-cascader-picker,
+          ${antCls}-picker,
+          ${antCls}-input,
+          ${antCls}-input-number,
+          ${antCls}-input-affix-wrapper,
+          ${antCls}-input-affix-wrapper,
+          ${antCls}-input`]: {
+          borderColor: colorSuccess,
+        },
 
-      [`${prefixCls}-upload${prefixCls}-upload-drag`]: {
-        background: token.colorBgBase,
-      },
+        [`${antCls}-select-selector,
+          ${antCls}-cascader-picker,
+          ${antCls}-picker,
+          ${antCls}-input,
+          ${antCls}-input-number,
+          ${antCls}-input-affix-wrapper,
+          ${antCls}-input-affix-wrapper:hover,
+          ${antCls}-input:hover`]: {
+          borderColor: colorSuccess,
+        },
 
-      [`${prefixCls}-radio-inline, ${prefixCls}-checkbox-inline`]: {
-        display: 'inline-block',
-        marginLeft: marginSM,
-        fontWeight: 'normal',
-        verticalAlign: 'middle',
-        cursor: 'pointer',
+        [`${antCls}-select:not(${antCls}-select-disabled):not(${antCls}-select-customize-input)`]:
+          {
+            [`${antCls}-select-selector`]: {
+              backgroundColor: colorWarningBg,
+              borderColor: colorSuccess,
+            },
 
-        '&:first-child': {
-          marginLeft: 0,
+            [`&${antCls}-select-open ${antCls}-select-selector,
+              &${antCls}-select-focused ${antCls}-select-selector`]: {
+              ...active(colorWarning),
+            },
+          },
+
+        [`${antCls}-input-number,
+          ${antCls}-picker`]: {
+          backgroundColor: colorWarningBg,
+          borderColor: colorWarning,
+
+          [`&-focused,
+            &:focus`]: {
+            ...active(colorWarning),
+          },
+
+          '&:not([disabled]):hover': {
+            backgroundColor: colorWarningBg,
+            borderColor: colorWarning,
+          },
+        },
+
+        [`${antCls}-cascader-picker:focus ${antCls}-cascader-input`]: {
+          backgroundColor: colorWarningBg,
+          ...active(colorWarning),
+        },
+
+        [`${antCls}-input-affix-wrapper-focused,
+          ${antCls}-input-affix-wrapper:focus,
+          ${antCls}-input-focused,
+          ${antCls}-input:focus`]: {
+          ...active(colorWarning),
         },
       },
 
-      [`${prefixCls}-radio-vertical,
-        ${prefixCls}-checkbox-vertical`]: {
-        display: 'block',
-      },
-
-      [`${prefixCls}-checkbox-vertical + ${prefixCls}-checkbox-vertical,
-        ${prefixCls}-radio-vertical + ${prefixCls}-radio-vertical`]: {
-        marginLeft: 0,
-      },
-
-      [`${prefixCls}-input-number`]: {
-        width: '100%',
-
-        [`+ ${prefixCls}-form-text`]: {
-          marginLeft: marginSM,
+      '&-error': {
+        [`${antCls}-select-selector,
+            ${antCls}-cascader-picker,
+            ${antCls}-picker,
+            ${antCls}-input,
+            ${antCls}-input-number,
+            ${antCls}-input-affix-wrapper,
+            ${antCls}-input`]: {
+          borderColor: `${colorError} !important`,
         },
 
-        '&-handler-wrap': {
-          zIndex: 2,
+        [`${antCls}-select-selector,
+            ${antCls}-cascader-picker,
+            ${antCls}-picker,
+            ${antCls}-input,
+            ${antCls}-input-number,
+            ${antCls}-input-affix-wrapper,
+            ${antCls}-input-affix-wrapper:hover,
+            ${antCls}-input:hover`]: {
+          borderColor: `${colorError}  !important`,
+        },
+
+        [`${antCls}-select:not(${antCls}-select-disabled):not(${antCls}-select-customize-input)`]:
+          {
+            [`${antCls}-select-selector`]: {
+              backgroundColor: colorErrorBg,
+              borderColor: `${colorError}  !important`,
+            },
+
+            [`&${antCls}-select-open ${antCls}-select-selector,
+                &${antCls}-select-focused ${antCls}-select-selector`]: {
+              ...active(colorError),
+            },
+          },
+
+        [`${antCls}-input-number,
+            ${antCls}-picker`]: {
+          backgroundColor: colorErrorBg,
+          borderColor: colorError,
+
+          [`&-focused,
+            &:focus`]: {
+            ...active(colorError),
+          },
+
+          [`&:not([disabled]):hover`]: {
+            backgroundColor: colorErrorBg,
+            borderColor: colorError,
+          },
+        },
+
+        [`${antCls}-cascader-picker:focus ${antCls}-cascader-input`]: {
+          backgroundColor: colorErrorBg,
+          ...active(colorError),
+        },
+
+        [`${antCls}-input-affix-wrapper-focused,
+            ${antCls}-input-affix-wrapper:focus,
+            ${antCls}-input-focused,
+            ${antCls}-input:focus`]: {
+          ...active(colorError),
         },
       },
-      [`${prefixCls}-select,
-        ${prefixCls}-cascader-picker,
-        ${prefixCls}-picker`]: {
-        width: '100%',
-      },
 
-      [`${prefixCls}-input-group ${prefixCls}-select,
-        ${prefixCls}-input-group ${prefixCls}-cascader-picker`]: {
-        width: 'auto',
-      },
+      '&-feedback-layout': {
+        '&-terse': {
+          marginBottom: 8,
 
-      [`${componentCls}-control-align-left`]: {
-        [`${componentCls}-control-content`]: {
-          justifyContent: 'flex-start',
+          [`&${componentCls}-feedback-has-text:not(${componentCls}-inset)`]: {
+            marginBottom: 0,
+          },
+        },
+
+        '&-loose': {
+          marginBottom: 22,
+          [`&${componentCls}-feedback-has-text:not(${componentCls}-inset)`]: {
+            marginBottom: 0,
+          },
+        },
+
+        '&-none': {
+          marginBottom: 0,
+
+          [`&${componentCls}-feedback-has-text:not(${componentCls}-inset)`]: {
+            marginBottom: 0,
+          },
         },
       },
 
-      [`${componentCls}-control-align-right`]: {
-        [`${componentCls}-control-content`]: {
-          justifyContent: 'flex-end',
-        },
-      },
-
-      [`${componentCls}-control-wrap`]: {
+      '&-control-wrap': {
         [`${componentCls}-control`]: {
           whiteSpace: 'pre-line',
           wordBreak: 'break-all',
         },
       },
 
-      [`${componentCls}-asterisk`]: {
-        color: colorError,
-        marginRight: '4px',
-        display: 'inline-block',
-        fontFamily: 'SimSun, sans-serif',
+      '&-control-align': {
+        '&-left': {
+          [`${componentCls}-control-content`]: {
+            justifyContent: 'flex-start',
+          },
+        },
+
+        '&-right': {
+          [`${componentCls}-control-content`]: {
+            justifyContent: 'flex-end',
+          },
+        },
       },
 
-      [`${componentCls}-colon`]: {
-        marginLeft: 2,
-        marginRight: 8,
+      "input[type='radio'], input[type='checkbox']": {
+        width: fontSize,
+        height: fontSize,
       },
 
-      [`${componentCls}-help,
-        ${componentCls}-extra`]: {
-        clear: 'both',
-        minHeight: controlHeightSM - 2,
-        color: 'rgba(0, 0, 0, 0.45)',
-        transition: 'color 0.3s cubic-bezier(0.215, 0.61, 0.355, 1)',
-        paddingTop: 0,
+      '&-feedback-layout-popover': {
+        marginBottom: 8,
       },
 
-      [`${componentCls}-fullness`]: {
+      '&-fullness': {
         [`> ${componentCls}-control`]: {
           [`> ${componentCls}-control-content`]: {
             [`> ${componentCls}-control-content-component`]: {
@@ -176,68 +275,27 @@ export const genOtherStyle: GenerateStyle = (token) => {
         },
       },
 
-      [`${componentCls}-control-content-component-has-feedback-icon`]: {
+      '&-inset': {
         borderRadius: 2,
         border: `1px solid ${colorBorder}`,
-        paddingRight: 8,
-        transition: 'all 0.3s',
-        touchAction: 'manipulation',
-        outline: 'none',
-
-        [`${componentCls}-input-number,
-          ${componentCls}-picker,
-          ${componentCls}-cascader-picker:focus ${componentCls}-cascader-input,
-          ${componentCls}-select:not(${componentCls}-select-customize-input)
-          ${componentCls}-select-selector,
-          ${componentCls}-input-affix-wrapper,
-          ${componentCls}-input`]: {
-          border: 'none !important',
-          boxShadow: 'none !important',
-        },
-      },
-
-      [`${componentCls}-bordered-none`]: {
-        [`${componentCls}-input-number,
-    ${componentCls}:-input-affix-wrapper,
-    ${componentCls}-picker,
-    ${componentCls}-cascader-picker:focus ${componentCls}-cascader-input,
-    ${componentCls}-select:not(${componentCls}-select-customize-input)
-      ${componentCls}-select-selector,
-    ${componentCls}-input`]: {
-          border: 'none !important',
-          boxShadow: 'none !important',
-        },
-
-        [`${componentCls}-input-number-handler-wrap`]: {
-          border: 'none !important',
-
-          [`${componentCls}-input-number-handler`]: {
-            border: 'none !important',
-          },
-        },
-      },
-
-      [`${componentCls}-inset`]: {
-        borderRadius: 2,
-        border: `1px solid ${colorBorder}`,
-        paddingLeft: 12,
+        paddingInlineStart: 12,
         transition: '0.3s all',
 
-        [`${componentCls}-input-number,
-          ${componentCls}-picker,
-          ${componentCls}-cascader-picker:focus ${componentCls}-cascader-input,
-          ${componentCls}-select:not(${componentCls}-select-customize-input)
-          ${componentCls}-select-selector,
-          ${componentCls}-input-affix-wrapper,
-          ${componentCls}-input`]: {
+        [`${antCls}-input-number,
+          ${antCls}-picker,
+          ${antCls}-cascader-picker:focus ${antCls}-cascader-input,
+          ${antCls}-select:not(${antCls}-select-customize-input)
+          ${antCls}-select-selector,
+          ${antCls}-input-affix-wrapper,
+          ${antCls}-input`]: {
           border: 'none !important',
           boxShadow: 'none !important',
         },
 
-        [`${componentCls}-input-number-handler-wrap`]: {
+        [`${antCls}-input-number-handler-wrap`]: {
           border: 'none !important',
 
-          [`${componentCls}-input-number-handler`]: {
+          [`${antCls}-input-number-handler`]: {
             border: 'none !important',
           },
         },
@@ -247,96 +305,152 @@ export const genOtherStyle: GenerateStyle = (token) => {
         },
       },
 
-      [`${componentCls}-inset-active`]: {
-        ...active(),
-      },
-
-      [`${componentCls}-active`]: {
+      '&-active': {
         [`${componentCls}-control-content-component-has-feedback-icon`]: {
           ...active(),
         },
 
-        [`${componentCls}-input-number,
-        ${componentCls}-picker,
-        ${componentCls}-cascader-picker:focus ${componentCls}-cascader-input,
-        ${componentCls}-select:not(${componentCls}-select-customize-input)
-        ${componentCls}-select-selector,
-        ${componentCls}-input`]: {
+        [`${antCls}-input-number,
+          ${antCls}-picker,
+          ${antCls}-cascader-picker:focus ${antCls}-cascader-input,
+          ${antCls}-select:not(${antCls}-select-customize-input)
+          ${antCls}-select-selector,
+          ${antCls}-input`]: {
           ...active(),
         },
       },
 
-      [`${componentCls}`]: {
-        '&:hover': {
-          [`${componentCls}-control-content-component-has-feedback-icon`]: {
-            ...hover(),
+      '&-inset-active': {
+        ...active(),
+      },
+
+      '&-bordered-none': {
+        [`${antCls}-input-number,
+          ${antCls}:-input-affix-wrapper,
+          ${antCls}-picker,
+          ${antCls}-cascader-picker:focus ${antCls}-cascader-input,
+          ${antCls}-select:not(${antCls}-select-customize-input)
+          ${antCls}-select-selector,
+          ${antCls}-input`]: {
+          border: 'none !important',
+          boxShadow: 'none !important',
+        },
+
+        [`${antCls}-input-number-handler-wrap`]: {
+          border: 'none !important',
+
+          [`${antCls}-input-number-handler`]: {
+            border: 'none !important',
           },
         },
       },
 
-      [`${componentCls}-error`]: {
-        [`${componentCls}-select-selector,
-        ${componentCls}-cascader-picker,
-        ${componentCls}-picker,
-        ${componentCls}-input,
-        ${componentCls}-input-number,
-        ${componentCls}-input-affix-wrapper,
-        ${componentCls}-input-affix-wrapper,
-        ${componentCls}-input`]: {
-          borderColor: `${colorError}  !important`,
+      '&:hover': {
+        [`${componentCls}-control-content-component-has-feedback-icon`]: {
+          ...hover(),
         },
+      },
 
-        [`${componentCls}-select-selector,
-        ${componentCls}-cascader-picker,
-        ${componentCls}-picker,
-        ${componentCls}-input,
-        ${componentCls}-input-number,
-        ${componentCls}-input-affix-wrapper,
-        ${componentCls}-input-affix-wrapper:hover,
-        ${componentCls}-input:hover`]: {
-          borderColor: `${colorError}  !important`,
+      [`textarea${antCls}-input`]: {
+        height: 'auto',
+      },
+
+      [`${componentCls}-label-tooltip-icon`]: {
+        marginInlineStart: 4,
+
+        color: token.colorTextSecondary,
+        display: 'flex',
+        alignItems: 'center',
+        maxHeight: controlHeight,
+
+        span: {
+          display: 'inline-block',
         },
+      },
 
-        [`${componentCls}-select:not(${componentCls}-select-disabled):not(${componentCls}-select-customize-input)`]:
-          {
-            [`${componentCls}-select-selector`]: {
-              backgroundColor: colorErrorBg,
-              borderColor: `${colorError}  !important`,
+      [`${componentCls}-asterisk`]: {
+        color: colorError,
+        marginInlineEnd: '4px',
+        display: 'inline-block',
+        fontFamily: 'SimSun, sans-serif',
+      },
+
+      [`${componentCls}-colon`]: {
+        marginInlineStart: 2,
+        marginInlineEnd: 8,
+      },
+
+      [`${componentCls}-control`]: {
+        flex: 1,
+        maxWidth: '100%',
+
+        [`${componentCls}-control-content`]: {
+          display: 'flex',
+
+          [`${componentCls}-control-content-component`]: {
+            width: '100%',
+            minHeight: controlHeight - 2,
+            lineHeight,
+
+            [`&-has-feedback-icon`]: {
+              flex: 1,
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
             },
-
-            [`&${componentCls}-select-open ${componentCls}-select-selector,
-            &${componentCls}-select-focused ${componentCls}-select-selector`]: {
-              ...active(colorError),
-            },
           },
 
-        [`${componentCls}-input-number,
-        ${componentCls}-picker`]: {
-          backgroundColor: colorErrorBg,
-          borderColor: colorError,
-
-          [`&-focused,
-          &:focus`]: {
-            ...active(colorError),
+          [`${componentCls}-addon-before `]: {
+            marginInlineEnd: 8,
+            display: 'inline-flex',
+            alignItems: 'center',
+            minHeight: controlHeight,
+            flexShrink: 0,
           },
 
-          [`&:not([disabled]):hover`]: {
-            backgroundColor: colorErrorBg,
-            borderColor: colorError,
+          [`${componentCls}-addon-after`]: {
+            marginInlineStart: 8,
+            display: 'inline-flex',
+            alignItems: 'center',
+            minHeight: controlHeight,
+            flexShrink: 0,
           },
         },
 
-        [`${componentCls}-cascader-picker:focus ${componentCls}-cascader-input`]:
-          {
-            backgroundColor: colorErrorBg,
-            ...active(colorError),
-          },
+        [`${componentCls}-help,
+        ${componentCls}-extra `]: {
+          minHeight: controlHeightSM - 2,
+          lineHeight,
+          color: colorTextSecondary,
+        },
+      },
 
-        [`${componentCls}-input-affix-wrapper-focused,
-        ${componentCls}-input-affix-wrapper:focus,
-        ${componentCls}-input-focused,
-        ${componentCls}-input:focus`]: {
-          ...active(colorError),
+      [`${componentCls}-help,
+          ${componentCls}-extra`]: {
+        clear: 'both',
+        minHeight: controlHeightSM - 2,
+        color: 'rgba(0, 0, 0, 0.45)',
+        transition: 'color 0.3s cubic-bezier(0.215, 0.61, 0.355, 1)',
+        paddingTop: 0,
+      },
+
+      [`${componentCls}-control-content-component-has-feedback-icon`]: {
+        borderRadius: 2,
+        border: `1px solid ${colorBorder}`,
+        paddingInlineEnd: 8,
+        transition: 'all 0.3s',
+        touchAction: 'manipulation',
+        outline: 'none',
+
+        [`${antCls}-input-number,
+            ${antCls}-picker,
+            ${antCls}-cascader-picker:focus ${antCls}-cascader-input,
+            ${antCls}-select:not(${antCls}-select-customize-input)
+            ${antCls}-select-selector,
+            ${antCls}-input-affix-wrapper,
+            ${antCls}-input`]: {
+          border: 'none !important',
+          boxShadow: 'none !important',
         },
       },
 
@@ -352,102 +466,56 @@ export const genOtherStyle: GenerateStyle = (token) => {
         color: `${colorSuccess} !important`,
       },
 
-      [`${componentCls}-warning`]: {
-        [`${componentCls}-select-selector,
-        ${componentCls}-cascader-picker,
-        ${componentCls}-picker,
-        ${componentCls}-input,
-        ${componentCls}-input-number,
-        ${componentCls}-input-affix-wrapper,
-        ${componentCls}-input-affix-wrapper,
-        ${componentCls}-input`]: {
-          borderColor: colorSuccess,
-        },
+      [`${antCls}-upload`]: {
+        background: 'transparent',
+      },
 
-        [`${componentCls}-select-selector,
-        ${componentCls}-cascader-picker,
-        ${componentCls}-picker,
-        ${componentCls}-input,
-        ${componentCls}-input-number,
-        ${componentCls}-input-affix-wrapper,
-        ${componentCls}-input-affix-wrapper:hover,
-        ${componentCls}-input:hover`]: {
-          borderColor: colorSuccess,
-        },
+      [`${antCls}-upload${antCls}-upload-drag`]: {
+        background: token.colorBgBase,
+      },
 
-        [`${componentCls}-select:not(${componentCls}-select-disabled):not(${componentCls}-select-customize-input)`]:
-          {
-            [`${componentCls}-select-selector`]: {
-              backgroundColor: colorWarningBg,
-              borderColor: colorSuccess,
-            },
+      [`${antCls}-radio-inline, ${antCls}-checkbox-inline`]: {
+        display: 'inline-block',
+        marginInlineStart: marginSM,
+        fontWeight: 'normal',
+        verticalAlign: 'middle',
+        cursor: 'pointer',
 
-            [`&${componentCls}-select-open ${componentCls}-select-selector,
-      &${componentCls}-select-focused ${componentCls}-select-selector`]: {
-              ...active(colorWarning),
-            },
-          },
-
-        [`${componentCls}-input-number,
-        ${componentCls}-picker`]: {
-          backgroundColor: colorWarningBg,
-          borderColor: colorWarning,
-
-          [`&-focused,
-      &:focus`]: {
-            ...active(colorWarning),
-          },
-
-          '&:not([disabled]):hover': {
-            backgroundColor: colorWarningBg,
-            borderColor: colorWarning,
-          },
-        },
-
-        [`${componentCls}-cascader-picker:focus ${componentCls}-cascader-input`]:
-          {
-            backgroundColor: colorWarningBg,
-            ...active(colorWarning),
-          },
-
-        [`${componentCls}-input-affix-wrapper-focused,
-        ${componentCls}-input-affix-wrapper:focus,
-        ${componentCls}-input-focused,
-        ${componentCls}-input:focus`]: {
-          ...active(colorWarning),
+        '&:first-child': {
+          marginInlineStart: 0,
         },
       },
 
-      [`${componentCls}-success{
-      ${componentCls}-select-selector,
-      ${componentCls}-cascader-picker,
-      ${componentCls}-picker,
-      ${componentCls}-input,
-      ${componentCls}-input-number,
-      ${componentCls}-input-affix-wrapper,
-      ${componentCls}-input-affix-wrapper,
-      ${componentCls}-input`]: {
-        borderColor: `${colorSuccess} !important`,
+      [`${antCls}-radio-vertical,
+          ${antCls}-checkbox-vertical`]: {
+        display: 'block',
       },
 
-      [`${componentCls}-select-selector,
-      ${componentCls}-cascader-picker,
-      ${componentCls}-picker,
-      ${componentCls}-input,
-      ${componentCls}-input-number,
-      ${componentCls}-input-affix-wrapper,
-      ${componentCls}-input-affix-wrapper:hover,
-      ${componentCls}-input:hover`]: {
-        borderColor: `${colorSuccess} !important`,
+      [`${antCls}-checkbox-vertical + ${antCls}-checkbox-vertical,
+          ${antCls}-radio-vertical + ${antCls}-radio-vertical`]: {
+        marginInlineStart: 0,
       },
 
-      [`${componentCls}-input-affix-wrapper-focused,
-      ${componentCls}-input-affix-wrapper:focus,
-      ${componentCls}-input-focused,
-      ${componentCls}-input:focus`]: {
-        borderColor: `${colorSuccess} !important`,
-        borderRightWidth: '1px !important',
-        outline: 0,
+      [`${antCls}-input-number`]: {
+        width: '100%',
+
+        [`+ ${antCls}-form-text`]: {
+          marginInlineStart: marginSM,
+        },
+
+        '&-handler-wrap': {
+          zIndex: 2,
+        },
+      },
+      [`${antCls}-select,
+          ${antCls}-cascader-picker,
+          ${antCls}-picker`]: {
+        width: '100%',
+      },
+
+      [`${antCls}-input-group ${antCls}-select,
+          ${antCls}-input-group ${antCls}-cascader-picker`]: {
+        width: 'auto',
       },
     },
   }

@@ -1,11 +1,16 @@
-import React from 'react'
-import { Form as FormType, ObjectField, IFormFeedback } from '@formily/core'
 import {
-  useParentForm,
+  Form as FormType,
+  IFormFeedback,
+  isForm,
+  ObjectField,
+} from '@formily/core'
+import {
   FormProvider,
-  ExpressionScope,
   JSXComponent,
+  RecordScope,
+  useParentForm,
 } from '@formily/react'
+import React from 'react'
 import { FormLayout, IFormLayoutProps } from '../form-layout'
 import { PreviewText } from '../preview-text'
 export interface FormProps extends IFormLayoutProps {
@@ -16,7 +21,7 @@ export interface FormProps extends IFormLayoutProps {
   previewTextPlaceholder?: React.ReactNode
 }
 
-export const Form: React.FC<FormProps> = ({
+export const Form: React.FC<React.PropsWithChildren<FormProps>> = ({
   form,
   component,
   onAutoSubmit,
@@ -26,7 +31,7 @@ export const Form: React.FC<FormProps> = ({
 }) => {
   const top = useParentForm()
   const renderContent = (form: FormType | ObjectField) => (
-    <ExpressionScope value={{ $$form: form }}>
+    <RecordScope getRecord={() => (isForm(form) ? form.values : form.value)}>
       <PreviewText.Placeholder value={previewTextPlaceholder}>
         <FormLayout {...props}>
           {React.createElement(
@@ -42,7 +47,7 @@ export const Form: React.FC<FormProps> = ({
           )}
         </FormLayout>
       </PreviewText.Placeholder>
-    </ExpressionScope>
+    </RecordScope>
   )
   if (form)
     return <FormProvider form={form}>{renderContent(form)}</FormProvider>

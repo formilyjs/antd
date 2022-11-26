@@ -5133,6 +5133,11 @@ fault@^1.0.0:
   dependencies:
     format "^0.2.0"
 
+fetch-jsonp@^1.0.3:
+  version "1.2.3"
+  resolved "https://registry.npmmirror.com/fetch-jsonp/-/fetch-jsonp-1.2.3.tgz#ae99a867095cb1ce5c39fac601d70d1084db122f"
+  integrity sha512-C13k1o7R9JTN1wmhKkrW5bU/00LwixXnkufQUR6Rbf4KCS0i8mycQaovt4WVbHnA2NKgi7Ryp9Whpy/CGcij6Q==
+
 figures@3.2.0, figures@^3.0.0:
   version "3.2.0"
   resolved "https://registry.npmmirror.com/figures/-/figures-3.2.0.tgz#625c18bd293c604dc4a8ddb2febf0c88341746af"
@@ -7607,6 +7612,17 @@ merge2@^1.3.0, merge2@^1.4.1:
   resolved "https://registry.npmmirror.com/merge2/-/merge2-1.4.1.tgz#4368892f885e907455a6fd7dc55c0c9d404990ae"
   integrity sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==
 
+mfetch@^0.2.27:
+  version "0.2.27"
+  resolved "https://registry.npmmirror.com/mfetch/-/mfetch-0.2.27.tgz#6d50dc71e2e486030b05741d1c37c552d319bf10"
+  integrity sha512-BoYzvjhYeGOi5e1OAU0uqIxnZwG4ZUydd4geh3hB13txKGCoaUpgasMouxpfgLz/UNnCK/V37eRMIqhlZNXkfQ==
+  dependencies:
+    fetch-jsonp "^1.0.3"
+    query-string "^4.2.3"
+    recursive-iterator "^2.0.3"
+    super-plugin "^0.1.0"
+    uri-templates "^0.2.0"
+
 mhchemparser@^4.1.0:
   version "4.1.1"
   resolved "https://registry.npmmirror.com/mhchemparser/-/mhchemparser-4.1.1.tgz#a2142fdab37a02ec8d1b48a445059287790becd5"
@@ -9842,7 +9858,7 @@ q@^1.5.1:
   resolved "https://registry.npmmirror.com/q/-/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
   integrity sha512-kV/CThkXo6xyFEZUugw/+pIOywXcDbFYgSct5cT3gqlbkBE1SJdwy6UQoZvodiWF/ckQLZyDE/Bu1M6gVu5lVw==
 
-query-string@^4.1.0:
+query-string@^4.1.0, query-string@^4.2.3:
   version "4.3.4"
   resolved "https://registry.npmmirror.com/query-string/-/query-string-4.3.4.tgz#bbb693b9ca915c232515b228b1a02b609043dbeb"
   integrity sha512-O2XLNDBIg1DnTOa+2XrIwSiXEV8h2KImXUnjhhn2+UsvZ+Es2uyd5CCRTNQlDGbzUQOW3aYCBx9rVA6dzsiY7Q==
@@ -10541,6 +10557,11 @@ readdirp@~3.6.0:
   integrity sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==
   dependencies:
     picomatch "^2.2.1"
+
+recursive-iterator@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.npmmirror.com/recursive-iterator/-/recursive-iterator-2.0.3.tgz#d0e0d2c7e7a83109d73091cf043fc509e5a76dc3"
+  integrity sha512-SqfNKjjTw7Lq3E2S6P8L5Ac7YFD91mbkzWRlxrWK4tWioJRKDhe1+PtWS0X0hkQNEzZDpSish0TTXAVM4cRUzQ==
 
 redent@^3.0.0:
   version "3.0.0"
@@ -11689,6 +11710,11 @@ stylis@^4.0.13:
   resolved "https://registry.npmmirror.com/stylis/-/stylis-4.1.3.tgz#fd2fbe79f5fed17c55269e16ed8da14c84d069f7"
   integrity sha512-GP6WDNWf+o403jrEp9c5jibKavrtLW+/qYGhFxFrG8maXhwTBI7gLLhiBb0o7uFccWN+EOS9aMO6cGHWAO07OA==
 
+super-plugin@^0.1.0:
+  version "0.1.6"
+  resolved "https://registry.npmmirror.com/super-plugin/-/super-plugin-0.1.6.tgz#8f6a081afdd99ac6c8a6081db9db4efd64069b0c"
+  integrity sha512-CnZCRh2shXEqR7mYxP67REJjuvRVXmXI5NSvh8YOh+iPmbK/o2bssD3kzKxgF49DHfgBcGHEZwjiVi4xUpjE/Q==
+
 supports-color@^5.3.0:
   version "5.5.0"
   resolved "https://registry.npmmirror.com/supports-color/-/supports-color-5.5.0.tgz#e2e69a44ac8772f78a1ec0b35b689df6530efc8f"
@@ -12287,6 +12313,11 @@ uri-js@^4.2.2:
   integrity sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==
   dependencies:
     punycode "^2.1.0"
+
+uri-templates@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.npmmirror.com/uri-templates/-/uri-templates-0.2.0.tgz#2b5784511cc909868731e9233c268097d10b499f"
+  integrity sha512-EWkjYEN0L6KOfEoOH6Wj4ghQqU7eBZMJqRHQnxQAq+dSEzRPClkWjf8557HkWQXF6BrAUoLSAyy9i3RVTliaNg==
 
 url-parse-lax@^1.0.0:
   version "1.0.0"

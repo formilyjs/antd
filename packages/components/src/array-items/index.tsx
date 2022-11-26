@@ -5,14 +5,22 @@ import {
   observer,
   useFieldSchema,
   RecursionField,
+  ReactFC,
 } from '@formily/react'
 import cls from 'classnames'
-import { SortableContainer, SortableElement } from 'react-sortable-hoc'
+import {
+  SortableContainer,
+  SortableElement,
+  SortableContainerProps,
+  SortableElementProps,
+} from 'react-sortable-hoc'
 import { ISchema } from '@formily/json-schema'
 import { usePrefixCls } from '../__builtins__'
 import { ArrayBase, ArrayBaseMixins } from '../array-base'
 
-type ComposedArrayItems = React.FC<React.HTMLAttributes<HTMLDivElement>> &
+type ComposedArrayItems = React.FC<
+  React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>
+> &
   ArrayBaseMixins & {
     Item?: React.FC<
       React.HTMLAttributes<HTMLDivElement> & {
@@ -21,7 +29,9 @@ type ComposedArrayItems = React.FC<React.HTMLAttributes<HTMLDivElement>> &
     >
   }
 
-const SortableItem = SortableElement(
+const SortableItem: ReactFC<
+  React.HTMLAttributes<HTMLDivElement> & SortableElementProps
+> = SortableElement(
   (props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => {
     const prefixCls = usePrefixCls('formily-array-items')
     return (
@@ -30,9 +40,11 @@ const SortableItem = SortableElement(
       </div>
     )
   }
-)
+) as any
 
-const SortableList = SortableContainer(
+const SortableList: ReactFC<
+  React.HTMLAttributes<HTMLDivElement> & SortableContainerProps
+> = SortableContainer(
   (props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => {
     const prefixCls = usePrefixCls('formily-array-items')
     return (
@@ -41,7 +53,7 @@ const SortableList = SortableContainer(
       </div>
     )
   }
-)
+) as any
 
 const isAdditionComponent = (schema: ISchema) => {
   return schema['x-component']?.indexOf('Addition') > -1
@@ -84,7 +96,11 @@ export const ArrayItems: ComposedArrayItems = observer((props) => {
               ? schema.items[index] || schema.items[0]
               : schema.items
             return (
-              <ArrayBase.Item key={index} index={index} record={item}>
+              <ArrayBase.Item
+                key={index}
+                index={index}
+                record={() => field.value?.[index]}
+              >
                 <SortableItem key={`item-${index}`} index={index}>
                   <div className={`${prefixCls}-item-inner`}>
                     <RecursionField schema={items} name={index} />

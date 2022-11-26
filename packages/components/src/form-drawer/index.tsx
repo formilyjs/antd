@@ -7,7 +7,7 @@ import {
   onFormSubmitSuccess,
 } from '@formily/core'
 import { toJS } from '@formily/reactive'
-import { FormProvider, observer } from '@formily/react'
+import { FormProvider, observer, ReactFC } from '@formily/react'
 import {
   isNum,
   isStr,
@@ -164,7 +164,38 @@ export function FormDrawer(title: any, id: any, renderer?: any): IFormDrawer {
   return formDrawer
 }
 
-const DrawerFooter: React.FC = (props) => {
+const DrawerExtra: ReactFC = (props) => {
+  const ref = useRef<HTMLDivElement>()
+  const [extra, setExtra] = useState<HTMLDivElement>()
+  const extraRef = useRef<HTMLDivElement>()
+  const prefixCls = usePrefixCls('drawer')
+  useLayoutEffect(() => {
+    const content = ref.current
+      ?.closest(`.${prefixCls}-wrapper-body`)
+      ?.querySelector(`.${prefixCls}-header`)
+    if (content) {
+      if (!extraRef.current) {
+        extraRef.current = content.querySelector(`.${prefixCls}-extra`)
+        if (!extraRef.current) {
+          extraRef.current = document.createElement('div')
+          extraRef.current.classList.add(`${prefixCls}-extra`)
+          content.appendChild(extraRef.current)
+        }
+      }
+      setExtra(extraRef.current)
+    }
+  })
+
+  extraRef.current = extra
+
+  return (
+    <div ref={ref} style={{ display: 'none' }}>
+      {extra && createPortal(props.children, extra)}
+    </div>
+  )
+}
+
+const DrawerFooter: ReactFC = (props) => {
   const ref = useRef<HTMLDivElement>()
   const [footer, setFooter] = useState<HTMLDivElement>()
   const footerRef = useRef<HTMLDivElement>()
@@ -192,6 +223,8 @@ const DrawerFooter: React.FC = (props) => {
     </div>
   )
 }
+
+FormDrawer.Extra = DrawerExtra
 
 FormDrawer.Footer = DrawerFooter
 

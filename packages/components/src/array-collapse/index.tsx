@@ -23,29 +23,31 @@ import { usePrefixCls } from '../__builtins__'
 export interface IArrayCollapseProps extends CollapseProps {
   defaultOpenPanelCount?: number
 }
-type ComposedArrayCollapse = React.FC<IArrayCollapseProps> &
+type ComposedArrayCollapse = React.FC<
+  React.PropsWithChildren<IArrayCollapseProps>
+> &
   ArrayBaseMixins & {
-    CollapsePanel?: React.FC<CollapsePanelProps>
+    CollapsePanel?: React.FC<React.PropsWithChildren<CollapsePanelProps>>
   }
 
 const isAdditionComponent = (schema: ISchema) => {
-  return schema['x-component']?.indexOf('Addition') > -1
+  return schema['x-component']?.indexOf?.('Addition') > -1
 }
 
 const isIndexComponent = (schema: ISchema) => {
-  return schema['x-component']?.indexOf('Index') > -1
+  return schema['x-component']?.indexOf?.('Index') > -1
 }
 
 const isRemoveComponent = (schema: ISchema) => {
-  return schema['x-component']?.indexOf('Remove') > -1
+  return schema['x-component']?.indexOf?.('Remove') > -1
 }
 
 const isMoveUpComponent = (schema: ISchema) => {
-  return schema['x-component']?.indexOf('MoveUp') > -1
+  return schema['x-component']?.indexOf?.('MoveUp') > -1
 }
 
 const isMoveDownComponent = (schema: ISchema) => {
-  return schema['x-component']?.indexOf('MoveDown') > -1
+  return schema['x-component']?.indexOf?.('MoveDown') > -1
 }
 
 const isOperationComponent = (schema: ISchema) => {
@@ -138,7 +140,10 @@ export const ArrayCollapse: ComposedArrayCollapse = observer(
                 address: `${path}.**`,
               })
               return (
-                <ArrayBase.Item index={index} record={item}>
+                <ArrayBase.Item
+                  index={index}
+                  record={() => field.value?.[index]}
+                >
                   <RecursionField
                     schema={items}
                     name={index}
@@ -174,7 +179,7 @@ export const ArrayCollapse: ComposedArrayCollapse = observer(
                   }}
                   onlyRenderProperties
                 />
-                {props?.extra}
+                {panelProps?.extra}
               </ArrayBase.Item>
             )
 
@@ -221,7 +226,9 @@ export const ArrayCollapse: ComposedArrayCollapse = observer(
   }
 )
 
-const CollapsePanel: React.FC<CollapsePanelProps> = ({ children }) => {
+const CollapsePanel: React.FC<React.PropsWithChildren<CollapsePanelProps>> = ({
+  children,
+}) => {
   return <Fragment>{children}</Fragment>
 }
 

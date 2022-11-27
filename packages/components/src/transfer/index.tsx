@@ -1,6 +1,6 @@
+import { isVoidField } from '@formily/core'
 import { connect, mapProps } from '@formily/react'
 import { Transfer as AntdTransfer } from 'antd'
-import { isVoidField } from '@formily/core'
 
 export const Transfer = connect(
   AntdTransfer,
@@ -26,7 +26,7 @@ export const Transfer = connect(
 )
 
 Transfer.defaultProps = {
-  render: (item) => item.title,
+  render: (item) => item.title ?? null,
 }
 
 export default Transfer

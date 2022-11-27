@@ -1,12 +1,12 @@
-import moment from 'moment'
 import { connect, mapProps, mapReadPretty } from '@formily/react'
-import { TimePicker as AntdTimePicker } from 'antd'
 import {
+  TimePicker as AntdTimePicker,
   TimePickerProps as AntdTimePickerProps,
   TimeRangePickerProps,
-} from 'antd/lib/time-picker'
+} from 'antd'
+import dayjs from 'dayjs'
 import { PreviewText } from '../preview-text'
-import { formatMomentValue, momentable } from '../__builtins__'
+import { dayjsable, formatDayjsValue } from '../__builtins__'
 
 type ComposedTimePicker = React.FC<
   React.PropsWithChildren<AntdTimePickerProps>
@@ -21,26 +21,28 @@ const mapTimeFormat = function () {
     return {
       ...props,
       format,
-      value: momentable(props.value, format),
-      onChange: (value: moment.Moment | moment.Moment[]) => {
+      value: dayjsable(props.value, format),
+      onChange: (value: dayjs.Dayjs | dayjs.Dayjs[]) => {
         if (onChange) {
-          onChange(formatMomentValue(value, format))
+          onChange(formatDayjsValue(value, format))
         }
       },
     }
   }
 }
 
-export const TimePicker: ComposedTimePicker = connect(
+const InternalTimePicker: ComposedTimePicker = connect(
   AntdTimePicker,
   mapProps(mapTimeFormat()),
   mapReadPretty(PreviewText.TimePicker)
 )
 
-TimePicker.RangePicker = connect(
+const RangePicker = connect(
   AntdTimePicker.RangePicker,
   mapProps(mapTimeFormat()),
   mapReadPretty(PreviewText.TimeRangePicker)
 )
+
+export const TimePicker = Object.assign(InternalTimePicker, { RangePicker })
 
 export default TimePicker

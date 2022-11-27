@@ -1,6 +1,7 @@
 export * from './cascader'
 export * from './checkbox'
 export * from './date-picker'
+export * from './editable'
 export * from './form'
 export * from './form-button-group'
 export * from './form-grid'

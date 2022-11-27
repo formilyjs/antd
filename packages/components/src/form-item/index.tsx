@@ -13,7 +13,9 @@ import { pickDataProps, usePrefixCls } from '../__builtins__'
 import { useFormItemLayout, useOverflow } from './hooks'
 import useStyle from './style'
 import { IFormItemProps } from './types'
+
 export * from './hooks'
+export * from './types'
 
 type ComposeFormItem = ReactFC<IFormItemProps> & {
   BaseItem: ReactFC<IFormItemProps>

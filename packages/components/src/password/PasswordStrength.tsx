@@ -7,27 +7,27 @@ type ReactRenderPropsChildren<T = any> =
   | ((props: T) => React.ReactElement)
 
 interface IPasswordStrengthProps {
-  value?: React.ReactText
+  value?: string | number
   children?: ReactRenderPropsChildren<number>
 }
 
-const isNum = function (c) {
+const isNum = function (c: number) {
   return c >= 48 && c <= 57
 }
-const isLower = function (c) {
+const isLower = function (c: number) {
   return c >= 97 && c <= 122
 }
-const isUpper = function (c) {
+const isUpper = function (c: number) {
   return c >= 65 && c <= 90
 }
-const isSymbol = function (c) {
+const isSymbol = function (c: any) {
   return !(isLower(c) || isUpper(c) || isNum(c))
 }
-const isLetter = function (c) {
+const isLetter = function (c: any) {
   return isLower(c) || isUpper(c)
 }
 
-const getStrength = (val) => {
+const getStrength = (val: string) => {
   if (!val) return 0
   let num = 0
   let lower = 0

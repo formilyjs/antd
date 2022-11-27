@@ -73,9 +73,9 @@ type ComposedArrayBase = React.FC<React.PropsWithChildren<IArrayBaseProps>> &
     mixin?: <T extends JSXComponent>(target: T) => T & ArrayBaseMixins
   }
 
-const ArrayBaseContext = createContext<IArrayBaseContext>(null)
+const ArrayBaseContext = createContext<IArrayBaseContext | null>(null)
 
-const ItemContext = createContext<IArrayBaseItemProps>(null)
+const ItemContext = createContext<IArrayBaseItemProps | null>(null)
 
 const takeRecord = (val: any, index?: number) =>
   typeof val === 'function' ? val(index) : val
@@ -86,7 +86,7 @@ const useArray = () => {
 
 const useIndex = (index?: number) => {
   const ctx = useContext(ItemContext)
-  return ctx ? ctx.index : index
+  return (ctx ? ctx.index : index) || 0
 }
 
 const useRecord = (record?: number) => {
@@ -94,7 +94,7 @@ const useRecord = (record?: number) => {
   return takeRecord(ctx ? ctx.record : record, ctx?.index)
 }
 
-const getSchemaDefaultValue = (schema: Schema) => {
+const getSchemaDefaultValue = (schema?: Schema) => {
   if (schema?.type === 'array') return []
   if (schema?.type === 'object') return {}
   if (schema?.type === 'void') {
@@ -159,7 +159,7 @@ ArrayBase.Index = (props) => {
   const prefixCls = usePrefixCls('formily-array-base')
   return (
     <span {...props} className={`${prefixCls}-index`}>
-      #{index + 1}.
+      #{(index || 0) + 1}.
     </span>
   )
 }
@@ -205,7 +205,7 @@ ArrayBase.Addition = (props) => {
 ArrayBase.Copy = React.forwardRef((props, ref) => {
   const self = useField()
   const array = useArray()
-  const index = useIndex(props.index)
+  const index = useIndex(props.index) || 0
   const prefixCls = usePrefixCls('formily-array-base')
   if (!array) return null
   if (array.field?.pattern !== 'editable') return null
@@ -235,7 +235,7 @@ ArrayBase.Copy = React.forwardRef((props, ref) => {
 })
 
 ArrayBase.Remove = React.forwardRef((props, ref) => {
-  const index = useIndex(props.index)
+  const index = useIndex(props.index) || 0
   const self = useField()
   const array = useArray()
   const prefixCls = usePrefixCls('formily-array-base')
@@ -264,7 +264,7 @@ ArrayBase.Remove = React.forwardRef((props, ref) => {
 })
 
 ArrayBase.MoveDown = React.forwardRef((props, ref) => {
-  const index = useIndex(props.index)
+  const index = useIndex(props.index) || 0
   const self = useField()
   const array = useArray()
   const prefixCls = usePrefixCls('formily-array-base')

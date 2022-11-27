@@ -1,69 +1,83 @@
-import React, { createContext, useContext } from 'react'
-import { isArr, toArr, isValid } from '@formily/shared'
 import { Field } from '@formily/core'
-import { observer, useField } from '@formily/react'
-import { InputProps } from 'antd/lib/input'
-import { InputNumberProps } from 'antd/lib/input-number'
-import { SelectProps } from 'antd/lib/select'
-import { TreeSelectProps } from 'antd/lib/tree-select'
-import { CascaderProps, DefaultOptionType } from 'antd/lib/cascader'
-import {
+import { observer, ReactFC, useField } from '@formily/react'
+import { isArr, isValid, toArr } from '@formily/shared'
+import type {
+  CascaderProps,
   DatePickerProps,
-  RangePickerProps as DateRangePickerProps,
-} from 'antd/lib/date-picker'
-import { TimePickerProps, TimeRangePickerProps } from 'antd/lib/time-picker'
-import { Tag, Space } from 'antd'
+  InputNumberProps,
+  InputProps,
+  SelectProps,
+  TimePickerProps,
+  TimeRangePickerProps,
+  TreeSelectProps,
+} from 'antd'
+import { Space, Tag } from 'antd'
+import type { DefaultOptionType } from 'antd/lib/cascader'
+import type { RangePickerProps as DateRangePickerProps } from 'antd/lib/date-picker'
 import cls from 'classnames'
+import React, { createContext, useContext } from 'react'
 import { formatDayjsValue, usePrefixCls } from '../__builtins__'
+import useStyle from './style'
 
-const PlaceholderContext = createContext<React.ReactNode>('N/A')
+export const PlaceholderContext = createContext<React.ReactNode>('N/A')
 
-const Placeholder = PlaceholderContext.Provider
+export const Placeholder = PlaceholderContext.Provider
 
-const usePlaceholder = (value?: any) => {
+export const usePlaceholder = (value?: any) => {
   const placeholder = useContext(PlaceholderContext) || 'N/A'
   return isValid(value) && value !== '' ? value : placeholder
 }
 
-const Input: React.FC<React.PropsWithChildren<InputProps>> = (props) => {
-  const prefixCls = usePrefixCls('form-text', props)
-  return (
-    <Space className={cls(prefixCls, props.className)} style={props.style}>
-      {props.addonBefore}
-      {props.prefix}
-      {usePlaceholder(props.value)}
-      {props.suffix}
-      {props.addonAfter}
-    </Space>
-  )
-}
+const Input: React.FC<React.PropsWithChildren<InputProps>> = observer(
+  (props) => {
+    const prefixCls = usePrefixCls('form-text', props)
+    const [wrapSSR, hashId] = useStyle(prefixCls)
+    return wrapSSR(
+      <Space
+        className={cls(prefixCls, hashId, props.className)}
+        style={props.style}
+      >
+        {props.addonBefore}
+        {props.prefix}
+        {usePlaceholder(props.value)}
+        {props.suffix}
+        {props.addonAfter}
+      </Space>
+    )
+  }
+)
 
-const NumberPicker: React.FC<React.PropsWithChildren<InputNumberProps>> = (
-  props
-) => {
-  const prefixCls = usePrefixCls('form-text', props)
-  return (
-    <Space className={cls(prefixCls, props.className)} style={props.style}>
-      {props.addonBefore}
-      {props.prefix}
-      {usePlaceholder(
-        props.formatter
-          ? props.formatter(String(props.value), {
-              userTyping: false,
-              input: '',
-            })
-          : props.value
-      )}
-      {props['suffix']}
-      {props.addonAfter}
-    </Space>
-  )
-}
+const NumberPicker: React.FC<React.PropsWithChildren<InputNumberProps>> =
+  observer((props) => {
+    const prefixCls = usePrefixCls('form-text', props)
+    const [wrapSSR, hashId] = useStyle(prefixCls)
+    return wrapSSR(
+      <Space
+        className={cls(prefixCls, hashId, props.className)}
+        style={props.style}
+      >
+        {props.addonBefore}
+        {props.prefix}
+        {usePlaceholder(
+          props.formatter
+            ? props.formatter(String(props.value), {
+                userTyping: false,
+                input: '',
+              })
+            : props.value
+        )}
+        {props['suffix']}
+        {props.addonAfter}
+      </Space>
+    )
+  })
 
 const Select: React.FC<React.PropsWithChildren<SelectProps<any>>> = observer(
   (props) => {
     const field = useField<Field>()
     const prefixCls = usePrefixCls('form-text', props)
+    const [wrapSSR, hashId] = useStyle(prefixCls)
+
     const dataSource: any[] = field?.dataSource?.length
       ? field.dataSource
       : props?.options?.length
@@ -109,8 +123,11 @@ const Select: React.FC<React.PropsWithChildren<SelectProps<any>>> = observer(
         return <Tag key={key}>{getLabel(item)}</Tag>
       })
     }
-    return (
-      <div className={cls(prefixCls, props.className)} style={props.style}>
+    return wrapSSR(
+      <div
+        className={cls(prefixCls, hashId, props.className)}
+        style={props.style}
+      >
         {getLabels()}
       </div>
     )
@@ -122,6 +139,7 @@ const TreeSelect: React.FC<React.PropsWithChildren<TreeSelectProps<any>>> =
     const field = useField<Field>()
     const placeholder = usePlaceholder()
     const prefixCls = usePrefixCls('form-text', props)
+    const [wrapSSR, hashId] = useStyle(prefixCls)
     const dataSource = field?.dataSource?.length
       ? field.dataSource
       : props?.treeData?.length
@@ -175,8 +193,11 @@ const TreeSelect: React.FC<React.PropsWithChildren<TreeSelectProps<any>>> =
         )
       })
     }
-    return (
-      <div className={cls(prefixCls, props.className)} style={props.style}>
+    return wrapSSR(
+      <div
+        className={cls(prefixCls, hashId, props.className)}
+        style={props.style}
+      >
         {getLabels()}
       </div>
     )
@@ -187,6 +208,7 @@ const Cascader: React.FC<React.PropsWithChildren<CascaderProps<any>>> =
     const field = useField<Field>()
     const placeholder = usePlaceholder()
     const prefixCls = usePrefixCls('form-text', props)
+    const [wrapSSR, hashId] = useStyle(prefixCls)
     const dataSource: any[] = field?.dataSource?.length
       ? field.dataSource
       : props?.options?.length
@@ -231,8 +253,11 @@ const Cascader: React.FC<React.PropsWithChildren<CascaderProps<any>>> =
         .join(' ')
       return labels || placeholder
     }
-    return (
-      <div className={cls(prefixCls, props.className)} style={props.style}>
+    return wrapSSR(
+      <div
+        className={cls(prefixCls, hashId, props.className)}
+        style={props.style}
+      >
         {getLabels()}
       </div>
     )
@@ -266,9 +291,7 @@ const DateRangePicker: React.FC<
   )
 }
 
-const TimePicker: React.FC<React.PropsWithChildren<TimePickerProps>> = (
-  props
-) => {
+const TimePicker: ReactFC<TimePickerProps> = (props) => {
   const placeholder = usePlaceholder()
   const prefixCls = usePrefixCls('form-text', props)
   const getLabels = () => {
@@ -298,28 +321,36 @@ const TimeRangePicker: React.FC<
   )
 }
 
-const Text = (props: React.PropsWithChildren<any>) => {
-  const prefixCls = usePrefixCls('form-text', props)
-
-  return (
-    <div className={cls(prefixCls, props.className)} style={props.style}>
-      {usePlaceholder(props.value)}
-    </div>
-  )
+export interface IPreviewTextProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  prefixCls?: string
+  value?: any
 }
 
-Text.Input = Input
-Text.Select = Select
-Text.TreeSelect = TreeSelect
-Text.Cascader = Cascader
-Text.DatePicker = DatePicker
-Text.DateRangePicker = DateRangePicker
-Text.TimePicker = TimePicker
-Text.TimeRangePicker = TimeRangePicker
-Text.Placeholder = Placeholder
-Text.usePlaceholder = usePlaceholder
-Text.NumberPicker = NumberPicker
+const InternalPreviewText: ReactFC<IPreviewTextProps> = observer(
+  (props: React.PropsWithChildren<IPreviewTextProps>) => {
+    const prefixCls = usePrefixCls('form-text', props)
 
-export const PreviewText = Text
+    return (
+      <div className={cls(prefixCls, props.className)} style={props.style}>
+        {usePlaceholder(props.value)}
+      </div>
+    )
+  }
+)
+
+export const PreviewText = Object.assign(InternalPreviewText, {
+  Input,
+  Select,
+  TreeSelect,
+  Cascader,
+  DatePicker,
+  DateRangePicker,
+  TimePicker,
+  TimeRangePicker,
+  Placeholder,
+  usePlaceholder,
+  NumberPicker,
+})
 
 export default PreviewText

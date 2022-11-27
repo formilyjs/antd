@@ -1,2 +1,5 @@
-import 'antd/lib/button/style/index'
-import './style.less'
+import { genStyleHook } from './../__builtins__'
+
+export default genStyleHook('array-base', () => {
+  return []
+})

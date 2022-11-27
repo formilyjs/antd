@@ -1,17 +1,16 @@
 import type { CSSInterpolation, CSSObject } from '@ant-design/cssinjs'
 import { useStyleRegister } from '@ant-design/cssinjs'
 import { merge } from '@formily/shared'
-import { DerivativeToken } from 'antd/es/theme'
 import type { ComponentTokenMap, GlobalToken } from 'antd/es/theme/interface'
 import { useConfig, useToken } from './hooks'
-export type OverrideComponent = keyof ComponentTokenMap
 
-export interface StyleInfo<ComponentName extends OverrideComponent> {
+export type OverrideComponent = keyof ComponentTokenMap | (string & {})
+
+export interface StyleInfo {
   hashId: string
   prefixCls: string
   rootPrefixCls: string
   iconPrefixCls: string
-  overrideComponentToken: ComponentTokenMap[ComponentName]
 }
 
 export type TokenWithCommonCls<T> = T & {
@@ -31,7 +30,7 @@ export type GenerateStyle<
 > = (token: ComponentToken, options?: any) => ReturnType
 
 export const genCommonStyle = (
-  token: DerivativeToken,
+  token: any,
   componentPrefixCls: string
 ): CSSObject => {
   const { fontFamily, fontSize } = token
@@ -67,7 +66,7 @@ export const genStyleHook = <ComponentName extends OverrideComponent>(
   component: ComponentName,
   styleFn: (
     token: TokenWithCommonCls<GlobalToken>,
-    info: StyleInfo<ComponentName>
+    info: StyleInfo
   ) => CSSInterpolation
 ) => {
   return (prefixCls: string): UseComponentStyleResult => {
@@ -96,7 +95,6 @@ export const genStyleHook = <ComponentName extends OverrideComponent>(
             prefixCls,
             rootPrefixCls,
             iconPrefixCls,
-            overrideComponentToken: token[component],
           })
           return [genCommonStyle(token, prefixCls), styleInterpolation]
         }

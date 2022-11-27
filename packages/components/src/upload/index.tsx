@@ -93,7 +93,7 @@ const getState = (target: any) => {
   return target?.state || target?.status
 }
 
-const normalizeFileList = (fileList: UploadFile[]) => {
+const normalizeFileList = (fileList?: UploadFile[]) => {
   if (fileList && fileList.length) {
     return fileList.map((file, index) => {
       return {

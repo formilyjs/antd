@@ -109,7 +109,7 @@ export function FormDialog(title: any, id: any, renderer?: any): IFormDialog {
     return <Fragment>{isFn(renderer) ? renderer(env.form) : renderer}</Fragment>
   })
   const renderDialog = (
-    visible = true,
+    open = true,
     resolve?: () => any,
     reject?: () => any
   ) => {
@@ -120,7 +120,7 @@ export function FormDialog(title: any, id: any, renderer?: any): IFormDialog {
         {() => (
           <Modal
             {...modal}
-            visible={visible}
+            open={open}
             confirmLoading={form.submitting}
             onCancel={(e) => {
               if (modal?.onCancel?.(e) !== false) {

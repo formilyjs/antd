@@ -1,27 +1,27 @@
+import {
+  createForm,
+  Form,
+  IFormProps,
+  onFormSubmitSuccess,
+} from '@formily/core'
+import { FormProvider, observer, ReactFC } from '@formily/react'
+import { toJS } from '@formily/reactive'
+import {
+  applyMiddleware,
+  IMiddleware,
+  isBool,
+  isFn,
+  isNum,
+  isStr,
+} from '@formily/shared'
+import { Drawer, DrawerProps } from 'antd'
 import React, { Fragment, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import {
-  createForm,
-  IFormProps,
-  Form,
-  onFormSubmitSuccess,
-} from '@formily/core'
-import { toJS } from '@formily/reactive'
-import { FormProvider, observer, ReactFC } from '@formily/react'
-import {
-  isNum,
-  isStr,
-  isBool,
-  isFn,
-  applyMiddleware,
-  IMiddleware,
-} from '@formily/shared'
-import { Drawer, DrawerProps } from 'antd'
-import {
-  usePrefixCls,
   createPortalProvider,
   createPortalRoot,
   loading,
+  usePrefixCls,
 } from '../__builtins__'
 
 type FormDrawerRenderer =
@@ -60,6 +60,12 @@ export interface IDrawerProps extends DrawerProps {
   onClose?: (e: EventType) => void | boolean
   loadingText?: React.ReactNode
 }
+interface IEnv {
+  form: Form | null
+  host: HTMLDivElement
+  promise: Promise<any> | null
+  openMiddlewares: IMiddleware<IFormProps>[]
+}
 
 export function FormDrawer(
   title: IDrawerProps,
@@ -84,7 +90,7 @@ export function FormDrawer(title: any, id: any, renderer?: any): IFormDrawer {
     renderer = id
     id = 'form-drawer'
   }
-  const env = {
+  const env: IEnv = {
     host: document.createElement('div'),
     openMiddlewares: [],
     form: null,
@@ -100,19 +106,21 @@ export function FormDrawer(title: any, id: any, renderer?: any): IFormDrawer {
         formDrawer.close()
       }
     },
-    afterVisibleChange: (visible: boolean) => {
-      props?.afterVisibleChange?.(visible)
-      if (visible) return
+    afterOpenChange: (open: boolean) => {
+      props?.afterOpenChange?.(open)
+      if (open) return
       root.unmount()
     },
   }
   const DrawerContent = observer(() => {
     return <Fragment>{isFn(renderer) ? renderer(env.form) : renderer}</Fragment>
   })
-  const renderDrawer = (visible = true) => {
+  const renderDrawer = (open = true) => {
+    const { form } = env
+    if (!form) return null
     return (
-      <Drawer {...drawer} visible={visible}>
-        <FormProvider form={env.form}>
+      <Drawer {...drawer} open={open}>
+        <FormProvider form={form}>
           <DrawerContent />
         </FormProvider>
       </Drawer>
@@ -165,7 +173,7 @@ export function FormDrawer(title: any, id: any, renderer?: any): IFormDrawer {
 }
 
 const DrawerExtra: ReactFC = (props) => {
-  const ref = useRef<HTMLDivElement>()
+  const ref = useRef<HTMLDivElement>(null)
   const [extra, setExtra] = useState<HTMLDivElement>()
   const extraRef = useRef<HTMLDivElement>()
   const prefixCls = usePrefixCls('drawer')
@@ -175,7 +183,9 @@ const DrawerExtra: ReactFC = (props) => {
       ?.querySelector(`.${prefixCls}-header`)
     if (content) {
       if (!extraRef.current) {
-        extraRef.current = content.querySelector(`.${prefixCls}-extra`)
+        extraRef.current = content.querySelector(
+          `.${prefixCls}-extra`
+        ) as HTMLDivElement
         if (!extraRef.current) {
           extraRef.current = document.createElement('div')
           extraRef.current.classList.add(`${prefixCls}-extra`)
@@ -196,7 +206,7 @@ const DrawerExtra: ReactFC = (props) => {
 }
 
 const DrawerFooter: ReactFC = (props) => {
-  const ref = useRef<HTMLDivElement>()
+  const ref = useRef<HTMLDivElement>(null)
   const [footer, setFooter] = useState<HTMLDivElement>()
   const footerRef = useRef<HTMLDivElement>()
   const prefixCls = usePrefixCls('drawer')
@@ -204,7 +214,9 @@ const DrawerFooter: ReactFC = (props) => {
     const content = ref.current?.closest(`.${prefixCls}-wrapper-body`)
     if (content) {
       if (!footerRef.current) {
-        footerRef.current = content.querySelector(`.${prefixCls}-footer`)
+        footerRef.current = content.querySelector(
+          `.${prefixCls}-footer`
+        ) as HTMLDivElement
         if (!footerRef.current) {
           footerRef.current = document.createElement('div')
           footerRef.current.classList.add(`${prefixCls}-footer`)

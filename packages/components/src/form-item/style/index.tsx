@@ -9,41 +9,34 @@ export interface FormToken extends FullToken<'Form'> {
 }
 
 const genSmallStyle: GenerateStyle = (token) => {
-  const {
-    componentCls,
-    antCls,
-    controlHeightSM,
-    marginLG,
-    fontSizeSM,
-    lineHeightSM: lineHeight,
-  } = token
+  const { componentCls, antCls, controlHeightSM, marginLG, fontSizeSM } = token
   return {
     fontSize: fontSizeSM,
-    lineHeight,
+    lineHeight: controlHeightSM,
     [`${componentCls}-label`]: {
-      lineHeight,
-      minHeight: controlHeightSM - 2,
+      lineHeight: `${controlHeightSM}px`,
+      minHeight: controlHeightSM - 4,
 
       '> label': {
-        height: controlHeightSM,
+        height: controlHeightSM - 2,
       },
     },
 
     [`${componentCls}-control-content`]: {
       ' &-component': {
-        minHeight: controlHeightSM - 2,
-        lineHeight,
+        minHeight: controlHeightSM - 4,
+        lineHeight: `${controlHeightSM}px`,
       },
     },
 
     [`${componentCls}-help,
       ${componentCls}-extra`]: {
       minHeight: controlHeightSM - 4,
-      lineHeight,
+      lineHeight: `${controlHeightSM - 4}px`,
     },
 
     [`${componentCls}-control-content`]: {
-      minHeight: controlHeightSM - 2,
+      minHeight: controlHeightSM - 4,
     },
 
     [`${antCls}-input-affix-wrapper,
@@ -52,17 +45,17 @@ const genSmallStyle: GenerateStyle = (token) => {
       padding: `0px 11px`,
 
       input: {
-        height: controlHeightSM - 2,
+        height: controlHeightSM - 4,
         fontSize: fontSizeSM,
       },
     },
 
     [`${antCls}-cascader-picker`]: {
-      height: controlHeightSM - 2,
+      height: controlHeightSM - 4,
 
       input: {
         padding: '0 7px',
-        height: controlHeightSM - 2,
+        height: controlHeightSM - 4,
         fontSize: fontSizeSM,
       },
     },
@@ -70,55 +63,55 @@ const genSmallStyle: GenerateStyle = (token) => {
     [`${antCls}-select-single:not(${antCls}-select-customize-input) ${antCls}-select-selector`]:
       {
         padding: `0px 11px`,
-        height: controlHeightSM - 2,
+        height: controlHeightSM - 4,
         fontSize: fontSizeSM,
-        lineHeight,
+        lineHeight: `${controlHeightSM}px`,
 
         [`${antCls}-select-selection-search`]: {
           height: controlHeightSM,
-          lineHeight,
+          lineHeight: `${controlHeightSM - 4}px`,
 
           '&-input': {
-            height: controlHeightSM - 2,
-            lineHeight,
+            height: controlHeightSM - 4,
+            lineHeight: `${controlHeightSM - 4}px`,
           },
         },
 
         [`${antCls}-select-selection-placeholder`]: {
           height: controlHeightSM,
-          lineHeight,
+          lineHeight: `${controlHeightSM - 4}px`,
         },
 
         [`${antCls}-select-selection-item`]: {
           height: controlHeightSM,
-          lineHeight,
+          lineHeight: `${controlHeightSM - 4}px`,
         },
         [`${antCls}-select-multiple:not(${antCls}-select-customize-input)
           ${antCls}-select-selector`]: {
           padding: '0px 2px',
-          height: controlHeightSM - 2,
+          height: controlHeightSM - 4,
           fontSize: fontSizeSM,
-          lineHeight,
+          lineHeight: `${controlHeightSM}px`,
 
           '&::after': {
             height: controlHeightSM - 8,
-            lineHeight,
+            lineHeight: `${controlHeightSM - 8}px`,
           },
 
           [`${antCls}-select-selection-search`]: {
             height: controlHeightSM - 8,
-            lineHeight,
+            lineHeight: `${controlHeightSM - 8}px`,
             marginInlineStart: 0,
 
             '&-input': {
-              height: controlHeightSM - 12,
-              lineHeight,
+              height: controlHeightSM,
+              lineHeight: `${controlHeightSM - 4}px`,
             },
           },
 
           [`${antCls}-select-selection-placeholder`]: {
-            height: controlHeightSM - 8,
-            lineHeight,
+            height: controlHeightSM - 4,
+            lineHeight: `${controlHeightSM}px`,
             marginInlineStart: 4,
           },
 
@@ -126,7 +119,7 @@ const genSmallStyle: GenerateStyle = (token) => {
             alignSelf: 'flex-start',
 
             [`${antCls}-select-selection-item`]: {
-              lineHeight,
+              lineHeight: `${controlHeightSM - 10}px`,
               height: controlHeightSM - 8,
             },
           },
@@ -159,13 +152,12 @@ const genLargeStyle: GenerateStyle = (token) => {
     controlHeightLG,
     controlHeightSM,
     marginLG,
-    lineHeightLG: lineHeight,
   } = token
   return {
     fontSize: fontSizeLG,
-    lineHeight,
+    lineHeight: `${controlHeightLG}px`,
     [`${componentCls}-label`]: {
-      lineHeight,
+      lineHeight: `${controlHeightLG}px`,
       minHeight: controlHeightLG - 2,
 
       '> label': {
@@ -176,14 +168,14 @@ const genLargeStyle: GenerateStyle = (token) => {
     [`${componentCls}-control-content`]: {
       ' &-component': {
         minHeight: controlHeightLG - 2,
-        lineHeight,
+        lineHeight: `${controlHeightLG + 2}px`,
       },
     },
 
     [`${componentCls}-help,
       ${componentCls}-extra`]: {
       minHeight: controlHeightSM,
-      lineHeight,
+      lineHeight: `${controlHeightSM}px`,
     },
 
     [`${componentCls}-control-content`]: {
@@ -205,7 +197,7 @@ const genLargeStyle: GenerateStyle = (token) => {
     [`${antCls}-input-affix-wrapper,
       ${antCls}-picker`]: {
       padding: `0px 11px`,
-      lineHeight,
+      lineHeight: `${controlHeightLG - 2}px`,
       input: {
         height: controlHeightLG - 2,
         fontSize: fontSizeLG,
@@ -219,7 +211,7 @@ const genLargeStyle: GenerateStyle = (token) => {
 
     [`${antCls}-radio-button-wrapper`]: {
       height: controlHeightLG,
-      lineHeight,
+      lineHeight: `${controlHeightLG}px`,
     },
 
     [`${antCls}-cascader-picker`]: {
@@ -237,59 +229,59 @@ const genLargeStyle: GenerateStyle = (token) => {
         padding: `0px 11px`,
         height: controlHeightLG,
         fontSize: fontSizeLG,
-        lineHeight,
+        lineHeight: `${controlHeightLG}px`,
 
         [`${antCls}-select-selection-search`]: {
           height: controlHeightLG,
-          lineHeight,
+          lineHeight: `${controlHeightLG - 2}px`,
 
           '&-input': {
             height: controlHeightLG,
-            lineHeight,
+            lineHeight: `${controlHeightLG - 2}px`,
           },
         },
 
         [`${antCls}-select-selection-placeholder`]: {
           height: controlHeightLG,
-          lineHeight,
+          lineHeight: `${controlHeightLG}px`,
         },
 
         [`${antCls}-select-selection-item`]: {
           height: controlHeightLG,
-          lineHeight,
+          lineHeight: `${controlHeightLG}px`,
         },
         [`${antCls}-select-multiple:not(${antCls}-select-customize-input)
           ${antCls}-select-selector`]: {
           padding: '0px 2px',
           height: controlHeightLG - 2,
           fontSize: fontSizeLG,
-          lineHeight,
+          lineHeight: `${controlHeightLG}px`,
 
           '&::after': {
             height: controlHeightLG - 8,
-            lineHeight,
+            lineHeight: `${controlHeightLG - 8}px`,
           },
 
           [`${antCls}-select-selection-search`]: {
             height: controlHeightLG - 8,
-            lineHeight,
+            lineHeight: `${controlHeightLG - 8}px`,
 
             '&-input': {
               height: controlHeightLG - 12,
-              lineHeight,
+              lineHeight: `${controlHeightLG - 12}px`,
             },
           },
 
           [`${antCls}-select-selection-placeholder`]: {
             height: controlHeightLG - 8,
-            lineHeight,
+            lineHeight: `${controlHeightLG - 8}px`,
           },
 
           [`${antCls}-select-selection-overflow-item`]: {
             alignSelf: 'flex-start',
 
             [`${antCls}-select-selection-item`]: {
-              lineHeight,
+              lineHeight: `${controlHeightLG - 10}px`,
               height: controlHeightLG - 8,
             },
           },
@@ -315,16 +307,10 @@ const genLargeStyle: GenerateStyle = (token) => {
 }
 
 const genLableStyle: GenerateStyle = (token) => {
-  const {
-    componentCls,
-    controlHeight,
-    controlHeightSM,
-    marginLG,
-    marginSM,
-    lineHeight,
-  } = token
+  const { componentCls, controlHeight, controlHeightSM, marginLG, marginSM } =
+    token
   return {
-    lineHeight,
+    lineHeight: `${controlHeight}px`,
     minHeight: controlHeight - 2,
     position: 'relative',
     display: 'flex',
@@ -380,7 +366,7 @@ const genLableStyle: GenerateStyle = (token) => {
         '&-component': {
           width: '100%',
           minHeight: controlHeight - 2,
-          lineHeight,
+          lineHeight: `${controlHeight}px`,
 
           '&-has-feedback-icon': {
             flex: 1,
@@ -411,7 +397,7 @@ const genLableStyle: GenerateStyle = (token) => {
       [`${componentCls}-help,
         ${componentCls}-extra`]: {
         minHeight: controlHeightSM,
-        lineHeight,
+        lineHeight: `${controlHeightSM}px`,
         color: token.colorTextSecondary,
       },
     },

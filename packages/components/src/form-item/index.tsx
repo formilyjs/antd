@@ -105,7 +105,7 @@ export const BaseItem: React.FC<React.PropsWithChildren<IFormItemProps>> = ({
             {feedbackStatus ? ICON_MAP[feedbackStatus] : null} {feedbackText}
           </div>
         }
-        visible={!!feedbackText}
+        open={!!feedbackText}
         getPopupContainer={getPopupContainer}
       >
         {children}

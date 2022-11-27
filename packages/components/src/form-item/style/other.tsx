@@ -326,7 +326,7 @@ export const genOtherStyle: GenerateStyle = (token) => {
 
       '&-bordered-none': {
         [`${antCls}-input-number,
-          ${antCls}:-input-affix-wrapper,
+          ${antCls}-input-affix-wrapper,
           ${antCls}-picker,
           ${antCls}-cascader-picker:focus ${antCls}-cascader-input,
           ${antCls}-select:not(${antCls}-select-customize-input)
@@ -390,7 +390,7 @@ export const genOtherStyle: GenerateStyle = (token) => {
           [`${componentCls}-control-content-component`]: {
             width: '100%',
             minHeight: controlHeight - 2,
-            lineHeight,
+            lineHeight: `${controlHeight + 2}px`,
 
             [`&-has-feedback-icon`]: {
               flex: 1,
@@ -420,7 +420,7 @@ export const genOtherStyle: GenerateStyle = (token) => {
         [`${componentCls}-help,
         ${componentCls}-extra `]: {
           minHeight: controlHeightSM - 2,
-          lineHeight,
+          lineHeight: `${controlHeightSM - 2}px`,
           color: colorTextSecondary,
         },
       },

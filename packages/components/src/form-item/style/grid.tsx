@@ -19,9 +19,10 @@ export const getGridStyle: GenerateStyle = (token) => {
       }
     }).reduce((acc, cur) => ({ ...acc, ...cur }), {})
   }
+
   return {
     [componentCls]: {
-      ...genGrids,
+      ...genGrids(),
     },
   }
 }

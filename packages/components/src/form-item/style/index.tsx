@@ -350,32 +350,6 @@ const genLableStyle: GenerateStyle = (token) => {
       },
     },
 
-    '&-align': {
-      [`&-left`]: {
-        [`> ${componentCls}-label`]: {
-          justifyContent: 'flex-start',
-        },
-      },
-
-      [`&-right`]: {
-        [`> ${componentCls}-label`]: {
-          label: {
-            whiteSpace: 'pre-line',
-            wordBreak: 'break-all',
-          },
-        },
-      },
-    },
-
-    '&-wrap': {
-      [`${componentCls}-label`]: {
-        label: {
-          whiteSpace: 'pre-line',
-          wordBreak: 'break-all',
-        },
-      },
-    },
-
     '&-feedback-layout': {
       '&-terse': {
         marginBottom: marginSM,
@@ -452,6 +426,35 @@ const genFormItemStyle: GenerateStyle = (token) => {
       position: 'relative',
       marginBottom: marginLG,
       fontSize: fontSize,
+
+      '&-label': {
+        '&-align': {
+          [`&-left`]: {
+            [`> ${componentCls}-label`]: {
+              justifyContent: 'flex-start',
+            },
+          },
+
+          [`&-right`]: {
+            [`> ${componentCls}-label`]: {
+              justifyContent: 'flex-end',
+
+              label: {
+                whiteSpace: 'pre-line',
+                wordBreak: 'break-all',
+              },
+            },
+          },
+        },
+        '&-wrap': {
+          [`${componentCls}-label`]: {
+            label: {
+              whiteSpace: 'pre-line',
+              wordBreak: 'break-all',
+            },
+          },
+        },
+      },
 
       [`${componentCls}-label`]: genLableStyle(token),
 

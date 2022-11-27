@@ -4,14 +4,16 @@
  * 3. 行内布局
  * 4. 吸底布局
  */
-import React, { useRef, useLayoutEffect, useState } from 'react'
 import { ReactFC } from '@formily/react'
 import { Space } from 'antd'
 import { SpaceProps } from 'antd/lib/space'
+import cls from 'classnames'
+import React, { useLayoutEffect, useRef, useState } from 'react'
+import StickyBox from 'react-sticky-box'
 import { BaseItem, IFormItemProps } from '../form-item'
 import { usePrefixCls } from '../__builtins__'
-import StickyBox from 'react-sticky-box'
-import cls from 'classnames'
+import useStyle from './style'
+
 interface IStickyProps extends React.ComponentProps<typeof StickyBox> {
   align?: React.CSSProperties['textAlign']
 }
@@ -110,9 +112,10 @@ FormButtonGroup.FormItem = ({ gutter, ...props }) => {
 }
 
 FormButtonGroup.Sticky = ({ align, ...props }) => {
-  const ref = useRef()
+  const ref = useRef(null)
   const [color, setColor] = useState('transparent')
   const prefixCls = usePrefixCls('formily-button-group')
+  const [wrapSSR, hashId] = useStyle(prefixCls)
 
   useLayoutEffect(() => {
     if (ref.current) {
@@ -122,10 +125,10 @@ FormButtonGroup.Sticky = ({ align, ...props }) => {
       }
     }
   })
-  return (
+  return wrapSSR(
     <StickyBox
       {...props}
-      className={cls(`${prefixCls}-sticky`, props.className)}
+      className={cls(`${prefixCls}-sticky`, hashId, props.className)}
       style={{
         backgroundColor: color,
         ...props.style,

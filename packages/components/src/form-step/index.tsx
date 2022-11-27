@@ -1,17 +1,17 @@
-import React, { Fragment } from 'react'
-import { define, observable, action, markRaw, model } from '@formily/reactive'
-import { Steps } from 'antd'
-import cls from 'classnames'
-import { StepsProps, StepProps } from 'antd/lib/steps'
 import { Form, VoidField } from '@formily/core'
+import { Schema, SchemaKey } from '@formily/json-schema'
 import {
   connect,
-  useField,
   observer,
-  useFieldSchema,
   RecursionField,
+  useField,
+  useFieldSchema,
 } from '@formily/react'
-import { Schema, SchemaKey } from '@formily/json-schema'
+import { action, define, markRaw, model, observable } from '@formily/reactive'
+import { Steps } from 'antd'
+import { StepProps, StepsProps } from 'antd/lib/steps'
+import cls from 'classnames'
+import React, { Fragment } from 'react'
 import { usePrefixCls } from '../__builtins__'
 
 export interface IFormStep {
@@ -41,8 +41,8 @@ type SchemaStep = {
 }
 
 type FormStepEnv = {
-  form: Form
-  field: VoidField
+  form: Form | null
+  field: VoidField | null
   steps: SchemaStep[]
 }
 
@@ -74,10 +74,10 @@ const createFormStep = (defaultCurrent = 0): IFormStep => {
     }
   )
 
-  const setDisplay = action.bound((target: number) => {
+  const setDisplay = action.bound?.((target: number) => {
     const currentStep = env.steps[target]
     env.steps.forEach(({ name }) => {
-      env.form.query(`${env.field.address}.${name}`).take((field) => {
+      env.form?.query(`${env.field?.address}.${name}`).take((field) => {
         if (name === currentStep.name) {
           field.setDisplay('visible')
         } else {
@@ -87,13 +87,13 @@ const createFormStep = (defaultCurrent = 0): IFormStep => {
     })
   })
 
-  const next = action.bound(() => {
+  const next = action.bound?.(() => {
     if (formStep.allowNext) {
       formStep.setCurrent(formStep.current + 1)
     }
   })
 
-  const back = action.bound(() => {
+  const back = action.bound?.(() => {
     if (formStep.allowBack) {
       formStep.setCurrent(formStep.current - 1)
     }
@@ -107,7 +107,7 @@ const createFormStep = (defaultCurrent = 0): IFormStep => {
     },
     current: defaultCurrent,
     setCurrent(key: number) {
-      setDisplay(key)
+      setDisplay?.(key)
       formStep.current = key
     },
     get allowNext() {
@@ -118,17 +118,17 @@ const createFormStep = (defaultCurrent = 0): IFormStep => {
     },
     async next() {
       try {
-        await env.form.validate()
-        if (env.form.valid) {
-          next()
+        await env.form?.validate()
+        if (env.form?.valid) {
+          next?.()
         }
       } catch {}
     },
     async back() {
-      back()
+      back?.()
     },
     async submit(onSubmit) {
-      return env.form?.submit?.(onSubmit)
+      return env.form?.submit?.(onSubmit) as Promise<any>
     },
   })
   return markRaw(formStep)

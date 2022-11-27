@@ -1,14 +1,8 @@
 import { connect, mapProps, mapReadPretty } from '@formily/react'
 import { Checkbox as AntdCheckbox } from 'antd'
-import { CheckboxProps, CheckboxGroupProps } from 'antd/lib/checkbox'
 import { PreviewText } from '../preview-text'
 
-type ComposedCheckbox = React.FC<React.PropsWithChildren<CheckboxProps>> & {
-  Group?: React.FC<React.PropsWithChildren<CheckboxGroupProps>>
-  __ANT_CHECKBOX?: boolean
-}
-
-export const Checkbox: ComposedCheckbox = connect(
+const InternalCheckbox = connect(
   AntdCheckbox,
   mapProps({
     value: 'checked',
@@ -16,9 +10,7 @@ export const Checkbox: ComposedCheckbox = connect(
   })
 )
 
-Checkbox.__ANT_CHECKBOX = true
-
-Checkbox.Group = connect(
+const Group = connect(
   AntdCheckbox.Group,
   mapProps({
     dataSource: 'options',
@@ -27,5 +19,10 @@ Checkbox.Group = connect(
     mode: 'tags',
   })
 )
+
+export const Checkbox = Object.assign(InternalCheckbox, {
+  __ANT_CHECKBOX: true,
+  Group,
+})
 
 export default Checkbox

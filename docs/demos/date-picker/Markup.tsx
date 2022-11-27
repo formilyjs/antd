@@ -1,17 +1,10 @@
-import {
-  DatePicker,
-  FormButtonGroup,
-  FormItem,
-  Input,
-  Submit,
-} from '@formily/antd'
+import { DatePicker, FormButtonGroup, FormItem, Submit } from '@formily/antd'
 import { createForm } from '@formily/core'
 import { createSchemaField, FormProvider } from '@formily/react'
 import React from 'react'
 
 const SchemaField = createSchemaField({
   components: {
-    Input,
     FormItem,
     DatePicker,
   },

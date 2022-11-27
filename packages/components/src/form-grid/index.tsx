@@ -1,12 +1,14 @@
-import React, { useLayoutEffect, useRef, useMemo, useContext } from 'react'
-import { markRaw } from '@formily/reactive'
-import { observer } from '@formily/react'
 import { Grid, IGridOptions } from '@formily/grid'
-import { usePrefixCls, pickDataProps } from '../__builtins__'
-import { useFormLayout } from '../form-layout'
+import { observer } from '@formily/react'
+import { markRaw } from '@formily/reactive'
 import cls from 'classnames'
+import React, { useContext, useLayoutEffect, useMemo, useRef } from 'react'
+import { useFormLayout } from '../form-layout'
+import { pickDataProps, usePrefixCls } from '../__builtins__'
 
-const FormGridContext = React.createContext<Grid<HTMLElement>>(null)
+import useStyle from './style'
+
+const FormGridContext = React.createContext<Grid<HTMLElement>>(null as any)
 
 export interface IFormGridProps extends IGridOptions {
   grid?: Grid<HTMLElement>
@@ -21,41 +23,13 @@ export interface IGridColumnProps {
   className?: string
 }
 
-type ComposedFormGrid = React.FC<React.PropsWithChildren<IFormGridProps>> & {
-  GridColumn: React.FC<React.PropsWithChildren<IGridColumnProps>>
-  useFormGrid: () => Grid<HTMLElement>
-  createFormGrid: (props: IFormGridProps) => Grid<HTMLElement>
-  /**
-   * @deprecated
-   */
-  useGridSpan: (gridSpan: number) => number
-  /**
-   * @deprecated
-   */
-  useGridColumn: (gridSpan: number) => number
-}
-
 export const createFormGrid = (props: IFormGridProps) => {
   return markRaw(new Grid(props))
 }
 
 export const useFormGrid = () => useContext(FormGridContext)
 
-/**
- * @deprecated
- */
-export const useGridSpan = (gridSpan = 1) => {
-  return gridSpan
-}
-
-/**
- * @deprecated
- */
-export const useGridColumn = (gridSpan = 1) => {
-  return gridSpan
-}
-
-export const FormGrid: ComposedFormGrid = observer(
+const InternalFormGrid = observer(
   ({
     children,
     className,
@@ -72,33 +46,39 @@ export const FormGrid: ComposedFormGrid = observer(
       () => markRaw(options?.grid ? options.grid : new Grid(options)),
       [Grid.id(options)]
     )
-    const ref = useRef<HTMLDivElement>()
+    const ref = useRef<HTMLDivElement>(null)
     const prefixCls = usePrefixCls('formily-grid', props)
+
+    const [wrapSSR, hashId] = useStyle(prefixCls)
     const dataProps = pickDataProps(props)
     useLayoutEffect(() => {
-      return grid.connect(ref.current)
+      if (ref.current) {
+        return grid.connect(ref.current)
+      }
     }, [grid])
     return (
       <FormGridContext.Provider value={grid}>
-        <div
-          {...dataProps}
-          className={cls(`${prefixCls}-layout`, className)}
-          style={{
-            ...style,
-            gridTemplateColumns: grid.templateColumns,
-            gap: grid.gap,
-          }}
-          ref={ref}
-        >
-          {children}
-        </div>
+        {wrapSSR(
+          <div
+            {...dataProps}
+            className={cls(`${prefixCls}-layout`, hashId, className)}
+            style={{
+              ...style,
+              gridTemplateColumns: grid.templateColumns,
+              gap: grid.gap,
+            }}
+            ref={ref}
+          >
+            {children}
+          </div>
+        )}
       </FormGridContext.Provider>
     )
   },
   {
     forwardRef: true,
   }
-) as any
+)
 
 export const GridColumn: React.FC<React.PropsWithChildren<IGridColumnProps>> =
   observer(({ gridSpan, children, ...props }) => {
@@ -113,10 +93,10 @@ GridColumn.defaultProps = {
   gridSpan: 1,
 }
 
-FormGrid.createFormGrid = createFormGrid
-FormGrid.useGridSpan = useGridSpan
-FormGrid.useGridColumn = useGridColumn
-FormGrid.useFormGrid = useFormGrid
-FormGrid.GridColumn = GridColumn
+export const FormGrid = Object.assign(InternalFormGrid, {
+  createFormGrid,
+  useFormGrid,
+  GridColumn,
+})
 
 export default FormGrid

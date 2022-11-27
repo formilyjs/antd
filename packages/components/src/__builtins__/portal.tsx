@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import { createPortal } from 'react-dom'
 import { observable } from '@formily/reactive'
-import { Observer } from '@formily/react'
+import { Observer, ReactFC } from '@formily/react'
 import { render as reactRender, unmount as reactUnmount } from './render'
 export interface IPortalProps {
   id?: string | symbol
@@ -10,7 +10,7 @@ export interface IPortalProps {
 const PortalMap = observable(new Map<string | symbol, React.ReactNode>())
 
 export const createPortalProvider = (id: string | symbol) => {
-  const Portal = (props: React.PropsWithChildren<IPortalProps>) => {
+  const Portal: ReactFC<IPortalProps> = (props) => {
     if (props.id && !PortalMap.has(props.id)) {
       PortalMap.set(props.id, null)
     }

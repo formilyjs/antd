@@ -122,6 +122,7 @@ const useArrayTableSources = () => {
 }
 
 const useArrayTableColumns = (
+  dataSource: any[],
   field: ArrayField,
   sources: ObservableColumnSource[]
 ): ColumnsType<any> => {
@@ -134,7 +135,7 @@ const useArrayTableColumns = (
         key,
         dataIndex: name,
         render: (value: any, record: any) => {
-          const index = field?.value?.indexOf(record)
+          const index = dataSource.indexOf(record)
           const children = (
             <ArrayBase.Item index={index} record={() => field?.value?.[index]}>
               <RecursionField
@@ -307,7 +308,7 @@ const InternalArrayTable: ReactFC<TableProps<any>> = observer(
     const [wrapSSR, hashId] = useStyle(prefixCls)
     const dataSource = Array.isArray(field.value) ? field.value.slice() : []
     const sources = useArrayTableSources()
-    const columns = useArrayTableColumns(field, sources)
+    const columns = useArrayTableColumns(dataSource, field, sources)
     const pagination = isBool(props.pagination) ? {} : props.pagination
     const addition = useAddition()
     const defaultRowKey = (record: any) => {

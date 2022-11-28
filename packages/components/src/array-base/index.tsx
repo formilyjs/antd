@@ -45,16 +45,16 @@ type CommonProps = AntdIconProps & {
 }
 
 export type ArrayBaseMixins = {
-  Addition?: ReactFC<IArrayBaseAdditionProps>
-  Copy?: ReactFC<CommonProps>
-  Remove?: ReactFC<CommonProps>
-  MoveUp?: ReactFC<CommonProps>
-  MoveDown?: React.FC<React.PropsWithChildren<CommonProps>>
-  SortHandle?: ReactFC<CommonProps>
-  Index?: React.FC
-  useArray?: () => IArrayBaseContext | null
-  useIndex?: (index?: number) => number
-  useRecord?: (record?: number) => any
+  Addition: ReactFC<IArrayBaseAdditionProps>
+  Copy: ReactFC<CommonProps>
+  Remove: ReactFC<CommonProps>
+  MoveUp: ReactFC<CommonProps>
+  MoveDown: React.FC<React.PropsWithChildren<CommonProps>>
+  SortHandle: ReactFC<CommonProps>
+  Index: React.FC
+  useArray: () => IArrayBaseContext | null
+  useIndex: (index?: number) => number
+  useRecord: (record?: number) => any
 }
 
 export interface IArrayBaseProps {

@@ -1,4 +1,5 @@
 export * from './array-cards'
+export * from './array-collapse'
 export * from './array-tabs'
 export * from './cascader'
 export * from './checkbox'

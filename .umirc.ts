@@ -18,11 +18,11 @@ export default {
       },
       {
         title: '主站',
-        path: 'https://formilyjs.org',
+        path: 'https://v2.formilyjs.org/',
       },
       {
         title: 'GITHUB',
-        path: 'https://github.com/alibaba/formily',
+        path: 'https://github.com/formilyjs/antd',
       },
     ],
     'en-US': [

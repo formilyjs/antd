@@ -35,7 +35,7 @@ export const Form: React.FC<React.PropsWithChildren<FormProps>> = ({
       <PreviewText.Placeholder value={previewTextPlaceholder}>
         <FormLayout {...props}>
           {React.createElement(
-            component,
+            component as string,
             {
               onSubmit(e: React.FormEvent) {
                 e?.stopPropagation?.()

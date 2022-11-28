@@ -79,7 +79,7 @@ export const genStyleHook = <ComponentName extends OverrideComponent>(
           theme,
           token,
           hashId,
-          path: ['formily', component, prefixCls, iconPrefixCls],
+          path: ['formily-antd', component, prefixCls, iconPrefixCls],
         },
         () => {
           const componentCls = `.${prefixCls}`

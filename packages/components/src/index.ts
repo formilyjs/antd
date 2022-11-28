@@ -1,6 +1,7 @@
 export * from './array-cards'
 export * from './array-collapse'
 export * from './array-tabs'
+export * from './array-items'
 export * from './cascader'
 export * from './checkbox'
 export * from './date-picker'

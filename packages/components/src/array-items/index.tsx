@@ -1,59 +1,51 @@
-import React from 'react'
 import { ArrayField } from '@formily/core'
 import {
-  useField,
   observer,
-  useFieldSchema,
-  RecursionField,
   ReactFC,
+  RecursionField,
+  useField,
+  useFieldSchema,
 } from '@formily/react'
 import cls from 'classnames'
-import {
-  SortableContainer,
-  SortableElement,
-  SortableContainerProps,
-  SortableElementProps,
-} from 'react-sortable-hoc'
+import React from 'react'
+// import {
+//   SortableContainer,
+//   SortableElement,
+//   SortableContainerProps,
+//   SortableElementProps,
+// } from 'react-sortable-hoc'
 import { ISchema } from '@formily/json-schema'
+import { ArrayBase } from '../array-base'
 import { usePrefixCls } from '../__builtins__'
-import { ArrayBase, ArrayBaseMixins } from '../array-base'
-
-type ComposedArrayItems = React.FC<
-  React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>
-> &
-  ArrayBaseMixins & {
-    Item?: React.FC<
-      React.HTMLAttributes<HTMLDivElement> & {
-        type?: 'card' | 'divide'
-      }
-    >
-  }
+import useStyle from './style'
 
 const SortableItem: ReactFC<
-  React.HTMLAttributes<HTMLDivElement> & SortableElementProps
-> = SortableElement(
-  (props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => {
-    const prefixCls = usePrefixCls('formily-array-items')
-    return (
-      <div {...props} className={cls(`${prefixCls}-item`, props.className)}>
-        {props.children}
-      </div>
-    )
-  }
-) as any
+  React.HTMLAttributes<HTMLDivElement> & { index?: number }
+> = (props) => {
+  const prefixCls = usePrefixCls('formily-array-items')
+  const [wrapSSR, hashId] = useStyle(prefixCls)
+  return wrapSSR(
+    <div
+      {...props}
+      className={cls(`${prefixCls}-item`, hashId, props.className)}
+    >
+      {props.children}
+    </div>
+  )
+}
 
-const SortableList: ReactFC<
-  React.HTMLAttributes<HTMLDivElement> & SortableContainerProps
-> = SortableContainer(
-  (props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) => {
-    const prefixCls = usePrefixCls('formily-array-items')
-    return (
-      <div {...props} className={cls(`${prefixCls}-list`, props.className)}>
-        {props.children}
-      </div>
-    )
-  }
-) as any
+const SortableList: ReactFC<React.HTMLAttributes<HTMLDivElement>> = (props) => {
+  const prefixCls = usePrefixCls('formily-array-items')
+  const [wrapSSR, hashId] = useStyle(prefixCls)
+  return wrapSSR(
+    <div
+      {...props}
+      className={cls(`${prefixCls}-list`, hashId, props.className)}
+    >
+      {props.children}
+    </div>
+  )
+}
 
 const isAdditionComponent = (schema: ISchema) => {
   return schema['x-component']?.indexOf('Addition') > -1
@@ -69,68 +61,83 @@ const useAddition = () => {
   }, null)
 }
 
-export const ArrayItems: ComposedArrayItems = observer((props) => {
-  const field = useField<ArrayField>()
-  const prefixCls = usePrefixCls('formily-array-items')
-  const schema = useFieldSchema()
-  const addition = useAddition()
-  const dataSource = Array.isArray(field.value) ? field.value : []
-  if (!schema) throw new Error('can not found schema object')
-  return (
-    <ArrayBase>
-      <div
-        {...props}
-        onChange={() => {}}
-        className={cls(prefixCls, props.className)}
-      >
-        <SortableList
-          useDragHandle
-          lockAxis="y"
-          helperClass={`${prefixCls}-sort-helper`}
-          onSortEnd={({ oldIndex, newIndex }) => {
-            field.move(oldIndex, newIndex)
-          }}
+const InternalArrayItems: ReactFC<React.HTMLAttributes<HTMLDivElement>> =
+  observer((props) => {
+    const field = useField<ArrayField>()
+    const prefixCls = usePrefixCls('formily-array-items')
+    const [wrapSSR, hashId] = useStyle(prefixCls)
+    const schema = useFieldSchema()
+    const addition = useAddition()
+    const dataSource = Array.isArray(field.value) ? field.value : []
+    if (!schema) throw new Error('can not found schema object')
+    return wrapSSR(
+      <ArrayBase>
+        <div
+          {...props}
+          onChange={() => {}}
+          className={cls(prefixCls, hashId, props.className)}
         >
-          {dataSource?.map((item, index) => {
-            const items = Array.isArray(schema.items)
-              ? schema.items[index] || schema.items[0]
-              : schema.items
-            return (
-              <ArrayBase.Item
-                key={index}
-                index={index}
-                record={() => field.value?.[index]}
-              >
-                <SortableItem key={`item-${index}`} index={index}>
-                  <div className={`${prefixCls}-item-inner`}>
-                    <RecursionField schema={items} name={index} />
-                  </div>
-                </SortableItem>
-              </ArrayBase.Item>
-            )
-          })}
-        </SortableList>
-        {addition}
-      </div>
-    </ArrayBase>
-  )
-})
+          <SortableList
+          // useDragHandle
+          // lockAxis="y"
+          // helperClass={`${prefixCls}-sort-helper`}
+          // onSortEnd={({ oldIndex, newIndex }) => {
+          //   field.move(oldIndex, newIndex)
+          // }}
+          >
+            {dataSource?.map((item, index) => {
+              const items = Array.isArray(schema.items)
+                ? schema.items[index] || schema.items[0]
+                : schema.items
+              return (
+                <ArrayBase.Item
+                  key={index}
+                  index={index}
+                  record={() => field.value?.[index]}
+                >
+                  <SortableItem key={`item-${index}`} index={index}>
+                    <div className={`${prefixCls}-item-inner`}>
+                      {items ? (
+                        <RecursionField schema={items} name={index} />
+                      ) : null}
+                    </div>
+                  </SortableItem>
+                </ArrayBase.Item>
+              )
+            })}
+          </SortableList>
+          {addition}
+        </div>
+      </ArrayBase>
+    )
+  })
 
-ArrayItems.displayName = 'ArrayItems'
-
-ArrayItems.Item = (props) => {
+const Item: ReactFC<
+  React.HTMLAttributes<HTMLDivElement> & {
+    type?: 'card' | 'divide'
+  }
+> = (props) => {
   const prefixCls = usePrefixCls('formily-array-items')
-  return (
+  const [wrapSSR, hashId] = useStyle(prefixCls)
+  return wrapSSR(
     <div
       {...props}
       onChange={() => {}}
-      className={cls(`${prefixCls}-${props.type || 'card'}`, props.className)}
+      className={cls(
+        `${prefixCls}-${props.type || 'card'}`,
+        hashId,
+        props.className
+      )}
     >
       {props.children}
     </div>
   )
 }
 
-ArrayBase.mixin(ArrayItems)
+export const ArrayItems = Object.assign(ArrayBase.mixin(InternalArrayItems), {
+  Item,
+})
+
+ArrayItems.displayName = 'ArrayItems'
 
 export default ArrayItems

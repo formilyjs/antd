@@ -1,30 +1,31 @@
-import React, {
-  Fragment,
-  useState,
-  useRef,
-  useEffect,
-  createContext,
-  useContext,
-  useCallback,
-} from 'react'
-import { Table, Pagination, Space, Select, Badge } from 'antd'
+import { Badge, Pagination, Select, SelectProps, Space, Table } from 'antd'
 import { PaginationProps } from 'antd/lib/pagination'
-import { TableProps, ColumnProps } from 'antd/lib/table'
-import { SelectProps } from 'antd/lib/select'
+import { ColumnProps, TableProps } from 'antd/lib/table'
 import cls from 'classnames'
-import { SortableContainer, SortableElement } from 'react-sortable-hoc'
-import { GeneralField, FieldDisplayTypes, ArrayField } from '@formily/core'
+import React, {
+  createContext,
+  Fragment,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
+// import { SortableContainer, SortableElement } from 'react-sortable-hoc'
+import { ArrayField, FieldDisplayTypes, GeneralField } from '@formily/core'
+import { Schema } from '@formily/json-schema'
 import {
-  useField,
   observer,
-  useFieldSchema,
-  RecursionField,
   ReactFC,
+  RecursionField,
+  useField,
+  useFieldSchema,
 } from '@formily/react'
 import { isArr, isBool, isFn } from '@formily/shared'
-import { Schema } from '@formily/json-schema'
-import { usePrefixCls } from '../__builtins__'
+import { ColumnsType } from 'antd/es/table'
 import { ArrayBase, ArrayBaseMixins } from '../array-base'
+import { usePrefixCls } from '../__builtins__'
+import useStyle from './style'
 
 interface ObservableColumnSource {
   field: GeneralField
@@ -45,19 +46,14 @@ interface IStatusSelectProps extends SelectProps<any> {
   pageSize?: number
 }
 
-type ComposedArrayTable = React.FC<React.PropsWithChildren<TableProps<any>>> &
-  ArrayBaseMixins & {
-    Column?: React.FC<React.PropsWithChildren<ColumnProps<any>>>
-  }
-
 interface PaginationAction {
   totalPage?: number
   pageSize?: number
   changePage?: (page: number) => void
 }
 
-const SortableRow = SortableElement((props: any) => <tr {...props} />)
-const SortableBody = SortableContainer((props: any) => <tbody {...props} />)
+const SortableRow = (props: any) => <tr {...props} />
+const SortableBody = (props: any) => <tbody {...props} />
 
 const isColumnComponent = (schema: Schema) => {
   return schema['x-component']?.indexOf('Column') > -1
@@ -97,10 +93,14 @@ const useArrayTableSources = () => {
         },
       ]
     } else if (schema.properties) {
-      return schema.reduceProperties((buf, schema) => {
+      return schema.reduceProperties<
+        ObservableColumnSource[],
+        ObservableColumnSource[]
+      >((buf, schema) => {
         return buf.concat(parseSources(schema))
       }, [])
     }
+    return []
   }
 
   const parseArrayItems = (schema: Schema['items']) => {
@@ -124,25 +124,32 @@ const useArrayTableSources = () => {
 const useArrayTableColumns = (
   field: ArrayField,
   sources: ObservableColumnSource[]
-): TableProps<any>['columns'] => {
-  return sources.reduce((buf, { name, columnProps, schema, display }, key) => {
-    if (display !== 'visible') return buf
-    if (!isColumnComponent(schema)) return buf
-    return buf.concat({
-      ...columnProps,
-      key,
-      dataIndex: name,
-      render: (value: any, record: any) => {
-        const index = field?.value?.indexOf(record)
-        const children = (
-          <ArrayBase.Item index={index} record={() => field?.value?.[index]}>
-            <RecursionField schema={schema} name={index} onlyRenderProperties />
-          </ArrayBase.Item>
-        )
-        return children
-      },
-    })
-  }, [])
+): ColumnsType<any> => {
+  return sources.reduce<ColumnsType<any>>(
+    (buf, { name, columnProps, schema, display }, key) => {
+      if (display !== 'visible') return buf
+      if (!isColumnComponent(schema)) return buf
+      return buf.concat({
+        ...columnProps,
+        key,
+        dataIndex: name,
+        render: (value: any, record: any) => {
+          const index = field?.value?.indexOf(record)
+          const children = (
+            <ArrayBase.Item index={index} record={() => field?.value?.[index]}>
+              <RecursionField
+                schema={schema}
+                name={index}
+                onlyRenderProperties
+              />
+            </ArrayBase.Item>
+          )
+          return children
+        },
+      })
+    },
+    []
+  )
 }
 
 const useAddition = () => {
@@ -156,18 +163,19 @@ const useAddition = () => {
 }
 
 const schedulerRequest = {
-  request: null,
+  request: null as null | number,
 }
 
 const StatusSelect: ReactFC<IStatusSelectProps> = observer(
   (props) => {
     const field = useField<ArrayField>()
     const prefixCls = usePrefixCls('formily-array-table')
+    const [wrapSSR, hashId] = useStyle(prefixCls)
     const errors = field.errors
-    const parseIndex = (address: string) => {
+    const parseIndex = (address?: string) => {
       return Number(
         address
-          .slice(address.indexOf(field.address.toString()) + 1)
+          ?.slice(address.indexOf(field.address.toString()) + 1)
           .match(/(\d+)/)?.[1]
       )
     }
@@ -175,8 +183,10 @@ const StatusSelect: ReactFC<IStatusSelectProps> = observer(
       const val = Number(value)
       const hasError = errors.some(({ address }) => {
         const currentIndex = parseIndex(address)
-        const startIndex = (val - 1) * props.pageSize
-        const endIndex = val * props.pageSize
+        const startIndex = props.pageSize ? (val - 1) * props.pageSize : 0
+        const endIndex = props.pageSize
+          ? val * props.pageSize
+          : props.options?.length || 0
         return currentIndex >= startIndex && currentIndex <= endIndex
       })
       return {
@@ -187,7 +197,7 @@ const StatusSelect: ReactFC<IStatusSelectProps> = observer(
 
     const width = String(options?.length).length * 15
 
-    return (
+    return wrapSSR(
       <Select
         value={props.value}
         onChange={props.onChange}
@@ -196,7 +206,7 @@ const StatusSelect: ReactFC<IStatusSelectProps> = observer(
         style={{
           width: width < 60 ? 60 : width,
         }}
-        className={cls(`${prefixCls}-status-select`, {
+        className={cls(`${prefixCls}-status-select`, hashId, {
           'has-error': errors?.length,
         })}
       />
@@ -204,10 +214,10 @@ const StatusSelect: ReactFC<IStatusSelectProps> = observer(
   },
   {
     scheduler: (update) => {
-      clearTimeout(schedulerRequest.request)
+      clearTimeout(schedulerRequest.request as any)
       schedulerRequest.request = setTimeout(() => {
         update()
-      }, 100)
+      }, 100) as unknown as number
     },
   }
 )
@@ -220,6 +230,7 @@ const usePagination = () => {
 const ArrayTablePagination: ReactFC<IArrayTablePaginationProps> = (props) => {
   const [current, setCurrent] = useState(1)
   const prefixCls = usePrefixCls('formily-array-table')
+  const [wrapSSR, hashId] = useStyle(prefixCls)
   const pageSize = props.pageSize || 10
   const size = props.size || 'default'
   const dataSource = props.dataSource || []
@@ -247,7 +258,7 @@ const ArrayTablePagination: ReactFC<IArrayTablePaginationProps> = (props) => {
   const renderPagination = () => {
     if (totalPage <= 1) return
     return (
-      <div className={`${prefixCls}-pagination`}>
+      <div className={cls(`${prefixCls}-pagination`, hashId)}>
         <Space>
           <StatusSelect
             value={current}
@@ -270,7 +281,7 @@ const ArrayTablePagination: ReactFC<IArrayTablePaginationProps> = (props) => {
     )
   }
 
-  return (
+  return wrapSSR(
     <Fragment>
       <PaginationContext.Provider
         value={{ totalPage, pageSize, changePage: handleChange }}
@@ -288,11 +299,12 @@ const RowComp = (props: any) => {
   return <SortableRow index={props['data-row-key'] || 0} {...props} />
 }
 
-export const ArrayTable: ComposedArrayTable = observer(
+const InternalArrayTable: ReactFC<TableProps<any>> = observer(
   (props: TableProps<any>) => {
-    const ref = useRef<HTMLDivElement>()
+    const ref = useRef<HTMLDivElement>(null)
     const field = useField<ArrayField>()
     const prefixCls = usePrefixCls('formily-array-table')
+    const [wrapSSR, hashId] = useStyle(prefixCls)
     const dataSource = Array.isArray(field.value) ? field.value.slice() : []
     const sources = useArrayTableSources()
     const columns = useArrayTableColumns(field, sources)
@@ -335,10 +347,10 @@ export const ArrayTable: ComposedArrayTable = observer(
       []
     )
 
-    return (
+    return wrapSSR(
       <ArrayTablePagination {...pagination} dataSource={dataSource}>
         {(dataSource, pager) => (
-          <div ref={ref} className={prefixCls}>
+          <div ref={ref} className={cls(prefixCls, hashId)}>
             <ArrayBase>
               <Table
                 size="small"
@@ -376,13 +388,9 @@ export const ArrayTable: ComposedArrayTable = observer(
   }
 )
 
-ArrayTable.displayName = 'ArrayTable'
-
-ArrayTable.Column = () => {
+const Column: ReactFC = () => {
   return <Fragment />
 }
-
-ArrayBase.mixin(ArrayTable)
 
 const Addition: ArrayBaseMixins['Addition'] = (props) => {
   const array = ArrayBase.useArray()
@@ -401,6 +409,12 @@ const Addition: ArrayBaseMixins['Addition'] = (props) => {
     />
   )
 }
-ArrayTable.Addition = Addition
+
+export const ArrayTable = Object.assign(ArrayBase.mixin(InternalArrayTable), {
+  Column,
+  Addition,
+})
+
+ArrayTable.displayName = 'ArrayTable'
 
 export default ArrayTable

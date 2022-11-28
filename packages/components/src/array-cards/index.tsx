@@ -1,20 +1,18 @@
-import React from 'react'
-import { Card, Empty } from 'antd'
-import { CardProps } from 'antd/lib/card'
 import { ArrayField } from '@formily/core'
-import {
-  useField,
-  observer,
-  useFieldSchema,
-  RecursionField,
-} from '@formily/react'
-import cls from 'classnames'
 import { ISchema } from '@formily/json-schema'
+import {
+  observer,
+  ReactFC,
+  RecursionField,
+  useField,
+  useFieldSchema,
+} from '@formily/react'
+import { Card, CardProps, Empty } from 'antd'
+import cls from 'classnames'
+import React from 'react'
+import { ArrayBase } from '../array-base'
 import { usePrefixCls } from '../__builtins__'
-import { ArrayBase, ArrayBaseMixins } from '../array-base'
-
-type ComposedArrayCards = React.FC<React.PropsWithChildren<CardProps>> &
-  ArrayBaseMixins
+import useStyle from './style'
 
 const isAdditionComponent = (schema: ISchema) => {
   return schema['x-component']?.indexOf('Addition') > -1
@@ -50,11 +48,12 @@ const isOperationComponent = (schema: ISchema) => {
   )
 }
 
-export const ArrayCards: ComposedArrayCards = observer((props) => {
+export const InternalArrayCards: ReactFC<CardProps> = observer((props) => {
   const field = useField<ArrayField>()
   const schema = useFieldSchema()
   const dataSource = Array.isArray(field.value) ? field.value : []
   const prefixCls = usePrefixCls('formily-array-cards', props)
+  const [wrapSSR, hashId] = useStyle(prefixCls)
 
   if (!schema) throw new Error('can not found schema object')
 
@@ -65,33 +64,37 @@ export const ArrayCards: ComposedArrayCards = observer((props) => {
         : schema.items
       const title = (
         <span>
-          <RecursionField
-            schema={items}
-            name={index}
-            filterProperties={(schema) => {
-              if (!isIndexComponent(schema)) return false
-              return true
-            }}
-            onlyRenderProperties
-          />
+          {items ? (
+            <RecursionField
+              schema={items}
+              name={index}
+              filterProperties={(schema) => {
+                if (!isIndexComponent(schema)) return false
+                return true
+              }}
+              onlyRenderProperties
+            />
+          ) : null}
           {props.title || field.title}
         </span>
       )
       const extra = (
         <span>
-          <RecursionField
-            schema={items}
-            name={index}
-            filterProperties={(schema) => {
-              if (!isOperationComponent(schema)) return false
-              return true
-            }}
-            onlyRenderProperties
-          />
+          {items ? (
+            <RecursionField
+              schema={items}
+              name={index}
+              filterProperties={(schema) => {
+                if (!isOperationComponent(schema)) return false
+                return true
+              }}
+              onlyRenderProperties
+            />
+          ) : null}
           {props.extra}
         </span>
       )
-      const content = (
+      const content = items ? (
         <RecursionField
           schema={items}
           name={index}
@@ -101,7 +104,7 @@ export const ArrayCards: ComposedArrayCards = observer((props) => {
             return true
           }}
         />
-      )
+      ) : null
       return (
         <ArrayBase.Item
           key={index}
@@ -111,7 +114,7 @@ export const ArrayCards: ComposedArrayCards = observer((props) => {
           <Card
             {...props}
             onChange={() => {}}
-            className={cls(`${prefixCls}-item`, props.className)}
+            className={cls(`${prefixCls}-item`, hashId, props.className)}
             title={title}
             extra={extra}
           >
@@ -137,7 +140,7 @@ export const ArrayCards: ComposedArrayCards = observer((props) => {
       <Card
         {...props}
         onChange={() => {}}
-        className={cls(`${prefixCls}-item`, props.className)}
+        className={cls(`${prefixCls}-item`, hashId, props.className)}
         title={props.title || field.title}
       >
         <Empty />
@@ -145,7 +148,7 @@ export const ArrayCards: ComposedArrayCards = observer((props) => {
     )
   }
 
-  return (
+  return wrapSSR(
     <ArrayBase>
       {renderEmpty()}
       {renderItems()}
@@ -154,8 +157,8 @@ export const ArrayCards: ComposedArrayCards = observer((props) => {
   )
 })
 
-ArrayCards.displayName = 'ArrayCards'
+export const ArrayCards = ArrayBase.mixin(InternalArrayCards)
 
-ArrayBase.mixin(ArrayCards)
+ArrayCards.displayName = 'ArrayCards'
 
 export default ArrayCards

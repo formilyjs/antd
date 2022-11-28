@@ -1,3 +1,5 @@
+export * from './array-cards'
+export * from './array-tabs'
 export * from './cascader'
 export * from './checkbox'
 export * from './date-picker'

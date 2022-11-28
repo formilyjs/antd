@@ -1,6 +1,6 @@
 const useFlatOptions = (tree: any[]) => {
-  const flatData = (data) => {
-    let list = []
+  const flatData = (data?: any[]) => {
+    let list: any[] = []
     data?.forEach((item) => {
       list = [...list, item]
       if (item?.children?.length) {

@@ -3,7 +3,7 @@ import {
   hasSelectedKey,
   completedKeys,
   getCompatibleAllSelected,
-} from './utils'
+} from '../utils'
 
 /**
  * 判断该字段的 indeterminate 属性
@@ -17,7 +17,7 @@ const getIndeterminate = (
   record: any,
   flatDataSource: any,
   selected: any[],
-  primaryKey: string
+  primaryKey = ''
 ) => {
   if (selected?.includes(record[primaryKey])) {
     return undefined
@@ -34,8 +34,8 @@ interface ICheckSlackly {
     selected: any[],
     flatDataSource: any[],
     flatFilteredDataSource: any[],
-    primaryKey: string,
-    checkStrictly: boolean
+    primaryKey?: string,
+    checkStrictly?: boolean
   ): { selectedRowKeys: any[] }
 }
 
@@ -45,7 +45,7 @@ const useCheckSlackly: ICheckSlackly = (
   selected, // Table UI 展示的 keys
   flatDataSource,
   flatFilteredDataSource,
-  primaryKey,
+  primaryKey = '',
   checkStrictly
 ) => {
   let isSelected = currentSelected.length > selected.length // 判断是选中还是取消
@@ -72,7 +72,7 @@ const useCheckSlackly: ICheckSlackly = (
     isSelected = false
   }
 
-  let newSelected = []
+  let newSelected: any[] = []
   if (isSelected) {
     // 选中当前key及其子keys
     newSelected = [...new Set([...selected, currentKey, ...currentTreeKeys])]

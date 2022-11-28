@@ -1,6 +1,6 @@
 import React from 'react'
 import { Checkbox } from 'antd'
-import { completedKeys, getCompatibleAllSelected } from './utils'
+import { completedKeys, getCompatibleAllSelected } from '../utils'
 
 // 重写表格表头Checkbox（节点状态按全完整数据计算，节点操作按筛选数据计算）
 const newCheckbox =
@@ -44,7 +44,7 @@ const newCheckbox =
           isSelected = false
         }
 
-        let newSelected = []
+        let newSelected: any[] = []
         if (isSelected) {
           // 执行全选
           newSelected = [...new Set([...selected, ...usableKeys])]
@@ -72,11 +72,11 @@ const useTitleAddon = (
   selected: any[],
   flatDataSource: any[],
   flatFilteredDataSource: any[],
-  primaryKey: string,
-  mode: string,
+  primaryKey: string | undefined,
+  mode: string | undefined,
   disabled: boolean,
   readOnly: boolean,
-  checkStrictly: boolean,
+  checkStrictly: boolean | undefined,
   onChange: (selectedRowKeys: any[], record: any[]) => any
 ) => {
   if (mode === 'single') {

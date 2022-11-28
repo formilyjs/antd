@@ -1,24 +1,30 @@
-import React, { useState, useMemo } from 'react'
+import { FieldDisplayTypes, GeneralField } from '@formily/core'
 import {
   observer,
-  useFieldSchema,
-  useField,
-  Schema,
+  ReactFC,
   RecursionField,
+  Schema,
+  useField,
+  useFieldSchema,
 } from '@formily/react'
-import cls from 'classnames'
-import { GeneralField, FieldDisplayTypes } from '@formily/core'
 import { isArr, isBool, isFn } from '@formily/shared'
 import { Input, Table } from 'antd'
-import { TableProps, ColumnProps } from 'antd/lib/table'
+import { ColumnsType } from 'antd/es/table'
 import { SearchProps } from 'antd/lib/input'
-import { useFilterOptions } from './useFilterOptions'
-import { useFlatOptions } from './useFlatOptions'
-import { useSize } from './useSize'
-import { useTitleAddon } from './useTitleAddon'
-import { useCheckSlackly, getIndeterminate } from './useCheckSlackly'
-import { getUISelected, getOutputData } from './utils'
+import { ColumnProps, TableProps } from 'antd/lib/table'
+import cls from 'classnames'
+import React, { useMemo, useState } from 'react'
 import { usePrefixCls } from '../__builtins__'
+import {
+  getIndeterminate,
+  useCheckSlackly,
+  useFilterOptions,
+  useFlatOptions,
+  useSize,
+  useTitleAddon,
+} from './hooks'
+import useStyle from './style'
+import { getOutputData, getUISelected } from './utils'
 
 const { Search } = Input
 
@@ -35,7 +41,7 @@ type IFilterOption = boolean | ((option: any, keyword: string) => boolean)
 type IFilterSort = (optionA: any, optionB: any) => number
 
 export interface ISelectTableColumnProps extends ColumnProps<any> {
-  key: React.ReactText
+  key: string | number
 }
 
 export interface ISelectTableProps extends TableProps<any> {
@@ -51,12 +57,6 @@ export interface ISelectTableProps extends TableProps<any> {
   onSearch?: (keyword: string) => void
   onChange?: (value: any, options: any) => void
   value?: any
-}
-
-type ComposedSelectTable = React.FC<
-  React.PropsWithChildren<ISelectTableProps>
-> & {
-  Column?: React.FC<React.PropsWithChildren<ISelectTableColumnProps>>
 }
 
 const isColumnComponent = (schema: Schema) => {
@@ -88,10 +88,14 @@ const useSources = () => {
         },
       ]
     } else if (schema.properties) {
-      return schema.reduceProperties((buf, schema) => {
+      return schema.reduceProperties<
+        ObservableColumnSource[],
+        ObservableColumnSource[]
+      >((buf, schema) => {
         return buf.concat(parseSources(schema))
       }, [])
     }
+    return []
   }
 
   const parseArrayItems = (schema: Schema['items']) => {
@@ -114,18 +118,19 @@ const useSources = () => {
   return parseArrayItems(validSchema)
 }
 
-const useColumns = (
-  sources: ObservableColumnSource[]
-): TableProps<any>['columns'] => {
-  return sources.reduce((buf, { name, columnProps, schema, display }, key) => {
-    if (display !== 'visible') return buf
-    if (!isColumnComponent(schema)) return buf
-    return buf.concat({
-      ...columnProps,
-      key,
-      dataIndex: name,
-    })
-  }, [])
+const useColumns = (sources: ObservableColumnSource[]): ColumnsType<any> => {
+  return sources.reduce<ColumnsType<any>>(
+    (buf, { name, columnProps, schema, display }, key) => {
+      if (display !== 'visible') return buf
+      if (!isColumnComponent(schema)) return buf
+      return buf.concat({
+        ...columnProps,
+        key,
+        dataIndex: name,
+      })
+    },
+    []
+  )
 }
 
 const addPrimaryKey = (dataSource, rowKey, primaryKey) =>
@@ -140,7 +145,7 @@ const addPrimaryKey = (dataSource, rowKey, primaryKey) =>
     }
   })
 
-export const SelectTable: ComposedSelectTable = observer((props) => {
+const InternalSelectTable: ReactFC<ISelectTableProps> = observer((props) => {
   const {
     mode,
     dataSource: propsDataSource,
@@ -159,6 +164,7 @@ export const SelectTable: ComposedSelectTable = observer((props) => {
     ...otherTableProps
   } = props
   const prefixCls = usePrefixCls('formily-select-table', props)
+  const [wrapSSR, hashId] = useStyle(prefixCls)
   const [searchValue, setSearchValue] = useState<string>()
   const field = useField() as any
   const loading = isBool(props.loading) ? props.loading : field.loading
@@ -205,6 +211,7 @@ export const SelectTable: ComposedSelectTable = observer((props) => {
       const map = new Map()
       const arr = [...flatDataSource, ...value]
       arr.forEach((item) => {
+        if (!primaryKey) return
         if (!map.has(item[primaryKey])) {
           map.set(item[primaryKey], item)
         }
@@ -230,10 +237,10 @@ export const SelectTable: ComposedSelectTable = observer((props) => {
   const readPrettyDataSource = useFilterOptions(
     orderedFilteredDataSource,
     selected,
-    (value, item) => value.includes(item[primaryKey])
+    (value, item) => primaryKey && value.includes(item[primaryKey])
   )
 
-  const onInnerSearch = (searchText) => {
+  const onInnerSearch = (searchText?: string) => {
     const formatted = (searchText || '').trim()
     setSearchValue(searchText)
     onSearch?.(formatted)
@@ -244,8 +251,8 @@ export const SelectTable: ComposedSelectTable = observer((props) => {
       return
     }
     // 筛选后onChange默认的records数据不完整，此处需使用完整数据过滤
-    const wholeRecords = getWholeDataSource().filter((item) =>
-      selectedRowKeys.includes(item?.[primaryKey])
+    const wholeRecords = getWholeDataSource().filter(
+      (item) => primaryKey && selectedRowKeys.includes(item?.[primaryKey])
     )
     const { outputValue, outputOptions } = getOutputData(
       selectedRowKeys,
@@ -261,14 +268,16 @@ export const SelectTable: ComposedSelectTable = observer((props) => {
     onChange?.(outputValue, outputOptions)
   }
 
-  const onRowClick = (record) => {
+  const onRowClick = (record: Record<string, string>) => {
     if (readPretty || disabled || readOnly || record?.disabled) {
       return
     }
-    const selectedRowKey = record?.[primaryKey]
-    const isSelected = selected?.includes(selectedRowKey)
-    let selectedRowKeys = []
-    if (mode === 'single') {
+    const selectedRowKey = primaryKey ? record?.[primaryKey] : null
+    const isSelected = selectedRowKey
+      ? selected?.includes(selectedRowKey)
+      : false
+    let selectedRowKeys: (string | null)[] = []
+    if (mode === 'single' && selectedRowKey) {
       selectedRowKeys = [selectedRowKey]
     } else {
       if (isSelected) {
@@ -311,10 +320,12 @@ export const SelectTable: ComposedSelectTable = observer((props) => {
   )
 
   // Antd rowSelection type
-  const modeAsType: any = { multiple: 'checkbox', single: 'radio' }?.[mode]
+  const modeAsType: any = { multiple: 'checkbox', single: 'radio' }?.[
+    mode || ''
+  ]
 
-  return (
-    <div className={prefixCls}>
+  return wrapSSR(
+    <div className={cls(prefixCls, hashId)}>
       {showSearch ? (
         <Search
           {...searchProps}
@@ -407,7 +418,9 @@ const TableColumn: React.FC<
   React.PropsWithChildren<ISelectTableColumnProps>
 > = () => <></>
 
-SelectTable.Column = TableColumn
+export const SelectTable = Object.assign(InternalSelectTable, {
+  Column: TableColumn,
+})
 
 SelectTable.defaultProps = {
   showSearch: false,

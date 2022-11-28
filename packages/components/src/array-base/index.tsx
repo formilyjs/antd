@@ -7,6 +7,8 @@ import {
   UpOutlined,
 } from '@ant-design/icons'
 import { AntdIconProps } from '@ant-design/icons/lib/components/AntdIcon'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import { ArrayField } from '@formily/core'
 import {
   ReactFC,
@@ -129,17 +131,31 @@ const Item: ReactFC<IArrayBaseItemProps> = ({ children, ...props }) => {
     </ItemContext.Provider>
   )
 }
+export const SortableItemContext = createContext<
+  Partial<ReturnType<typeof useSortable>>
+>({})
+
+const useSortableItem = () => {
+  return useContext(SortableItemContext)
+}
 
 const InternalSortHandle: ReactFC<CommonProps> = (props: any) => {
   const prefixCls = usePrefixCls('formily-array-base')
   const [wrapSSR, hashId] = useStyle(prefixCls)
+  const { attributes, listeners } = useSortableItem()
   return wrapSSR(
     <MenuOutlined
       {...props}
+      {...attributes}
+      {...listeners}
       className={cls(`${prefixCls}-sort-handle`, hashId, props.className)}
       style={{ ...props.style }}
     />
   )
+}
+
+interface ISortItemProps extends React.HTMLAttributes<HTMLDivElement> {
+  index?: number
 }
 
 const SortHandle: ReactFC<CommonProps> = (props) => {
@@ -147,6 +163,32 @@ const SortHandle: ReactFC<CommonProps> = (props) => {
   if (!array) return null
   if (array.field?.pattern !== 'editable') return null
   return <InternalSortHandle {...props} />
+}
+
+const SortItem: ReactFC<ISortItemProps> = (props) => {
+  const prefixCls = usePrefixCls('formily-array-base')
+  const [wrapSSR, hashId] = useStyle(prefixCls)
+  const sortable = useSortable({
+    id: props.index as number,
+  })
+  const { setNodeRef, transform } = sortable
+
+  const style = {
+    ...props.style,
+    transform: CSS.Transform.toString(transform),
+  }
+  return wrapSSR(
+    <SortableItemContext.Provider value={sortable}>
+      <div
+        {...props}
+        ref={setNodeRef}
+        style={style}
+        className={cls(`${prefixCls}-sort-item`, hashId, props.className)}
+      >
+        {props.children}
+      </div>
+    </SortableItemContext.Provider>
+  )
 }
 
 const Index: React.FC<React.HTMLAttributes<HTMLSpanElement>> = (props) => {
@@ -330,6 +372,7 @@ function mixin<T extends object = object>(target: T): T & ArrayBaseMixins {
   return Object.assign(target, {
     Index,
     SortHandle,
+    SortItem,
     Addition,
     Copy,
     Remove,
@@ -345,6 +388,7 @@ export const ArrayBase = Object.assign(InternalArrayBase, {
   Item,
   Index,
   SortHandle,
+  SortItem,
   Addition,
   Copy,
   Remove,

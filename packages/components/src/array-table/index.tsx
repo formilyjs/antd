@@ -1,4 +1,18 @@
+import { DndContext, DragEndEvent, DragStartEvent } from '@dnd-kit/core'
+import { SortableContext, useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+import { ArrayField, FieldDisplayTypes, GeneralField } from '@formily/core'
+import { Schema } from '@formily/json-schema'
+import {
+  observer,
+  ReactFC,
+  RecursionField,
+  useField,
+  useFieldSchema,
+} from '@formily/react'
+import { isArr, isBool, isFn } from '@formily/shared'
 import { Badge, Pagination, Select, SelectProps, Space, Table } from 'antd'
+import { ColumnsType } from 'antd/es/table'
 import { PaginationProps } from 'antd/lib/pagination'
 import { ColumnProps, TableProps } from 'antd/lib/table'
 import cls from 'classnames'
@@ -11,24 +25,12 @@ import React, {
   useRef,
   useState,
 } from 'react'
-// import { SortableContainer, SortableElement } from 'react-sortable-hoc'
-import { ArrayField, FieldDisplayTypes, GeneralField } from '@formily/core'
-import { Schema } from '@formily/json-schema'
-import {
-  observer,
-  ReactFC,
-  RecursionField,
-  useField,
-  useFieldSchema,
-} from '@formily/react'
-import { isArr, isBool, isFn } from '@formily/shared'
-import { ColumnsType } from 'antd/es/table'
-import { ArrayBase, ArrayBaseMixins } from '../array-base'
+import { ArrayBase, ArrayBaseMixins, SortableItemContext } from '../array-base'
 import { usePrefixCls } from '../__builtins__'
 import useStyle from './style'
 
 interface ObservableColumnSource {
-  field: GeneralField
+  field?: GeneralField
   columnProps: ColumnProps<any>
   schema: Schema
   display: FieldDisplayTypes
@@ -52,8 +54,45 @@ interface PaginationAction {
   changePage?: (page: number) => void
 }
 
-const SortableRow = (props: any) => <tr {...props} />
-const SortableBody = (props: any) => <tbody {...props} />
+interface ISortableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
+  index: number
+}
+
+const SortableRow: ReactFC<ISortableRowProps> = ({ index, ...props }) => {
+  const sortable = useSortable({
+    id: index + 1,
+  })
+  const { setNodeRef, transform } = sortable
+
+  const style = {
+    ...props.style,
+    transform: CSS.Transform.toString(transform),
+  }
+
+  return (
+    <SortableItemContext.Provider value={sortable}>
+      <tr {...props} ref={setNodeRef} style={style} />
+    </SortableItemContext.Provider>
+  )
+}
+
+interface ISortableBodyProps
+  extends React.HTMLAttributes<HTMLTableSectionElement> {
+  onSortStart: (event: DragStartEvent) => void
+  onSortEnd: (event: DragEndEvent) => void
+}
+
+const SortableBody: ReactFC<ISortableBodyProps> = ({
+  onSortStart,
+  onSortEnd,
+  ...props
+}) => {
+  return (
+    <DndContext onDragStart={onSortStart} onDragEnd={onSortEnd}>
+      <tbody {...props}>{props.children}</tbody>
+    </DndContext>
+  )
+}
 
 const isColumnComponent = (schema: Schema) => {
   return schema['x-component']?.indexOf('Column') > -1
@@ -296,8 +335,16 @@ const ArrayTablePagination: ReactFC<IArrayTablePaginationProps> = (props) => {
   )
 }
 
-const RowComp = (props: any) => {
-  return <SortableRow index={props['data-row-key'] || 0} {...props} />
+const RowComp: ReactFC<React.HTMLAttributes<HTMLTableRowElement>> = (props) => {
+  const prefixCls = usePrefixCls('formily-array-table')
+
+  return (
+    <SortableRow
+      index={props['data-row-key'] || 0}
+      className={cls(props.className, `${prefixCls}-sort-helper`)}
+      {...props}
+    />
+  )
 }
 
 const InternalArrayTable: ReactFC<TableProps<any>> = observer(
@@ -328,24 +375,31 @@ const InternalArrayTable: ReactFC<TableProps<any>> = observer(
       }
     }
     const WrapperComp = useCallback(
-      (props: any) => (
-        <SortableBody
-          useDragHandle
-          lockAxis="y"
-          helperClass={`${prefixCls}-sort-helper`}
-          helperContainer={() => {
-            return ref.current?.querySelector('tbody')
-          }}
-          onSortStart={({ node }) => {
-            addTdStyles(node as HTMLElement)
-          }}
-          onSortEnd={({ oldIndex, newIndex }) => {
-            field.move(oldIndex, newIndex)
-          }}
-          {...props}
-        />
-      ),
-      []
+      (props: React.HTMLAttributes<HTMLTableSectionElement>) => {
+        const dataSource = Array.isArray(field.value) ? field.value.slice() : []
+
+        return (
+          <SortableBody
+            onSortStart={() => {
+              addTdStyles(ref.current as HTMLElement)
+            }}
+            onSortEnd={(event) => {
+              const { active, over } = event
+              field.move(
+                (active.id as number) - 1,
+                ((over?.id as number) - 1) as number
+              )
+            }}
+            {...props}
+            className={cls(`${prefixCls}-sort-helper`, props.className)}
+          >
+            <SortableContext items={dataSource.map((_, index) => index + 1)}>
+              {props.children}
+            </SortableContext>
+          </SortableBody>
+        )
+      },
+      [field]
     )
 
     return wrapSSR(

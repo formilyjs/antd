@@ -1,4 +1,5 @@
 import { ArrayField } from '@formily/core'
+import { ISchema } from '@formily/json-schema'
 import {
   observer,
   ReactFC,
@@ -7,52 +8,41 @@ import {
   useFieldSchema,
 } from '@formily/react'
 import cls from 'classnames'
-import React, { createContext } from 'react'
-import { DndContext, DragEndEvent } from '@dnd-kit/core'
-import { SortableContext, useSortable } from '@dnd-kit/sortable'
-import { ISchema } from '@formily/json-schema'
+import React from 'react'
 import { ArrayBase } from '../array-base'
-import { usePrefixCls } from '../__builtins__'
+import {
+  SortableContainer,
+  SortableElement,
+  usePrefixCls,
+} from '../__builtins__'
 import useStyle from './style'
 
-export const ListenersContext = createContext<
-  ReturnType<typeof useSortable>['listeners']
->({})
-
-const SortableItem: ReactFC<
-  React.HTMLAttributes<HTMLDivElement> & { index?: number }
-> = (props) => {
+const SortableItem = SortableElement((props) => {
   const prefixCls = usePrefixCls('formily-array-items')
   const [wrapSSR, hashId] = useStyle(prefixCls)
 
   return wrapSSR(
-    <ArrayBase.SortItem
+    <div
       {...props}
       className={cls(`${prefixCls}-item`, hashId, props.className)}
     >
       {props.children}
-    </ArrayBase.SortItem>
+    </div>
   )
-}
+})
 
-interface ISortableProps extends React.HTMLAttributes<HTMLDivElement> {
-  onSortEnd: (event: DragEndEvent) => void
-}
-
-const SortableList: ReactFC<ISortableProps> = ({ onSortEnd, ...props }) => {
+const SortableList = SortableContainer((props) => {
   const prefixCls = usePrefixCls('formily-array-items')
   const [wrapSSR, hashId] = useStyle(prefixCls)
   return wrapSSR(
-    <DndContext onDragEnd={onSortEnd}>
-      <div
-        {...props}
-        className={cls(`${prefixCls}-list`, hashId, props.className)}
-      >
-        {props.children}
-      </div>
-    </DndContext>
+    <div
+      {...props}
+      className={cls(`${prefixCls}-list`, hashId, props.className)}
+    >
+      {props.children}
+    </div>
   )
-}
+})
 
 const isAdditionComponent = (schema: ISchema) => {
   return schema['x-component']?.indexOf('Addition') > -1
@@ -85,41 +75,37 @@ const InternalArrayItems: ReactFC<React.HTMLAttributes<HTMLDivElement>> =
           className={cls(prefixCls, hashId, props.className)}
         >
           <SortableList
+            list={dataSource.slice()}
             className={`${prefixCls}-sort-helper`}
             onSortEnd={(event) => {
-              const { active, over } = event
-              field.move(
-                (active.id as number) - 1,
-                ((over?.id as number) - 1) as number
-              )
+              const { oldIndex, newIndex } = event
+              field.move(oldIndex, newIndex)
             }}
           >
-            <SortableContext
-              items={dataSource?.map((item, index) => {
-                return index + 1
-              })}
-            >
-              {dataSource?.map((item, index) => {
-                const items = Array.isArray(schema.items)
-                  ? schema.items[index] || schema.items[0]
-                  : schema.items
-                return (
-                  <ArrayBase.Item
-                    key={index}
+            {dataSource?.map((item, index) => {
+              const items = Array.isArray(schema.items)
+                ? schema.items[index] || schema.items[0]
+                : schema.items
+              return (
+                <ArrayBase.Item
+                  key={index}
+                  index={index}
+                  record={() => field.value?.[index]}
+                >
+                  <SortableItem
+                    key={`item-${index}`}
+                    lockAxis="y"
                     index={index}
-                    record={() => field.value?.[index]}
                   >
-                    <SortableItem key={`item-${index}`} index={index + 1}>
-                      <div className={`${prefixCls}-item-inner`}>
-                        {items ? (
-                          <RecursionField schema={items} name={index} />
-                        ) : null}
-                      </div>
-                    </SortableItem>
-                  </ArrayBase.Item>
-                )
-              })}
-            </SortableContext>
+                    <div className={`${prefixCls}-item-inner`}>
+                      {items ? (
+                        <RecursionField schema={items} name={index} />
+                      ) : null}
+                    </div>
+                  </SortableItem>
+                </ArrayBase.Item>
+              )
+            })}
           </SortableList>
           {addition}
         </div>

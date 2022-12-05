@@ -523,26 +523,26 @@
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
 
-"@formily/core@2.2.13", "@formily/core@^2.2.13":
+"@formily/core@2.2.13", "@formily/core@^2.2.0":
   version "2.2.13"
-  resolved "https://registry.npmmirror.com/@formily/core/-/core-2.2.13.tgz#419e031dd9a04bc346bcd94e484feded9f2675dc"
+  resolved "https://registry.yarnpkg.com/@formily/core/-/core-2.2.13.tgz#419e031dd9a04bc346bcd94e484feded9f2675dc"
   integrity sha512-LuiZOFekevebRk7NWyETzz90BWF+xZ2vXMQgFBf99qTGb9u2lmd7sde+4BgIoxbc91uoVtJKP2ERJLpnxdbx+Q==
   dependencies:
     "@formily/reactive" "2.2.13"
     "@formily/shared" "2.2.13"
     "@formily/validator" "2.2.13"
 
-"@formily/grid@^2.2.13":
+"@formily/grid@^2.2.0":
   version "2.2.13"
-  resolved "https://registry.npmmirror.com/@formily/grid/-/grid-2.2.13.tgz#bee3c58a783a372512654fd6465a1d6d4cf5ec6e"
+  resolved "https://registry.yarnpkg.com/@formily/grid/-/grid-2.2.13.tgz#bee3c58a783a372512654fd6465a1d6d4cf5ec6e"
   integrity sha512-GSamNEThZkyvjRk481czscIj6B3r0t5wvs5ze4M7q16FcfHwkD3sKLj7S5BWIIRFNhx7WM9IPrUL2ECpXSPWQg==
   dependencies:
     "@formily/reactive" "2.2.13"
     "@juggle/resize-observer" "^3.3.1"
 
-"@formily/json-schema@2.2.13", "@formily/json-schema@^2.2.13":
+"@formily/json-schema@2.2.13", "@formily/json-schema@^2.2.0":
   version "2.2.13"
-  resolved "https://registry.npmmirror.com/@formily/json-schema/-/json-schema-2.2.13.tgz#ed35f9ddc6c76b32b4bddf365e92ab7e9965537e"
+  resolved "https://registry.yarnpkg.com/@formily/json-schema/-/json-schema-2.2.13.tgz#ed35f9ddc6c76b32b4bddf365e92ab7e9965537e"
   integrity sha512-ZSN8G0afi9sVF/5EbJQEjQVA8KDRZ27PcfHv02o6XqdocvRBFWiWM/vf79mgdclyTlsmF8EixPizGk0uKTSZJw==
   dependencies:
     "@formily/core" "2.2.13"
@@ -554,9 +554,9 @@
   resolved "https://registry.npmmirror.com/@formily/path/-/path-2.2.13.tgz#1f82169c89f03989417deae8938fff079ae62ccc"
   integrity sha512-6u/grP1ldZhjmsN9BxOC+Tdj0lj8GhNQw8+AFP/cjJ1xPoRTFIHYcANfTNeEH1NujMY3CAbjFN+ChREDg5gICQ==
 
-"@formily/react@^2.2.13":
+"@formily/react@^2.2.0":
   version "2.2.13"
-  resolved "https://registry.npmmirror.com/@formily/react/-/react-2.2.13.tgz#d02f8dd41f9b2c49e7c69bbd70b7e1b66fd025a1"
+  resolved "https://registry.yarnpkg.com/@formily/react/-/react-2.2.13.tgz#d02f8dd41f9b2c49e7c69bbd70b7e1b66fd025a1"
   integrity sha512-LZENEKX0rCpRkoh3sKY97QktaeKbtXOgjIyAjG3B/60g+iImyimi2c3NGaxveh1JjO2zSsU1uIIRbezeiz8GDA==
   dependencies:
     "@formily/core" "2.2.13"
@@ -567,20 +567,20 @@
     "@formily/validator" "2.2.13"
     hoist-non-react-statics "^3.3.2"
 
-"@formily/reactive-react@2.2.13", "@formily/reactive-react@^2.2.13":
+"@formily/reactive-react@2.2.13", "@formily/reactive-react@^2.2.0":
   version "2.2.13"
-  resolved "https://registry.npmmirror.com/@formily/reactive-react/-/reactive-react-2.2.13.tgz#886e5e14d323579e2234132d29591bcd2e3d8a0d"
+  resolved "https://registry.yarnpkg.com/@formily/reactive-react/-/reactive-react-2.2.13.tgz#886e5e14d323579e2234132d29591bcd2e3d8a0d"
   integrity sha512-ZzgrQ69TekWPGwDaCdKRH7DCap8LMakIyFmg6pd/bZ3tGE//l70M6s0CDlVCXsFUdX/MRI2nFRHvldqiJMPMXg==
   dependencies:
     "@formily/reactive" "2.2.13"
     hoist-non-react-statics "^3.3.2"
 
-"@formily/reactive@2.2.13", "@formily/reactive@^2.2.13":
+"@formily/reactive@2.2.13", "@formily/reactive@^2.2.0":
   version "2.2.13"
   resolved "https://registry.npmmirror.com/@formily/reactive/-/reactive-2.2.13.tgz#8b82844acc71c8896c262f2f5abd6378fef197c6"
   integrity sha512-0YUkelY6q+KvaiXbhBMKM0j7sdss/R9WYf/EB9Ehd4E8f+iYZCh87APC11PA8tKFpUJ1mABekfDKCWLL+ildBQ==
 
-"@formily/shared@2.2.13", "@formily/shared@^2.2.13":
+"@formily/shared@2.2.13", "@formily/shared@^2.2.0":
   version "2.2.13"
   resolved "https://registry.npmmirror.com/@formily/shared/-/shared-2.2.13.tgz#e1f9ff4febf407acc9028126fe26e3e6eaac2827"
   integrity sha512-qs/iRRsrOAYeGbPr5BDlUp5JSIjshUp3h1MpqRndwyha9dKUrX1x+xacOEWfYaBKBD9gIesP7CVZ6I0Q893+Gg==
@@ -2590,9 +2590,9 @@ ansi-styles@^6.0.0:
   resolved "https://registry.npmmirror.com/ansi-styles/-/ansi-styles-6.2.1.tgz#0e62320cf99c21afff3b3012192546aacbfb05c5"
   integrity sha512-bN798gFfQX+viw3R7yrGWRqnrN2oRkEkUjjl4JNn4E8GxxbjtG3FbrEIIY3l8/hrwUwIeCZvi4QuOTP4MErVug==
 
-antd@^5.0.2:
+antd@^5.0.0:
   version "5.0.2"
-  resolved "https://registry.npmmirror.com/antd/-/antd-5.0.2.tgz#50b99d82a6bcb6c0c8d281c35bdda4b5ad26668c"
+  resolved "https://registry.yarnpkg.com/antd/-/antd-5.0.2.tgz#50b99d82a6bcb6c0c8d281c35bdda4b5ad26668c"
   integrity sha512-vKDdFJ0SGWR4nndq5BcrF9OBa5nt3FTCtODnDh8piPdC3coSgjxb1t0qNkW9MPHaPFrOnAOjlvKHqtBRuVkmHg==
   dependencies:
     "@ant-design/colors" "^6.0.0"

@@ -1,6 +1,6 @@
 {
   "name": "@formily/antd",
-  "version": "3.0.0-alpha.0",
+  "version": "3.0.0-alpha.1",
   "license": "MIT",
   "main": "lib",
   "types": "lib/index.d.ts",
@@ -56,6 +56,5 @@
     "@formily/shared": "^2.2.0",
     "classnames": "^2.2.6",
     "react-sticky-box": "^1.0.2"
-  },
-  "devDependencies": {}
+  }
 }

@@ -1,17 +1,17 @@
-import React, { Fragment, useMemo } from 'react'
-import { Collapse, Badge } from 'antd'
-import { model, markRaw } from '@formily/reactive'
-import { CollapseProps, CollapsePanelProps } from 'antd/lib/collapse'
-import {
-  useField,
-  observer,
-  useFieldSchema,
-  RecursionField,
-} from '@formily/react'
 import { Schema, SchemaKey } from '@formily/json-schema'
-import cls from 'classnames'
-import { usePrefixCls } from '../__builtins__'
+import {
+  observer,
+  ReactFC,
+  RecursionField,
+  useField,
+  useFieldSchema,
+} from '@formily/react'
+import { markRaw, model } from '@formily/reactive'
 import { toArr } from '@formily/shared'
+import { Badge, Collapse, CollapsePanelProps, CollapseProps } from 'antd'
+import cls from 'classnames'
+import React, { Fragment, useMemo } from 'react'
+import { usePrefixCls } from '../__builtins__'
 
 type ActiveKeys = string | number | Array<string | number>
 
@@ -27,11 +27,6 @@ export interface IFormCollapse {
 
 export interface IFormCollapseProps extends CollapseProps {
   formCollapse?: IFormCollapse
-}
-
-type ComposedFormCollapse = React.FC<IFormCollapseProps> & {
-  CollapsePanel?: React.FC<CollapsePanelProps>
-  createFormCollapse?: (defaultActiveKeys?: ActiveKeys) => IFormCollapse
 }
 
 const usePanels = () => {
@@ -95,13 +90,15 @@ const createFormCollapse = (defaultActiveKeys?: ActiveKeys) => {
   return markRaw(formCollapse)
 }
 
-export const FormCollapse: ComposedFormCollapse = observer(
+const InternalFormCollapse: ReactFC<IFormCollapseProps> = observer(
   ({ formCollapse, ...props }) => {
     const field = useField()
     const panels = usePanels()
     const prefixCls = usePrefixCls('formily-collapse', props)
     const _formCollapse = useMemo(() => {
-      return formCollapse ? formCollapse : createFormCollapse()
+      return formCollapse
+        ? formCollapse
+        : createFormCollapse(props.defaultActiveKey)
     }, [])
 
     const takeActiveKeys = () => {
@@ -150,11 +147,15 @@ export const FormCollapse: ComposedFormCollapse = observer(
   }
 )
 
-const CollapsePanel: React.FC<CollapsePanelProps> = ({ children }) => {
+const CollapsePanel: React.FC<React.PropsWithChildren<CollapsePanelProps>> = ({
+  children,
+}) => {
   return <Fragment>{children}</Fragment>
 }
 
-FormCollapse.CollapsePanel = CollapsePanel
-FormCollapse.createFormCollapse = createFormCollapse
+export const FormCollapse = Object.assign(InternalFormCollapse, {
+  CollapsePanel,
+  createFormCollapse,
+})
 
 export default FormCollapse

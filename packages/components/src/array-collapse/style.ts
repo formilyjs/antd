@@ -1,4 +1,11 @@
-import 'antd/lib/collapse/style/index'
-import 'antd/lib/empty/style/index'
-import 'antd/lib/button/style/index'
-import './style.less'
+import { genStyleHook } from './../__builtins__'
+export default genStyleHook('', (token) => {
+  const { componentCls } = token
+  return {
+    [componentCls]: {
+      '&-item': {
+        marginBottom: '10px !important',
+      },
+    },
+  }
+})

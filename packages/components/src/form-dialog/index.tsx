@@ -1,22 +1,22 @@
-import React, { Fragment, useRef, useLayoutEffect, useState } from 'react'
-import { createPortal } from 'react-dom'
-import { createForm, IFormProps, Form } from '@formily/core'
+import { createForm, Form, IFormProps } from '@formily/core'
+import { FormProvider, Observer, observer, ReactFC } from '@formily/react'
 import { toJS } from '@formily/reactive'
-import { FormProvider, Observer, observer } from '@formily/react'
 import {
-  isNum,
-  isStr,
-  isBool,
-  isFn,
   applyMiddleware,
   IMiddleware,
+  isBool,
+  isFn,
+  isNum,
+  isStr,
 } from '@formily/shared'
 import { Modal, ModalProps } from 'antd'
+import React, { Fragment, useLayoutEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import {
-  usePrefixCls,
-  loading,
   createPortalProvider,
   createPortalRoot,
+  loading,
+  usePrefixCls,
 } from '../__builtins__'
 
 type FormDialogRenderer =
@@ -55,6 +55,15 @@ export interface IModalProps extends ModalProps {
   loadingText?: React.ReactNode
 }
 
+interface IEnv {
+  form: Form | null
+  host: HTMLDivElement
+  promise: Promise<any> | null
+  openMiddlewares: IMiddleware<IFormProps>[]
+  confirmMiddlewares: IMiddleware<Form>[]
+  cancelMiddlewares: IMiddleware<Form>[]
+}
+
 export function FormDialog(
   title: IModalProps,
   id: string,
@@ -73,14 +82,15 @@ export function FormDialog(
   title: ModalTitle,
   renderer: FormDialogRenderer
 ): IFormDialog
+
 export function FormDialog(title: any, id: any, renderer?: any): IFormDialog {
   if (isFn(id) || React.isValidElement(id)) {
     renderer = id
     id = 'form-dialog'
   }
-  const env = {
+  const env: IEnv = {
     host: document.createElement('div'),
-    form: null,
+    form: null as unknown as Form,
     promise: null,
     openMiddlewares: [],
     confirmMiddlewares: [],
@@ -99,29 +109,31 @@ export function FormDialog(title: any, id: any, renderer?: any): IFormDialog {
     return <Fragment>{isFn(renderer) ? renderer(env.form) : renderer}</Fragment>
   })
   const renderDialog = (
-    visible = true,
+    open = true,
     resolve?: () => any,
     reject?: () => any
   ) => {
+    const { form } = env
+    if (!form) return null
     return (
       <Observer>
         {() => (
           <Modal
             {...modal}
-            visible={visible}
-            confirmLoading={env.form.submitting}
+            open={open}
+            confirmLoading={form.submitting}
             onCancel={(e) => {
               if (modal?.onCancel?.(e) !== false) {
-                reject()
+                reject?.()
               }
             }}
             onOk={async (e) => {
               if (modal?.onOk?.(e) !== false) {
-                resolve()
+                resolve?.()
               }
             }}
           >
-            <FormProvider form={env.form}>
+            <FormProvider form={form}>
               <DialogContent />
             </FormProvider>
           </Modal>
@@ -166,9 +178,9 @@ export function FormDialog(title: any, id: any, renderer?: any): IFormDialog {
             true,
             () => {
               env.form
-                .submit(async () => {
+                ?.submit(async () => {
                   await applyMiddleware(env.form, env.confirmMiddlewares)
-                  resolve(toJS(env.form.values))
+                  resolve(toJS(env.form?.values))
                   formDialog.close()
                 })
                 .catch(() => {})
@@ -192,8 +204,8 @@ export function FormDialog(title: any, id: any, renderer?: any): IFormDialog {
   return formDialog
 }
 
-const DialogFooter: React.FC = (props) => {
-  const ref = useRef<HTMLDivElement>()
+const DialogFooter: ReactFC = (props) => {
+  const ref = useRef<HTMLDivElement>(null)
   const [footer, setFooter] = useState<HTMLDivElement>()
   const footerRef = useRef<HTMLDivElement>()
   const prefixCls = usePrefixCls('modal')
@@ -201,7 +213,9 @@ const DialogFooter: React.FC = (props) => {
     const content = ref.current?.closest(`.${prefixCls}-content`)
     if (content) {
       if (!footerRef.current) {
-        footerRef.current = content.querySelector(`.${prefixCls}-footer`)
+        footerRef.current = content.querySelector(
+          `.${prefixCls}-footer`
+        ) as HTMLDivElement
         if (!footerRef.current) {
           footerRef.current = document.createElement('div')
           footerRef.current.classList.add(`${prefixCls}-footer`)

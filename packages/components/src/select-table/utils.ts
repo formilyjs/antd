@@ -1,5 +1,5 @@
 import { isArr, isFn } from '@formily/shared'
-import { useFlatOptions } from './useFlatOptions'
+import { useFlatOptions } from './hooks/useFlatOptions'
 
 /**
  * 获取树列表某个键值的集合
@@ -7,7 +7,7 @@ import { useFlatOptions } from './useFlatOptions'
  * @param primaryKey 键名称
  * @returns 键值数组集合
  */
-const getTreeKeys = (tree: any[], primaryKey: string) =>
+const getTreeKeys = (tree: any[], primaryKey = '') =>
   isArr(tree)
     ? tree.reduce((prev, current) => {
         if (current?.disabled) {
@@ -42,7 +42,7 @@ const hasSelectedKey = (tree: any[], selected: any[], primaryKey: string) => {
  * @param primaryKey 键名称
  * @returns 是否全部被选中
  */
-const isAllSelected = (list: any[], selected: any[], primaryKey: string) => {
+const isAllSelected = (list: any[], selected: any[], primaryKey = '') => {
   const validList = list.filter((item) => !item?.disabled)
   const selectedList = validList.filter((item) =>
     selected?.includes(item[primaryKey])
@@ -60,7 +60,7 @@ const isAllSelected = (list: any[], selected: any[], primaryKey: string) => {
 const completedKeys = (
   flatDataSource: any[] = [],
   selected: any[],
-  primaryKey: string
+  primaryKey = ''
 ) => {
   let allSelectedKeys = [...selected]
   flatDataSource.forEach((item) => {
@@ -94,8 +94,12 @@ const completedKeys = (
  * @param primaryKey 键名称
  * @returns 有效的树路径
  */
-const getSelectedPath = (tree = [], selected, primaryKey) => {
-  const pathData = []
+const getSelectedPath = (
+  tree: any[] = [],
+  selected: string[],
+  primaryKey: string | number
+) => {
+  const pathData: any[] = []
 
   tree.forEach((item) => {
     const validChildren = getSelectedPath(item.children, selected, primaryKey)
@@ -139,31 +143,31 @@ const deleteTreeItem = (tree: any[], key: string) =>
  * @returns 最终输出的 keys 和 options
  */
 const getOutputData = (
-  keys,
-  options,
-  dataSource,
-  primaryKey,
-  originalValueType,
-  originalOptionAsValue,
-  mode,
-  checkStrictly
+  keys: any[], // selected
+  options: any[],
+  dataSource: any[] | undefined,
+  primaryKey = '',
+  originalValueType = '',
+  originalOptionAsValue = false,
+  mode = '',
+  checkStrictly: boolean | undefined
 ) => {
   const valueType = checkStrictly !== false ? 'all' : originalValueType // valueType 在 Strictly 为 false 时生效
   const optionAsValue = valueType === 'path' ? false : originalOptionAsValue // optionAsValue 在 path 模式不生效
-  let outputValue = []
-  let outputOptions = []
+  let outputValue: any[] = []
+  let outputOptions: any[] = []
 
   if (valueType === 'parent') {
     // 移除所有选中值的子值
-    let childrenKeys = []
-    options.forEach((option) => {
+    let childrenKeys: any[] = []
+    options.forEach((option: { children: any[] }) => {
       childrenKeys = [
         ...childrenKeys,
         ...getTreeKeys(option.children, primaryKey),
       ]
     })
-    outputValue = keys.filter((key) => !childrenKeys.includes(key))
-    outputOptions = options.filter((options) =>
+    outputValue = keys.filter((key: any) => !childrenKeys.includes(key))
+    outputOptions = options.filter((options: { [x: string]: any }) =>
       outputValue.includes(options[primaryKey])
     )
   } else if (valueType === 'child') {
@@ -211,15 +215,15 @@ const getOutputData = (
  * @returns [] TableUI keys 集合
  */
 const getUISelected = (
-  value,
-  flatDataSource,
-  primaryKey,
-  originalValueType,
-  originalOptionAsValue,
-  mode,
-  checkStrictly,
-  rowKey
-) => {
+  value: any,
+  flatDataSource: any[] | undefined,
+  primaryKey: string | undefined,
+  originalValueType: string | undefined,
+  originalOptionAsValue: boolean | undefined,
+  mode: string | undefined,
+  checkStrictly: boolean | undefined,
+  rowKey: string | ((record: any) => string) | undefined
+): string[] => {
   const valueType = checkStrictly !== false ? 'all' : originalValueType // valueType 在 Strictly 为 false 时生效
   const optionAsValue = valueType === 'path' ? false : originalOptionAsValue // optionAsValue 在 path 模式不生效
 
@@ -227,17 +231,17 @@ const getUISelected = (
   keys =
     optionAsValue && valueType !== 'path'
       ? keys.map((record: any) =>
-          isFn(rowKey) ? rowKey(record) : record?.[primaryKey]
+          isFn(rowKey) ? rowKey(record) : record?.[primaryKey || '']
         )
       : keys
 
-  let newKeys = []
+  let newKeys: any[] = []
   if (valueType === 'parent') {
-    const options = flatDataSource.filter((item) =>
-      keys.includes(item[primaryKey])
+    const options = flatDataSource?.filter((item: { [x: string]: any }) =>
+      keys.includes(item[primaryKey || ''])
     )
-    let childrenKeys = []
-    options.forEach((option) => {
+    let childrenKeys: any[] = []
+    options?.forEach((option: { children: any[] }) => {
       childrenKeys = [
         ...childrenKeys,
         ...getTreeKeys(option.children, primaryKey),
@@ -247,7 +251,7 @@ const getUISelected = (
   } else if (valueType === 'child') {
     newKeys = completedKeys(flatDataSource, keys, primaryKey)
   } else if (valueType === 'path') {
-    const pathKeys = useFlatOptions(keys).map((item) => item[primaryKey])
+    const pathKeys = useFlatOptions(keys).map((item) => item[primaryKey || ''])
     newKeys = completedKeys(flatDataSource, pathKeys, primaryKey)
   } else {
     // valueType === 'all'
@@ -255,6 +259,38 @@ const getUISelected = (
   }
 
   return newKeys
+}
+
+/**
+ * 获取兼容筛选模式下是否全部选中子元素
+ * @param selected 已选中项
+ * @param dataSource 当前数据结构
+ * @param usableKeys 当前数据结构的可执行项
+ * @param checkStrictly
+ * @param primaryKey
+ * @returns 是否全部选中
+ */
+const getCompatibleAllSelected = (
+  selected: any[],
+  dataSource: any[] | undefined,
+  usableKeys: string | any[],
+  checkStrictly: boolean | undefined,
+  primaryKey: string
+) => {
+  if (!usableKeys.length) {
+    return false
+  }
+  // 当前模式下已选中的项
+  const currentSelected = selected.filter((item: any) =>
+    usableKeys.includes(item)
+  )
+  // 获取有效选中（父子模式或非父子模式）
+  const validSelected =
+    checkStrictly !== false
+      ? currentSelected // 非父子模式选中项
+      : completedKeys(dataSource, currentSelected, primaryKey) // 父子模式选中项
+  // 有效选中项数量等于可执行项数量则全部选中子元素
+  return validSelected.length === usableKeys.length
 }
 
 export {
@@ -265,4 +301,5 @@ export {
   getUISelected,
   getOutputData,
   completedKeys,
+  getCompatibleAllSelected,
 }

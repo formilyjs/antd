@@ -1,14 +1,8 @@
 import { connect, mapProps, mapReadPretty } from '@formily/react'
 import { Radio as AntdRadio } from 'antd'
-import { RadioProps, RadioGroupProps } from 'antd/lib/radio'
 import { PreviewText } from '../preview-text'
 
-type ComposedRadio = React.FC<RadioProps> & {
-  Group?: React.FC<RadioGroupProps>
-  __ANT_RADIO?: boolean
-}
-
-export const Radio: ComposedRadio = connect(
+export const InternalRadio = connect(
   AntdRadio,
   mapProps({
     value: 'checked',
@@ -16,14 +10,17 @@ export const Radio: ComposedRadio = connect(
   })
 )
 
-Radio.__ANT_RADIO = true
-
-Radio.Group = connect(
+const Group = connect(
   AntdRadio.Group,
   mapProps({
     dataSource: 'options',
   }),
   mapReadPretty(PreviewText.Select)
 )
+
+export const Radio = Object.assign(InternalRadio, {
+  __ANT_RADIO: true,
+  Group,
+})
 
 export default Radio

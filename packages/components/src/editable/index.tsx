@@ -1,21 +1,13 @@
-import React, { useLayoutEffect, useRef, useState } from 'react'
-import { isVoidField, Field } from '@formily/core'
-import { useField, observer } from '@formily/react'
-import { Popover } from 'antd'
-import { EditOutlined, CloseOutlined, MessageOutlined } from '@ant-design/icons'
-import { BaseItem, IFormItemProps } from '../form-item'
+import { CloseOutlined, EditOutlined, MessageOutlined } from '@ant-design/icons'
+import { Field, isVoidField } from '@formily/core'
+import { observer, ReactFC, useField } from '@formily/react'
+import { Popover as AntdPopover } from 'antd'
 import { PopoverProps } from 'antd/lib/popover'
-import { useClickAway, usePrefixCls } from '../__builtins__'
 import cls from 'classnames'
-/**
- * 默认Inline展示
- */
-
-type IPopoverProps = PopoverProps
-
-type ComposedEditable = React.FC<IFormItemProps> & {
-  Popover?: React.FC<IPopoverProps & { title?: React.ReactNode }>
-}
+import React, { useLayoutEffect, useRef, useState } from 'react'
+import { BaseItem, IFormItemProps } from '../form-item'
+import { useClickAway, usePrefixCls } from '../__builtins__'
+import useStyle from './style'
 
 const useParentPattern = () => {
   const field = useField<Field>()
@@ -57,15 +49,16 @@ const useFormItemProps = (): IFormItemProps => {
   }
 }
 
-export const Editable: ComposedEditable = observer((props) => {
+const InternalEditable: ReactFC<IFormItemProps> = observer((props) => {
   const [editable, setEditable] = useEditable()
   const pattern = useParentPattern()
   const itemProps = useFormItemProps()
   const field = useField<Field>()
   const basePrefixCls = usePrefixCls()
   const prefixCls = usePrefixCls('formily-editable')
+  const [wrapSSR, hashId] = useStyle(prefixCls)
   const ref = useRef<boolean>()
-  const innerRef = useRef<HTMLDivElement>()
+  const innerRef = useRef<HTMLDivElement>(null)
   const recover = () => {
     if (ref.current && !field?.errors?.length) {
       setEditable(false)
@@ -104,14 +97,15 @@ export const Editable: ComposedEditable = observer((props) => {
 
   const onClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const target = e.target as HTMLElement
-    const close = innerRef.current.querySelector(`.${prefixCls}-close-btn`)
+    const close =
+      innerRef.current?.querySelector(`.${prefixCls}-close-btn`) || null
     if (target?.contains(close) || close?.contains(target)) {
       recover()
     } else if (!ref.current) {
       setTimeout(() => {
         setEditable(true)
         setTimeout(() => {
-          innerRef.current.querySelector('input')?.focus()
+          innerRef.current?.querySelector('input')?.focus()
         })
       })
     }
@@ -119,8 +113,8 @@ export const Editable: ComposedEditable = observer((props) => {
 
   ref.current = editable
 
-  return (
-    <div className={prefixCls} ref={innerRef} onClick={onClick}>
+  return wrapSSR(
+    <div className={cls(prefixCls, hashId)} ref={innerRef} onClick={onClick}>
       <div className={`${prefixCls}-content`}>
         <BaseItem {...props} {...itemProps}>
           {props.children}
@@ -132,11 +126,12 @@ export const Editable: ComposedEditable = observer((props) => {
   )
 })
 
-Editable.Popover = observer((props) => {
+const Popover = observer((props: PopoverProps) => {
   const field = useField<Field>()
   const pattern = useParentPattern()
-  const [visible, setVisible] = useState(false)
+  const [open, setOpen] = useState(false)
   const prefixCls = usePrefixCls('formily-editable')
+  const [wrapSSR, hashId] = useStyle(prefixCls)
   const closePopover = async () => {
     try {
       await field.form.validate(`${field.address}.*`)
@@ -146,23 +141,23 @@ Editable.Popover = observer((props) => {
         address: `${field.address}.*`,
       })
       if (errors?.length) return
-      setVisible(false)
+      setOpen(false)
     }
   }
   const openPopover = () => {
-    setVisible(true)
+    setOpen(true)
   }
-  return (
-    <Popover
+  return wrapSSR(
+    <AntdPopover
       {...props}
       title={props.title || field.title}
-      visible={visible}
-      className={cls(prefixCls, props.className)}
+      open={open}
+      className={cls(prefixCls, hashId, props.className)}
       content={props.children}
       trigger="click"
       destroyTooltipOnHide
-      onVisibleChange={(visible) => {
-        if (visible) {
+      onOpenChange={(open) => {
+        if (open) {
           openPopover()
         } else {
           closePopover()
@@ -184,8 +179,9 @@ Editable.Popover = observer((props) => {
           </div>
         </BaseItem>
       </div>
-    </Popover>
+    </AntdPopover>
   )
 })
+export const Editable = Object.assign(InternalEditable, { Popover })
 
 export default Editable

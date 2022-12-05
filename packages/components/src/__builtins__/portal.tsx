@@ -1,7 +1,8 @@
-import React, { Fragment } from 'react'
-import ReactDOM, { createPortal } from 'react-dom'
+import { Observer, ReactFC } from '@formily/react'
 import { observable } from '@formily/reactive'
-import { Observer } from '@formily/react'
+import React, { Fragment } from 'react'
+import { createPortal } from 'react-dom'
+import { render as reactRender, unmount as reactUnmount } from './render'
 export interface IPortalProps {
   id?: string | symbol
 }
@@ -9,7 +10,7 @@ export interface IPortalProps {
 const PortalMap = observable(new Map<string | symbol, React.ReactNode>())
 
 export const createPortalProvider = (id: string | symbol) => {
-  const Portal = (props: React.PropsWithChildren<IPortalProps>) => {
+  const Portal: ReactFC<IPortalProps> = (props) => {
     if (props.id && !PortalMap.has(props.id)) {
       PortalMap.set(props.id, null)
     }
@@ -19,10 +20,10 @@ export const createPortalProvider = (id: string | symbol) => {
         {props.children}
         <Observer>
           {() => {
-            if (!props.id) return null
+            if (!props.id) return <></>
             const portal = PortalMap.get(props.id)
             if (portal) return createPortal(portal, document.body)
-            return null
+            return <></>
           }}
         </Observer>
       </Fragment>
@@ -42,7 +43,7 @@ export function createPortalRoot<T extends React.ReactNode>(
     if (PortalMap.has(id)) {
       PortalMap.set(id, renderer?.())
     } else if (host) {
-      ReactDOM.render(<Fragment>{renderer?.()}</Fragment>, host)
+      reactRender(<Fragment>{renderer?.()}</Fragment>, host)
     }
   }
 
@@ -51,8 +52,10 @@ export function createPortalRoot<T extends React.ReactNode>(
       PortalMap.set(id, null)
     }
     if (host) {
-      ReactDOM.unmountComponentAtNode(host)
-      host.parentNode?.removeChild(host)
+      const unmountResult = reactUnmount(host)
+      if (unmountResult && host.parentNode) {
+        host.parentNode?.removeChild(host)
+      }
     }
   }
 

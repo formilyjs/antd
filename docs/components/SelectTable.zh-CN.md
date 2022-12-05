@@ -281,9 +281,6 @@ export default () => {
           name="selectTable3"
           x-decorator="FormItem"
           x-component="SelectTable"
-          x-component-props={{
-            hasBorder: false,
-          }}
           default={['1', '3']}
           enum={[
             { key: '1', name: '标题1', description: '描述1' },
@@ -593,9 +590,45 @@ export default () => (
 )
 ```
 
+## 纯 JSX 案例
+
+```tsx
+import React from 'react'
+import { FormItem, FormButtonGroup, Submit, SelectTable } from '@formily/antd'
+import { createForm } from '@formily/core'
+import { FormProvider, Field } from '@formily/react'
+
+const form = createForm()
+
+export default () => (
+  <FormProvider form={form}>
+    <Field
+      name="SelectTable"
+      dataSource={[
+        { key: '1', name: '标题1', description: '描述1' },
+        { key: '2', name: '标题2', description: '描述2' },
+      ]}
+      decorator={[FormItem]}
+      component={[
+        SelectTable,
+        {
+          columns: [
+            { dataIndex: 'name', title: '标题' },
+            { dataIndex: 'description', title: '描述' },
+          ],
+        },
+      ]}
+    />
+    <FormButtonGroup>
+      <Submit onSubmit={console.log}>提交</Submit>
+    </FormButtonGroup>
+  </FormProvider>
+)
+```
+
 ## API
 
-### SelectTable
+### SelectTable API
 
 | 属性名        | 类型                                         | 描述                                                                                                                                 | 默认值       |
 | ------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------ |
@@ -609,7 +642,7 @@ export default () => (
 | filterSort    | (optionA, optionB) => number                 | 搜索时对筛选结果项的排序函数, 类似 Array.sort 里的 compareFunction                                                                   | -            |
 | onSearch      | 文本框值变化时回调                           | (inputValue) => void                                                                                                                 | -            |
 
-参考 https://ant.design/components/table-cn/
+参考 <https://ant.design/components/table-cn/>
 
 ### rowSelection
 
@@ -617,8 +650,8 @@ export default () => (
 | ------------- | ------- | ------------------------------------------------------------ | ------ |
 | checkStrictly | boolean | checkable 状态下节点选择完全受控（父子数据选中状态不再关联） | true   |
 
-参考 https://ant.design/components/table/#rowSelection
+参考 <https://ant.design/components/table/#rowSelection>
 
 ### SelectTable.Column
 
-参考 https://ant.design/components/table-cn/ Table.Column 属性
+参考 <https://ant.design/components/table-cn/> Table.Column 属性

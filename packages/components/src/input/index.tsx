@@ -1,15 +1,11 @@
-import React from 'react'
-import { connect, mapProps, mapReadPretty } from '@formily/react'
-import { Input as AntdInput } from 'antd'
-import { InputProps, TextAreaProps } from 'antd/lib/input'
-import { PreviewText } from '../preview-text'
 import { LoadingOutlined } from '@ant-design/icons'
+import { connect, mapProps, mapReadPretty, ReactFC } from '@formily/react'
+import { Input as AntdInput } from 'antd'
+import type { InputProps } from 'antd/es/input'
+import React from 'react'
+import { PreviewText } from '../preview-text'
 
-type ComposedInput = React.FC<InputProps> & {
-  TextArea?: React.FC<TextAreaProps>
-}
-
-export const Input: ComposedInput = connect(
+const InternalInput: ReactFC<InputProps> = connect(
   AntdInput,
   mapProps((props, field) => {
     return {
@@ -27,7 +23,10 @@ export const Input: ComposedInput = connect(
   }),
   mapReadPretty(PreviewText.Input)
 )
+const TextArea = connect(AntdInput.TextArea, mapReadPretty(PreviewText.Input))
 
-Input.TextArea = connect(AntdInput.TextArea, mapReadPretty(PreviewText.Input))
+export const Input = Object.assign(InternalInput, {
+  TextArea,
+})
 
 export default Input

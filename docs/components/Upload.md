@@ -330,4 +330,4 @@ export default () => (
 
 ## API
 
-Reference https://ant.design/components/upload-cn/
+Reference <https://ant.design/components/upload-cn/>

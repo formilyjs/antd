@@ -289,7 +289,7 @@ export default () => {
 
 ## API
 
-### FormButtonGroup
+### FormButtonGroup API
 
 > 该组件主要用来处理按钮组间隙
 

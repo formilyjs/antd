@@ -51,6 +51,7 @@ export default () => {
               x-component="Input"
             />
             <SchemaField.Void x-component="ArrayCards.Remove" />
+            <SchemaField.Void x-component="ArrayCards.Copy" />
             <SchemaField.Void x-component="ArrayCards.MoveUp" />
             <SchemaField.Void x-component="ArrayCards.MoveDown" />
           </SchemaField.Void>
@@ -436,9 +437,9 @@ export default () => {
 
 ## API
 
-### ArrayCards
+### ArrayCards API
 
-Reference https://ant.design/components/card-cn/
+Reference <https://ant.design/components/card-cn/>
 
 ### ArrayCards.Addition
 
@@ -452,7 +453,22 @@ Extended attributes
 | method        | `'push' \|'unshift'` | add method    | `'push'`      |
 | defaultValue  | `any`                | Default value |               |
 
-Other references https://ant.design/components/button-cn/
+Other references <https://ant.design/components/button-cn/>
+
+Note: The title attribute can receive the title mapping in the Field model, that is, uploading the title in the Field is also effective
+
+### ArrayCards.Copy
+
+> Copy button
+
+Extended attributes
+
+| Property name | Type                 | Description | Default value |
+| ------------- | -------------------- | ----------- | ------------- |
+| title         | ReactText            | Copywriting |               |
+| method        | `'push' \|'unshift'` | Copy method | `'push'`      |
+
+Other references <https://ant.design/components/button-cn/>
 
 Note: The title attribute can receive the title mapping in the Field model, that is, uploading the title in the Field is also effective
 
@@ -464,7 +480,7 @@ Note: The title attribute can receive the title mapping in the Field model, that
 | ------------- | --------- | ----------- | ------------- |
 | title         | ReactText | Copywriting |               |
 
-Other references https://ant.design/components/icon-cn/
+Other references <https://ant.design/components/icon-cn/>
 
 Note: The title attribute can receive the title mapping in the Field model, that is, uploading the title in the Field is also effective
 
@@ -476,7 +492,7 @@ Note: The title attribute can receive the title mapping in the Field model, that
 | ------------- | --------- | ----------- | ------------- |
 | title         | ReactText | Copywriting |               |
 
-Other references https://ant.design/components/icon-cn/
+Other references <https://ant.design/components/icon-cn/>
 
 Note: The title attribute can receive the title mapping in the Field model, that is, uploading the title in the Field is also effective
 
@@ -488,7 +504,7 @@ Note: The title attribute can receive the title mapping in the Field model, that
 | ------------- | --------- | ----------- | ------------- |
 | title         | ReactText | Copywriting |               |
 
-Other references https://ant.design/components/icon-cn/
+Other references <https://ant.design/components/icon-cn/>
 
 Note: The title attribute can receive the title mapping in the Field model, that is, uploading the title in the Field is also effective
 

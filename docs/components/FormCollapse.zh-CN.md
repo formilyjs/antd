@@ -232,17 +232,17 @@ export default () => {
 
 ## API
 
-### FormCollapse
+### FormCollapse API
 
 | 属性名       | 类型          | 描述                                                       | 默认值 |
 | ------------ | ------------- | ---------------------------------------------------------- | ------ |
 | formCollapse | IFormCollapse | 传入通过 createFormCollapse/useFormCollapse 创建出来的模型 |        |
 
-其余参考 https://ant.design/components/collapse-cn/
+其余参考 <https://ant.design/components/collapse-cn/>
 
 ### FormCollapse.CollapsePanel
 
-参考 https://ant.design/components/collapse-cn/
+参考 <https://ant.design/components/collapse-cn/>
 
 ### FormCollapse.createFormCollapse
 

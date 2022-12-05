@@ -1,10 +1,11 @@
-import React from 'react'
-import { connect, mapReadPretty, mapProps } from '@formily/react'
+import { LoadingOutlined } from '@ant-design/icons'
+import { connect, mapProps, mapReadPretty, ReactFC } from '@formily/react'
 import { Select as AntdSelect } from 'antd'
 import { SelectProps } from 'antd/lib/select'
+import React from 'react'
 import { PreviewText } from '../preview-text'
-import { LoadingOutlined } from '@ant-design/icons'
-export const Select: React.FC<SelectProps<any>> = connect(
+
+export const Select: ReactFC<SelectProps<any, any>> = connect(
   AntdSelect,
   mapProps(
     {

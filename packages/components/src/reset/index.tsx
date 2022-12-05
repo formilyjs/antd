@@ -1,8 +1,8 @@
-import React from 'react'
-import { Button } from 'antd'
-import { ButtonProps } from 'antd/lib/button'
 import { IFieldResetOptions, IFormFeedback } from '@formily/core'
 import { useParentForm } from '@formily/react'
+import { isFn } from '@formily/shared'
+import { Button, ButtonProps } from 'antd'
+import React from 'react'
 
 export interface IResetProps extends IFieldResetOptions, ButtonProps {
   onClick?: (e: React.MouseEvent<Element, MouseEvent>) => any
@@ -10,7 +10,7 @@ export interface IResetProps extends IFieldResetOptions, ButtonProps {
   onResetValidateFailed?: (feedbacks: IFormFeedback[]) => void
 }
 
-export const Reset: React.FC<IResetProps> = ({
+export const Reset: React.FC<React.PropsWithChildren<IResetProps>> = ({
   forceClear,
   validate,
   onResetValidateSuccess,
@@ -22,7 +22,7 @@ export const Reset: React.FC<IResetProps> = ({
     <Button
       {...props}
       onClick={(e) => {
-        if (props.onClick) {
+        if (isFn(props.onClick)) {
           if (props.onClick(e) === false) return
         }
         form

@@ -1,124 +1,36 @@
-import React, { useEffect, useRef, useState } from 'react'
-import cls from 'classnames'
-import { usePrefixCls, pickDataProps } from '../__builtins__'
-import { isVoidField } from '@formily/core'
-import { connect, mapProps } from '@formily/react'
-import { useFormLayout, FormLayoutShallowContext } from '../form-layout'
-import { Tooltip, Popover } from 'antd'
 import {
-  QuestionCircleOutlined,
-  CloseCircleOutlined,
   CheckCircleOutlined,
+  CloseCircleOutlined,
   ExclamationCircleOutlined,
 } from '@ant-design/icons'
+import { isVoidField } from '@formily/core'
+import { connect, mapProps, ReactFC } from '@formily/react'
+import { Popover, Tooltip } from 'antd'
+import cls from 'classnames'
+import React, { useState } from 'react'
+import { FormLayoutShallowContext } from '../form-layout'
+import { pickDataProps, usePrefixCls } from '../__builtins__'
+import { useFormItemLayout, useOverflow } from './hooks'
+import useStyle from './style'
+import { IFormItemProps } from './types'
 
-export interface IFormItemProps {
-  className?: string
-  style?: React.CSSProperties
-  prefixCls?: string
-  label?: React.ReactNode
-  colon?: boolean
-  tooltip?: React.ReactNode
-  tooltipIcon?: React.ReactNode
-  layout?: 'vertical' | 'horizontal' | 'inline'
-  tooltipLayout?: 'icon' | 'text'
-  labelStyle?: React.CSSProperties
-  labelAlign?: 'left' | 'right'
-  labelWrap?: boolean
-  labelWidth?: number | string
-  wrapperWidth?: number | string
-  labelCol?: number
-  wrapperCol?: number
-  wrapperAlign?: 'left' | 'right'
-  wrapperWrap?: boolean
-  wrapperStyle?: React.CSSProperties
-  fullness?: boolean
-  addonBefore?: React.ReactNode
-  addonAfter?: React.ReactNode
-  size?: 'small' | 'default' | 'large'
-  inset?: boolean
-  extra?: React.ReactNode
-  feedbackText?: React.ReactNode
-  feedbackLayout?: 'loose' | 'terse' | 'popover' | 'none' | (string & {})
-  feedbackStatus?: 'error' | 'warning' | 'success' | 'pending' | (string & {})
-  feedbackIcon?: React.ReactNode
-  getPopupContainer?: (node: HTMLElement) => HTMLElement
-  asterisk?: boolean
-  gridSpan?: number
-  bordered?: boolean
-}
+export * from './hooks'
+export * from './types'
 
-type ComposeFormItem = React.FC<IFormItemProps> & {
-  BaseItem?: React.FC<IFormItemProps>
-}
-
-const useFormItemLayout = (props: IFormItemProps) => {
-  const layout = useFormLayout()
-  return {
-    ...props,
-    layout: props.layout ?? layout.layout ?? 'horizontal',
-    colon: props.colon ?? layout.colon,
-    labelAlign:
-      layout.layout === 'vertical'
-        ? props.labelAlign ?? layout.labelAlign ?? 'left'
-        : props.labelAlign ?? layout.labelAlign ?? 'right',
-    labelWrap: props.labelWrap ?? layout.labelWrap,
-    labelWidth: props.labelWidth ?? layout.labelWidth,
-    wrapperWidth: props.wrapperWidth ?? layout.wrapperWidth,
-    labelCol: props.labelCol ?? layout.labelCol,
-    wrapperCol: props.wrapperCol ?? layout.wrapperCol,
-    wrapperAlign: props.wrapperAlign ?? layout.wrapperAlign,
-    wrapperWrap: props.wrapperWrap ?? layout.wrapperWrap,
-    fullness: props.fullness ?? layout.fullness,
-    size: props.size ?? layout.size,
-    inset: props.inset ?? layout.inset,
-    asterisk: props.asterisk,
-    bordered: props.bordered ?? layout.bordered,
-    feedbackIcon: props.feedbackIcon,
-    feedbackLayout: props.feedbackLayout ?? layout.feedbackLayout ?? 'loose',
-    tooltipLayout: props.tooltipLayout ?? layout.tooltipLayout ?? 'icon',
-    tooltipIcon: props.tooltipIcon ?? layout.tooltipIcon ?? (
-      <QuestionCircleOutlined />
-    ),
-  }
-}
-
-function useOverflow<
-  Container extends HTMLElement,
-  Content extends HTMLElement
->() {
-  const [overflow, setOverflow] = useState(false)
-  const containerRef = useRef<Container>()
-  const contentRef = useRef<Content>()
-  const layout = useFormLayout()
-  const labelCol = JSON.stringify(layout.labelCol)
-
-  useEffect(() => {
-    if (containerRef.current && contentRef.current) {
-      const contentWidth = contentRef.current.getBoundingClientRect().width
-      const containerWidth = containerRef.current.getBoundingClientRect().width
-      if (contentWidth && containerWidth && containerWidth < contentWidth) {
-        if (!overflow) setOverflow(true)
-      } else {
-        if (overflow) setOverflow(false)
-      }
-    }
-  }, [labelCol])
-
-  return {
-    overflow,
-    containerRef,
-    contentRef,
-  }
+type ComposeFormItem = ReactFC<IFormItemProps> & {
+  BaseItem: ReactFC<IFormItemProps>
 }
 
 const ICON_MAP = {
   error: <CloseCircleOutlined />,
   success: <CheckCircleOutlined />,
   warning: <ExclamationCircleOutlined />,
-}
+} as const
 
-export const BaseItem: React.FC<IFormItemProps> = ({ children, ...props }) => {
+export const BaseItem: React.FC<React.PropsWithChildren<IFormItemProps>> = ({
+  children,
+  ...props
+}) => {
   const [active, setActive] = useState(false)
   const formLayout = useFormItemLayout(props)
   const { containerRef, contentRef, overflow } = useOverflow<
@@ -157,6 +69,8 @@ export const BaseItem: React.FC<IFormItemProps> = ({ children, ...props }) => {
   } = formLayout
   const labelStyle = { ...formLayout.labelStyle }
   const wrapperStyle = { ...formLayout.wrapperStyle }
+  const prefixCls = usePrefixCls('formily-item', props)
+  const [wrapSSR, hashId] = useStyle(prefixCls)
   // 固定宽度
   let enableCol = false
   if (labelWidth || wrapperWidth) {
@@ -176,7 +90,6 @@ export const BaseItem: React.FC<IFormItemProps> = ({ children, ...props }) => {
     }
   }
 
-  const prefixCls = usePrefixCls('formily-item', props)
   const formatChildren =
     feedbackLayout === 'popover' ? (
       <Popover
@@ -189,10 +102,10 @@ export const BaseItem: React.FC<IFormItemProps> = ({ children, ...props }) => {
               [`${prefixCls}-help`]: true,
             })}
           >
-            {ICON_MAP[feedbackStatus]} {feedbackText}
+            {feedbackStatus ? ICON_MAP[feedbackStatus] : null} {feedbackText}
           </div>
         }
-        visible={!!feedbackText}
+        open={!!feedbackText}
         getPopupContainer={getPopupContainer}
       >
         {children}
@@ -272,7 +185,7 @@ export const BaseItem: React.FC<IFormItemProps> = ({ children, ...props }) => {
     )
   }
 
-  return (
+  return wrapSSR(
     <div
       {...pickDataProps(props)}
       style={{
@@ -280,25 +193,28 @@ export const BaseItem: React.FC<IFormItemProps> = ({ children, ...props }) => {
         ...gridStyles,
       }}
       data-grid-span={props.gridSpan}
-      className={cls({
-        [`${prefixCls}`]: true,
-        [`${prefixCls}-layout-${layout}`]: true,
-        [`${prefixCls}-${feedbackStatus}`]: !!feedbackStatus,
-        [`${prefixCls}-feedback-has-text`]: !!feedbackText,
-        [`${prefixCls}-size-${size}`]: !!size,
-        [`${prefixCls}-feedback-layout-${feedbackLayout}`]: !!feedbackLayout,
-        [`${prefixCls}-fullness`]: !!fullness || !!inset || !!feedbackIcon,
-        [`${prefixCls}-inset`]: !!inset,
-        [`${prefixCls}-active`]: active,
-        [`${prefixCls}-inset-active`]: !!inset && active,
-        [`${prefixCls}-label-align-${labelAlign}`]: true,
-        [`${prefixCls}-control-align-${wrapperAlign}`]: true,
-        [`${prefixCls}-label-wrap`]: !!labelWrap,
-        [`${prefixCls}-control-wrap`]: !!wrapperWrap,
-        [`${prefixCls}-bordered-none`]:
-          bordered === false || !!inset || !!feedbackIcon,
-        [props.className]: !!props.className,
-      })}
+      className={cls(
+        props.className,
+        {
+          [`${prefixCls}`]: true,
+          [`${prefixCls}-layout-${layout}`]: true,
+          [`${prefixCls}-${feedbackStatus}`]: !!feedbackStatus,
+          [`${prefixCls}-feedback-has-text`]: !!feedbackText,
+          [`${prefixCls}-size-${size}`]: !!size,
+          [`${prefixCls}-feedback-layout-${feedbackLayout}`]: !!feedbackLayout,
+          [`${prefixCls}-fullness`]: !!fullness || !!inset || !!feedbackIcon,
+          [`${prefixCls}-inset`]: !!inset,
+          [`${prefixCls}-active`]: active,
+          [`${prefixCls}-inset-active`]: !!inset && active,
+          [`${prefixCls}-label-align-${labelAlign}`]: true,
+          [`${prefixCls}-control-align-${wrapperAlign}`]: true,
+          [`${prefixCls}-label-wrap`]: !!labelWrap,
+          [`${prefixCls}-control-wrap`]: !!wrapperWrap,
+          [`${prefixCls}-bordered-none`]:
+            bordered === false || !!inset || !!feedbackIcon,
+        },
+        hashId
+      )}
       onFocus={() => {
         if (feedbackIcon || inset) {
           setActive(true)
@@ -332,7 +248,7 @@ export const BaseItem: React.FC<IFormItemProps> = ({ children, ...props }) => {
                 !!feedbackIcon,
             })}
           >
-            <FormLayoutShallowContext.Provider value={undefined}>
+            <FormLayoutShallowContext.Provider value={{}}>
               {formatChildren}
             </FormLayoutShallowContext.Provider>
             {feedbackIcon && (
@@ -366,54 +282,57 @@ export const BaseItem: React.FC<IFormItemProps> = ({ children, ...props }) => {
 }
 
 // 适配
-export const FormItem: ComposeFormItem = connect(
-  BaseItem,
-  mapProps((props, field) => {
-    if (isVoidField(field))
+export const FormItem: ComposeFormItem = Object.assign(
+  connect(
+    BaseItem,
+    mapProps((props, field) => {
+      if (isVoidField(field))
+        return {
+          label: field.title || props.label,
+          asterisk: props.asterisk,
+          extra: props.extra || field.description,
+        }
+      if (!field) return props
+      const takeFeedbackStatus = () => {
+        if (field.validating) return 'pending'
+        return field.decoratorProps.feedbackStatus || field.validateStatus
+      }
+      const takeMessage = () => {
+        const split = (messages: any[]) => {
+          return messages.reduce((buf, text, index) => {
+            if (!text) return buf
+            return index < messages.length - 1
+              ? buf.concat([text, ', '])
+              : buf.concat([text])
+          }, [])
+        }
+        if (field.validating) return
+        if (props.feedbackText) return props.feedbackText
+        if (field.selfErrors.length) return split(field.selfErrors)
+        if (field.selfWarnings.length) return split(field.selfWarnings)
+        if (field.selfSuccesses.length) return split(field.selfSuccesses)
+      }
+      const takeAsterisk = () => {
+        if (field.required && field.pattern !== 'readPretty') {
+          return true
+        }
+        if ('asterisk' in props) {
+          return props.asterisk
+        }
+        return false
+      }
       return {
-        label: field.title || props.label,
-        asterisk: props.asterisk,
+        label: props.label || field.title,
+        feedbackStatus: takeFeedbackStatus(),
+        feedbackText: takeMessage(),
+        asterisk: takeAsterisk(),
         extra: props.extra || field.description,
       }
-    if (!field) return props
-    const takeFeedbackStatus = () => {
-      if (field.validating) return 'pending'
-      return field.decoratorProps.feedbackStatus || field.validateStatus
-    }
-    const takeMessage = () => {
-      const split = (messages: any[]) => {
-        return messages.reduce((buf, text, index) => {
-          if (!text) return buf
-          return index < messages.length - 1
-            ? buf.concat([text, ', '])
-            : buf.concat([text])
-        }, [])
-      }
-      if (field.validating) return
-      if (props.feedbackText) return props.feedbackText
-      if (field.selfErrors.length) return split(field.selfErrors)
-      if (field.selfWarnings.length) return split(field.selfWarnings)
-      if (field.selfSuccesses.length) return split(field.selfSuccesses)
-    }
-    const takeAsterisk = () => {
-      if (field.required && field.pattern !== 'readPretty') {
-        return true
-      }
-      if ('asterisk' in props) {
-        return props.asterisk
-      }
-      return false
-    }
-    return {
-      label: props.label || field.title,
-      feedbackStatus: takeFeedbackStatus(),
-      feedbackText: takeMessage(),
-      asterisk: takeAsterisk(),
-      extra: props.extra || field.description,
-    }
-  })
+    })
+  ),
+  {
+    BaseItem,
+  }
 )
-
-FormItem.BaseItem = BaseItem
 
 export default FormItem

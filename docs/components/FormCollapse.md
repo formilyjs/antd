@@ -232,17 +232,17 @@ export default () => {
 
 ## API
 
-### FormCollapse
+### FormCollapse API
 
 | Property name | Type          | Description                                                     | Default value |
 | ------------- | ------------- | --------------------------------------------------------------- | ------------- |
 | formCollapse  | IFormCollapse | Pass in the model created by createFormCollapse/useFormCollapse |               |
 
-Other references https://ant.design/components/collapse-cn/
+Other references <https://ant.design/components/collapse-cn/>
 
 ### FormCollapse.CollapsePanel
 
-Reference https://ant.design/components/collapse-cn/
+Reference <https://ant.design/components/collapse-cn/>
 
 ### FormCollapse.createFormCollapse
 

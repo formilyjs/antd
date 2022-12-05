@@ -289,7 +289,7 @@ export default () => {
 
 ## API
 
-### FormButtonGroup
+### FormButtonGroup API
 
 > This component is mainly used to handle the button group gap
 

@@ -1,12 +1,9 @@
-import moment from 'moment'
 import { connect, mapProps, mapReadPretty } from '@formily/react'
 import { DatePicker as AntdDatePicker } from 'antd'
-import {
-  DatePickerProps as AntdDatePickerProps,
-  RangePickerProps,
-} from 'antd/lib/date-picker'
+import { DatePickerProps as AntdDatePickerProps } from 'antd/es/date-picker'
+import dayjs from 'dayjs'
 import { PreviewText } from '../preview-text'
-import { formatMomentValue, momentable } from '../__builtins__'
+import { dayjsable, formatDayjsValue } from '../__builtins__'
 
 type DatePickerProps<PickerProps> = Exclude<
   PickerProps,
@@ -14,10 +11,6 @@ type DatePickerProps<PickerProps> = Exclude<
 > & {
   value: string
   onChange: (value: string | string[]) => void
-}
-
-type ComposedDatePicker = React.FC<AntdDatePickerProps> & {
-  RangePicker?: React.FC<RangePickerProps>
 }
 
 const mapDateFormat = function () {
@@ -39,26 +32,28 @@ const mapDateFormat = function () {
     return {
       ...props,
       format: format,
-      value: momentable(props.value, format === 'gggg-wo' ? 'gggg-ww' : format),
-      onChange: (value: moment.Moment | moment.Moment[]) => {
+      value: dayjsable(props.value, format === 'gggg-wo' ? 'gggg-ww' : format),
+      onChange: (value: dayjs.Dayjs | dayjs.Dayjs[]) => {
         if (onChange) {
-          onChange(formatMomentValue(value, format))
+          onChange(formatDayjsValue(value, format))
         }
       },
     }
   }
 }
 
-export const DatePicker: ComposedDatePicker = connect(
+const InternalDatePicker = connect(
   AntdDatePicker,
   mapProps(mapDateFormat()),
   mapReadPretty(PreviewText.DatePicker)
 )
-
-DatePicker.RangePicker = connect(
+const RangePicker = connect(
   AntdDatePicker.RangePicker,
   mapProps(mapDateFormat()),
   mapReadPretty(PreviewText.DateRangePicker)
 )
+export const DatePicker = Object.assign(InternalDatePicker, {
+  RangePicker,
+})
 
 export default DatePicker

@@ -1,32 +1,54 @@
-import React, { useState, useMemo } from 'react'
-import { observer, useFieldSchema, useField, Schema } from '@formily/react'
-import cls from 'classnames'
+import { FieldDisplayTypes, GeneralField } from '@formily/core'
+import {
+  observer,
+  ReactFC,
+  RecursionField,
+  Schema,
+  useField,
+  useFieldSchema,
+} from '@formily/react'
 import { isArr, isBool, isFn } from '@formily/shared'
 import { Input, Table } from 'antd'
-import { TableProps, ColumnProps } from 'antd/lib/table'
+import { ColumnsType } from 'antd/es/table'
 import { SearchProps } from 'antd/lib/input'
-import { useFilterOptions } from './useFilterOptions'
-import { useFlatOptions } from './useFlatOptions'
-import { useSize } from './useSize'
-import { useCheckSlackly } from './useCheckSlackly'
-import { getUISelected, getOutputData } from './utils'
+import { ColumnProps, TableProps } from 'antd/lib/table'
+import cls from 'classnames'
+import React, { useMemo, useState } from 'react'
 import { usePrefixCls } from '../__builtins__'
+import {
+  getIndeterminate,
+  useCheckSlackly,
+  useFilterOptions,
+  useFlatOptions,
+  useSize,
+  useTitleAddon,
+} from './hooks'
+import useStyle from './style'
+import { getOutputData, getUISelected } from './utils'
 
 const { Search } = Input
+
+interface ObservableColumnSource {
+  field?: GeneralField
+  columnProps: ColumnProps<any>
+  schema: Schema
+  display: FieldDisplayTypes
+  name: string
+}
 
 type IFilterOption = boolean | ((option: any, keyword: string) => boolean)
 
 type IFilterSort = (optionA: any, optionB: any) => number
 
 export interface ISelectTableColumnProps extends ColumnProps<any> {
-  key: React.ReactText
+  key: string | number
 }
 
 export interface ISelectTableProps extends TableProps<any> {
   mode?: 'multiple' | 'single'
   dataSource?: any[]
   optionAsValue?: boolean
-  valueType: 'all' | 'parent' | 'child' | 'path'
+  valueType?: 'all' | 'parent' | 'child' | 'path'
   showSearch?: boolean
   searchProps?: SearchProps
   primaryKey?: string | ((record: any) => string)
@@ -37,32 +59,78 @@ export interface ISelectTableProps extends TableProps<any> {
   value?: any
 }
 
-type ComposedSelectTable = React.FC<ISelectTableProps> & {
-  Column?: React.FC<ISelectTableColumnProps>
-}
-
 const isColumnComponent = (schema: Schema) => {
   return schema['x-component']?.indexOf('Column') > -1
 }
 
-const useColumns = () => {
+const useSources = () => {
+  const arrayField = useField()
   const schema = useFieldSchema()
-  const columns: ISelectTableColumnProps[] = []
+  const parseSources = (schema: Schema): ObservableColumnSource[] => {
+    if (isColumnComponent(schema)) {
+      if (!schema['x-component-props']?.['dataIndex'] && !schema['name'])
+        return []
+      const name = schema['x-component-props']?.['dataIndex'] || schema['name']
+      const field = arrayField.query(arrayField.address.concat(name)).take()
+      const columnProps =
+        field?.component?.[1] || schema['x-component-props'] || {}
+      const display = field?.display || schema['x-display']
+      return [
+        {
+          name,
+          display,
+          field,
+          schema,
+          columnProps: {
+            title: field?.title || columnProps.title,
+            ...columnProps,
+          },
+        },
+      ]
+    } else if (schema.properties) {
+      return schema.reduceProperties<
+        ObservableColumnSource[],
+        ObservableColumnSource[]
+      >((buf, schema) => {
+        return buf.concat(parseSources(schema))
+      }, [])
+    }
+    return []
+  }
+
+  const parseArrayItems = (schema: Schema['items']) => {
+    if (!schema) return []
+    const sources: ObservableColumnSource[] = []
+    const items = isArr(schema) ? schema : [schema]
+    return items.reduce((columns, schema) => {
+      const item = parseSources(schema)
+      if (item) {
+        return columns.concat(item)
+      }
+      return columns
+    }, sources)
+  }
+
   const validSchema = (
-    schema.type === 'array' && schema?.items ? schema.items : schema
+    schema?.type === 'array' && schema?.items ? schema.items : schema
   ) as Schema
 
-  validSchema?.mapProperties((schema, name) => {
-    if (isColumnComponent(schema)) {
-      const props = schema?.['x-component-props']
-      columns.push({
-        ...props,
-        title: props?.title || schema?.title,
-        dataIndex: props?.dataIndex || name,
+  return parseArrayItems(validSchema)
+}
+
+const useColumns = (sources: ObservableColumnSource[]): ColumnsType<any> => {
+  return sources.reduce<ColumnsType<any>>(
+    (buf, { name, columnProps, schema, display }, key) => {
+      if (display !== 'visible') return buf
+      if (!isColumnComponent(schema)) return buf
+      return buf.concat({
+        ...columnProps,
+        key,
+        dataIndex: name,
       })
-    }
-  })
-  return columns
+    },
+    []
+  )
 }
 
 const addPrimaryKey = (dataSource, rowKey, primaryKey) =>
@@ -77,7 +145,7 @@ const addPrimaryKey = (dataSource, rowKey, primaryKey) =>
     }
   })
 
-export const SelectTable: ComposedSelectTable = observer((props) => {
+const InternalSelectTable: ReactFC<ISelectTableProps> = observer((props) => {
   const {
     mode,
     dataSource: propsDataSource,
@@ -96,6 +164,7 @@ export const SelectTable: ComposedSelectTable = observer((props) => {
     ...otherTableProps
   } = props
   const prefixCls = usePrefixCls('formily-select-table', props)
+  const [wrapSSR, hashId] = useStyle(prefixCls)
   const [searchValue, setSearchValue] = useState<string>()
   const field = useField() as any
   const loading = isBool(props.loading) ? props.loading : field.loading
@@ -108,14 +177,49 @@ export const SelectTable: ComposedSelectTable = observer((props) => {
     props?.size
   )
   const primaryKey = isFn(rowKey) ? '__formily_key__' : rowKey
-  const columns = useColumns()
+  const sources = useSources()
+  const columns = useColumns(sources)
 
   // dataSource
   let dataSource = isArr(propsDataSource) ? propsDataSource : field.dataSource
   dataSource = isFn(rowKey)
     ? addPrimaryKey(dataSource, rowKey, primaryKey)
     : dataSource
+
+  // Filter dataSource By Search
+  const filteredDataSource = useFilterOptions(
+    dataSource,
+    searchValue,
+    filterOption,
+    rowSelection?.checkStrictly
+  )
+
+  // Order dataSource By filterSort
+  const orderedFilteredDataSource = useMemo(() => {
+    if (!filterSort) {
+      return filteredDataSource
+    }
+    return [...filteredDataSource].sort((a, b) => filterSort(a, b))
+  }, [filteredDataSource, filterSort])
+
   const flatDataSource = useFlatOptions(dataSource)
+  const flatFilteredDataSource = useFlatOptions(filteredDataSource)
+
+  // 分页或异步查询时，dataSource会丢失已选数据，配置optionAsValue则无法获取已选数据，需要进行合并
+  const getWholeDataSource = () => {
+    if (optionAsValue && mode === 'multiple' && value?.length) {
+      const map = new Map()
+      const arr = [...flatDataSource, ...value]
+      arr.forEach((item) => {
+        if (!primaryKey) return
+        if (!map.has(item[primaryKey])) {
+          map.set(item[primaryKey], item)
+        }
+      })
+      return [...map.values()]
+    }
+    return flatDataSource
+  }
 
   // selected keys for Table UI
   const selected = getUISelected(
@@ -129,43 +233,30 @@ export const SelectTable: ComposedSelectTable = observer((props) => {
     rowKey
   )
 
-  // Filter dataSource By Search
-  const filteredDataSource = useFilterOptions(
-    dataSource,
-    searchValue,
-    filterOption
-  )
-
-  // Order dataSource By filterSort
-  const orderedFilteredDataSource = useMemo(() => {
-    if (!filterSort) {
-      return filteredDataSource
-    }
-    return [...filteredDataSource].sort((a, b) => filterSort(a, b))
-  }, [filteredDataSource, filterSort])
-
   // readPretty Value
-  const readPrettyDataSource = useMemo(
-    () =>
-      orderedFilteredDataSource?.filter((item) =>
-        selected?.includes(item?.[primaryKey])
-      ),
-    [orderedFilteredDataSource, selected, primaryKey]
+  const readPrettyDataSource = useFilterOptions(
+    orderedFilteredDataSource,
+    selected,
+    (value, item) => primaryKey && value.includes(item[primaryKey])
   )
 
-  const onInnerSearch = (searchText) => {
+  const onInnerSearch = (searchText?: string) => {
     const formatted = (searchText || '').trim()
     setSearchValue(searchText)
     onSearch?.(formatted)
   }
 
-  const onInnerChange = (selectedRowKeys: any[], records: any[]) => {
+  const onInnerChange = (selectedRowKeys: any[]) => {
     if (readOnly) {
       return
     }
+    // 筛选后onChange默认的records数据不完整，此处需使用完整数据过滤
+    const wholeRecords = getWholeDataSource().filter(
+      (item) => primaryKey && selectedRowKeys.includes(item?.[primaryKey])
+    )
     const { outputValue, outputOptions } = getOutputData(
       selectedRowKeys,
-      records,
+      wholeRecords,
       dataSource,
       primaryKey,
       valueType,
@@ -173,54 +264,69 @@ export const SelectTable: ComposedSelectTable = observer((props) => {
       mode,
       rowSelection?.checkStrictly
     )
+
     onChange?.(outputValue, outputOptions)
   }
 
-  const onRowClick = (record) => {
-    if (disabled || readOnly || record?.disabled) {
+  const onRowClick = (record: Record<string, string>) => {
+    if (readPretty || disabled || readOnly || record?.disabled) {
       return
     }
-    const selectedRowKey = record?.[primaryKey]
-    const isSelected = selected?.includes(selectedRowKey)
-    let selectedRowKeys = []
-    let records = []
-    if (mode === 'single') {
+    const selectedRowKey = primaryKey ? record?.[primaryKey] : null
+    const isSelected = selectedRowKey
+      ? selected?.includes(selectedRowKey)
+      : false
+    let selectedRowKeys: (string | null)[] = []
+    if (mode === 'single' && selectedRowKey) {
       selectedRowKeys = [selectedRowKey]
-      records = [record]
     } else {
       if (isSelected) {
         selectedRowKeys = selected.filter((item) => item !== selectedRowKey)
       } else {
         selectedRowKeys = [...selected, selectedRowKey]
       }
-      records = flatDataSource.filter((item) =>
-        selectedRowKeys.includes(item?.[primaryKey])
-      )
     }
     if (rowSelection?.checkStrictly !== false) {
-      onInnerChange(selectedRowKeys, records)
+      onInnerChange(selectedRowKeys)
     } else {
       onSlacklyChange(selectedRowKeys)
     }
   }
 
-  // Antd TreeData SlacklyChange for onRowClick
+  // TreeData SlacklyChange
   const onSlacklyChange = (currentSelected: any[]) => {
-    let { selectedRowKeys, records } = useCheckSlackly(
+    let { selectedRowKeys } = useCheckSlackly(
       currentSelected,
       selected,
+      flatDataSource,
+      flatFilteredDataSource,
       primaryKey,
-      flatDataSource
+      rowSelection?.checkStrictly
     )
-    onInnerChange(selectedRowKeys, records)
+    onInnerChange(selectedRowKeys)
   }
 
-  // Antd rowSelection type
-  const modeAsType: any = { multiple: 'checkbox', single: 'radio' }?.[mode]
+  // Table All Checkbox
+  const titleAddon = useTitleAddon(
+    selected,
+    flatDataSource,
+    flatFilteredDataSource,
+    primaryKey,
+    mode,
+    disabled,
+    readOnly,
+    rowSelection?.checkStrictly,
+    onInnerChange
+  )
 
-  return (
-    <div className={prefixCls}>
-      {showSearch && !readPretty ? (
+  // Antd rowSelection type
+  const modeAsType: any = { multiple: 'checkbox', single: 'radio' }?.[
+    mode || ''
+  ]
+
+  return wrapSSR(
+    <div className={cls(prefixCls, hashId)}>
+      {showSearch ? (
         <Search
           {...searchProps}
           className={cls(`${prefixCls}-search`, searchProps?.className)}
@@ -242,16 +348,39 @@ export const SelectTable: ComposedSelectTable = observer((props) => {
         rowSelection={
           readPretty
             ? undefined
-            : {
+            : ({
                 ...rowSelection,
+                ...titleAddon,
                 getCheckboxProps: (record) => ({
                   ...(rowSelection?.getCheckboxProps?.(record) as any),
                   disabled: disabled || record?.disabled,
                 }), // antd
+                ...(rowSelection?.checkStrictly !== false
+                  ? {}
+                  : {
+                      renderCell: (checked, record, index, originNode) => {
+                        return React.cloneElement(
+                          originNode as React.ReactElement,
+                          {
+                            indeterminate: getIndeterminate(
+                              record,
+                              flatDataSource,
+                              selected,
+                              primaryKey
+                            ),
+                          }
+                        )
+                      },
+                    }),
                 selectedRowKeys: selected,
-                onChange: onInnerChange,
+                onChange:
+                  rowSelection?.checkStrictly !== false
+                    ? onInnerChange
+                    : onSlacklyChange,
                 type: modeAsType,
-              }
+                preserveSelectedRowKeys: true,
+                checkStrictly: true,
+              } as any)
         }
         columns={props.columns || columns}
         rowKey={primaryKey}
@@ -271,16 +400,31 @@ export const SelectTable: ComposedSelectTable = observer((props) => {
       >
         {''}
       </Table>
+      {sources.map((column, key) => {
+        //专门用来承接对Column的状态管理
+        if (!isColumnComponent(column.schema)) return
+        return React.createElement(RecursionField, {
+          name: column.name,
+          schema: column.schema,
+          onlyRenderSelf: true,
+          key,
+        })
+      })}
     </div>
   )
 })
 
-const TableColumn: React.FC<ISelectTableColumnProps> = () => <></>
+const TableColumn: React.FC<
+  React.PropsWithChildren<ISelectTableColumnProps>
+> = () => <></>
 
-SelectTable.Column = TableColumn
+export const SelectTable = Object.assign(InternalSelectTable, {
+  Column: TableColumn,
+})
 
 SelectTable.defaultProps = {
   showSearch: false,
+  valueType: 'all',
   primaryKey: 'key',
   mode: 'multiple',
 }

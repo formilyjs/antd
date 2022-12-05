@@ -227,17 +227,17 @@ export default () => {
 
 ## API
 
-### FormStep
+### FormStep API
 
 | Property name | Type      | Description                                             | Default value |
 | ------------- | --------- | ------------------------------------------------------- | ------------- |
 | formStep      | IFormStep | Pass in the model created by createFormStep/useFormStep |               |
 
-Other references https://ant.design/components/steps-cn/
+Other references <https://ant.design/components/steps-cn/>
 
 ### FormStep.StepPane
 
-Refer to https://ant.design/components/steps-cn/ Steps.Step properties
+Refer to <https://ant.design/components/steps-cn/> Steps.Step properties
 
 ### FormStep.createFormStep
 

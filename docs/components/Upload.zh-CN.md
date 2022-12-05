@@ -330,4 +330,4 @@ export default () => (
 
 ## API
 
-参考 https://ant.design/components/upload-cn/
+参考 <https://ant.design/components/upload-cn/>

@@ -556,13 +556,13 @@ export default () => {
 
 ## API
 
-### ArrayCollapse
+### ArrayCollapse API
 
-Reference https://ant.design/components/collapse-cn/
+Reference <https://ant.design/components/collapse-cn/>
 
 ### ArrayCollapse.CollapsePanel
 
-Reference https://ant.design/components/collapse-cn/
+Reference <https://ant.design/components/collapse-cn/>
 
 ### ArrayCollapse.Addition
 
@@ -576,7 +576,7 @@ Extended attributes
 | method        | `'push' \|'unshift'` | add method    | `'push'`      |
 | defaultValue  | `any`                | Default value |               |
 
-Other references https://ant.design/components/button-cn/
+Other references <https://ant.design/components/button-cn/>
 
 Note: The title attribute can receive the title mapping in the Field model, that is, uploading the title in the Field is also effective
 
@@ -588,7 +588,7 @@ Note: The title attribute can receive the title mapping in the Field model, that
 | ------------- | --------- | ----------- | ------------- |
 | title         | ReactText | Copywriting |               |
 
-Other references https://ant.design/components/icon-cn/
+Other references <https://ant.design/components/icon-cn/>
 
 Note: The title attribute can receive the title mapping in the Field model, that is, uploading the title in the Field is also effective
 
@@ -600,7 +600,7 @@ Note: The title attribute can receive the title mapping in the Field model, that
 | ------------- | --------- | ----------- | ------------- |
 | title         | ReactText | Copywriting |               |
 
-Other references https://ant.design/components/icon-cn/
+Other references <https://ant.design/components/icon-cn/>
 
 Note: The title attribute can receive the title mapping in the Field model, that is, uploading the title in the Field is also effective
 
@@ -612,7 +612,7 @@ Note: The title attribute can receive the title mapping in the Field model, that
 | ------------- | --------- | ----------- | ------------- |
 | title         | ReactText | Copywriting |               |
 
-Other references https://ant.design/components/icon-cn/
+Other references <https://ant.design/components/icon-cn/>
 
 Note: The title attribute can receive the title mapping in the Field model, that is, uploading the title in the Field is also effective
 

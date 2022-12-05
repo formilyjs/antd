@@ -281,9 +281,6 @@ export default () => {
           name="selectTable3"
           x-decorator="FormItem"
           x-component="SelectTable"
-          x-component-props={{
-            hasBorder: false,
-          }}
           default={['1', '3']}
           enum={[
             { key: '1', name: 'title-1', description: 'description-1' },
@@ -597,9 +594,45 @@ export default () => (
 )
 ```
 
+## Pure JSX case
+
+```tsx
+import React from 'react'
+import { FormItem, FormButtonGroup, Submit, SelectTable } from '@formily/antd'
+import { createForm } from '@formily/core'
+import { FormProvider, Field } from '@formily/react'
+
+const form = createForm()
+
+export default () => (
+  <FormProvider form={form}>
+    <Field
+      name="SelectTable"
+      dataSource={[
+        { key: '1', name: 'title-1', description: 'description-1' },
+        { key: '2', name: 'title-2', description: 'description-2' },
+      ]}
+      decorator={[FormItem]}
+      component={[
+        SelectTable,
+        {
+          columns: [
+            { dataIndex: 'name', title: 'Title' },
+            { dataIndex: 'description', title: 'Description' },
+          ],
+        },
+      ]}
+    />
+    <FormButtonGroup>
+      <Submit onSubmit={console.log}>Submit</Submit>
+    </FormButtonGroup>
+  </FormProvider>
+)
+```
+
 ## API
 
-### SelectTable
+### SelectTable API
 
 | Property name | Type                                               | Description                                                                                                                                                                                                                                                 | Default value |
 | ------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
@@ -613,7 +646,7 @@ export default () => (
 | filterSort    | (optionA, optionB) => number                       | Sort function for search options sorting, see Array.sort's compareFunction                                                                                                                                                                                  | -             |
 | onSearch      | Callback function that is fired when input changed | (inputValue) => void                                                                                                                                                                                                                                        | -             |
 
-`TableProps` type definition reference antd https://ant.design/components/table/
+`TableProps` type definition reference antd <https://ant.design/components/table/>
 
 ### rowSelection
 
@@ -621,8 +654,8 @@ export default () => (
 | ------------- | ------- | -------------------------------------------------------------------------- | ------------- |
 | checkStrictly | boolean | Check table row precisely; parent row and children rows are not associated | true          |
 
-`rowSelectionProps` type definition reference antd https://ant.design/components/table/#rowSelection
+`rowSelectionProps` type definition reference antd <https://ant.design/components/table/#rowSelection>
 
 ### SelectTable.Column
 
-`ColumnProps` type definition reference antd https://ant.design/components/table/ Table.Column
+`ColumnProps` type definition reference antd <https://ant.design/components/table/> Table.Column

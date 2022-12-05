@@ -1,26 +1,27 @@
-import React, { createContext, useContext } from 'react'
-import { Button } from 'antd'
 import {
+  CopyOutlined,
   DeleteOutlined,
   DownOutlined,
-  UpOutlined,
-  PlusOutlined,
   MenuOutlined,
+  PlusOutlined,
+  UpOutlined,
 } from '@ant-design/icons'
 import { AntdIconProps } from '@ant-design/icons/lib/components/AntdIcon'
-import { ButtonProps } from 'antd/lib/button'
 import { ArrayField } from '@formily/core'
 import {
+  ReactFC,
+  RecordScope,
+  RecordsScope,
+  Schema,
   useField,
   useFieldSchema,
-  Schema,
-  JSXComponent,
-  ExpressionScope,
 } from '@formily/react'
-import { isValid, clone, isBool } from '@formily/shared'
-import { SortableHandle } from 'react-sortable-hoc'
-import { usePrefixCls } from '../__builtins__'
+import { clone, isValid } from '@formily/shared'
+import { Button, ButtonProps } from 'antd'
 import cls from 'classnames'
+import React, { createContext, forwardRef, useContext } from 'react'
+import { SortableHandle, usePrefixCls } from '../__builtins__'
+import useStyle from './style'
 
 export interface IArrayBaseAdditionProps extends ButtonProps {
   title?: string
@@ -36,38 +37,41 @@ export interface IArrayBaseContext {
 
 export interface IArrayBaseItemProps {
   index: number
-  record: any
+  record: ((index: number) => Record<string, any>) | Record<string, any>
+}
+
+type CommonProps = AntdIconProps & {
+  index?: number
 }
 
 export type ArrayBaseMixins = {
-  Addition?: React.FC<IArrayBaseAdditionProps>
-  Remove?: React.FC<AntdIconProps & { index?: number }>
-  MoveUp?: React.FC<AntdIconProps & { index?: number }>
-  MoveDown?: React.FC<AntdIconProps & { index?: number }>
-  SortHandle?: React.FC<AntdIconProps & { index?: number }>
-  Index?: React.FC
-  useArray?: () => IArrayBaseContext
-  useIndex?: () => number
-  useRecord?: () => any
+  Addition: ReactFC<IArrayBaseAdditionProps>
+  Copy: ReactFC<CommonProps>
+  Remove: ReactFC<CommonProps>
+  MoveUp: ReactFC<CommonProps>
+  MoveDown: React.FC<React.PropsWithChildren<CommonProps>>
+  SortHandle: ReactFC<CommonProps>
+  Index: React.FC
+  useArray: () => IArrayBaseContext | null
+  useIndex: (index?: number) => number
+  useRecord: (record?: number) => any
 }
 
 export interface IArrayBaseProps {
   disabled?: boolean
   onAdd?: (index: number) => void
+  onCopy?: (index: number) => void
   onRemove?: (index: number) => void
   onMoveDown?: (index: number) => void
   onMoveUp?: (index: number) => void
 }
 
-type ComposedArrayBase = React.FC<IArrayBaseProps> &
-  ArrayBaseMixins & {
-    Item?: React.FC<IArrayBaseItemProps>
-    mixin?: <T extends JSXComponent>(target: T) => T & ArrayBaseMixins
-  }
+const ArrayBaseContext = createContext<IArrayBaseContext | null>(null)
 
-const ArrayBaseContext = createContext<IArrayBaseContext>(null)
+const ItemContext = createContext<IArrayBaseItemProps | null>(null)
 
-const ItemContext = createContext<IArrayBaseItemProps>(null)
+const takeRecord = (val: any, index?: number) =>
+  typeof val === 'function' ? val(index) : val
 
 const useArray = () => {
   return useContext(ArrayBaseContext)
@@ -75,93 +79,105 @@ const useArray = () => {
 
 const useIndex = (index?: number) => {
   const ctx = useContext(ItemContext)
-  return ctx ? ctx.index : index
+  return (ctx ? ctx.index : index) || 0
 }
 
 const useRecord = (record?: number) => {
   const ctx = useContext(ItemContext)
-  return ctx ? ctx.record : record
+  return takeRecord(ctx ? ctx.record : record, ctx?.index)
+}
+
+const getSchemaDefaultValue = (schema?: Schema) => {
+  if (schema?.type === 'array') return []
+  if (schema?.type === 'object') return {}
+  if (schema?.type === 'void') {
+    for (let key in schema.properties) {
+      const value = getSchemaDefaultValue(schema.properties[key])
+      if (isValid(value)) return value
+    }
+  }
 }
 
 const getDefaultValue = (defaultValue: any, schema: Schema) => {
   if (isValid(defaultValue)) return clone(defaultValue)
   if (Array.isArray(schema?.items))
-    return getDefaultValue(defaultValue, schema.items[0])
-  if (schema?.items?.type === 'array') return []
-  if (schema?.items?.type === 'boolean') return true
-  if (schema?.items?.type === 'date') return ''
-  if (schema?.items?.type === 'datetime') return ''
-  if (schema?.items?.type === 'number') return 0
-  if (schema?.items?.type === 'object') return {}
-  if (schema?.items?.type === 'string') return ''
-  return null
+    return getSchemaDefaultValue(schema?.items[0])
+  return getSchemaDefaultValue(schema?.items)
 }
 
-export const ArrayBase: ComposedArrayBase = (props) => {
+const InternalArrayBase: ReactFC<IArrayBaseProps> = (props) => {
   const field = useField<ArrayField>()
   const schema = useFieldSchema()
   return (
-    <ArrayBaseContext.Provider value={{ field, schema, props }}>
-      {props.children}
-    </ArrayBaseContext.Provider>
+    <RecordsScope getRecords={() => field.value}>
+      <ArrayBaseContext.Provider value={{ field, schema, props }}>
+        {props.children}
+      </ArrayBaseContext.Provider>
+    </RecordsScope>
   )
 }
 
-ArrayBase.Item = ({ children, ...props }) => {
+const Item: ReactFC<IArrayBaseItemProps> = ({ children, ...props }) => {
   return (
     <ItemContext.Provider value={props}>
-      <ExpressionScope value={{ $record: props.record, $index: props.index }}>
+      <RecordScope
+        getIndex={() => props.index}
+        getRecord={() => takeRecord(props.record, props.index)}
+      >
         {children}
-      </ExpressionScope>
+      </RecordScope>
     </ItemContext.Provider>
   )
 }
 
-const SortHandle = SortableHandle((props: any) => {
+const InternalSortHandle = SortableHandle((props) => {
   const prefixCls = usePrefixCls('formily-array-base')
-  return (
+  const [wrapSSR, hashId] = useStyle(prefixCls)
+  return wrapSSR(
     <MenuOutlined
       {...props}
-      className={cls(`${prefixCls}-sort-handle`, props.className)}
+      className={cls(`${prefixCls}-sort-handle`, hashId, props.className)}
       style={{ ...props.style }}
     />
   )
-}) as any
+})
 
-ArrayBase.SortHandle = (props) => {
+const SortHandle: ReactFC<CommonProps> = (props) => {
   const array = useArray()
   if (!array) return null
   if (array.field?.pattern !== 'editable') return null
-  return <SortHandle {...props} />
+  return <InternalSortHandle {...props} />
 }
 
-ArrayBase.Index = (props) => {
+const Index: React.FC<React.HTMLAttributes<HTMLSpanElement>> = (props) => {
   const index = useIndex()
   const prefixCls = usePrefixCls('formily-array-base')
-  return (
-    <span {...props} className={`${prefixCls}-index`}>
-      #{index + 1}.
+  const [wrapSSR, hashId] = useStyle(prefixCls)
+  return wrapSSR(
+    <span {...props} className={cls(`${prefixCls}-index`, hashId)}>
+      #{(index || 0) + 1}.
     </span>
   )
 }
 
-ArrayBase.Addition = (props) => {
+const Addition: ReactFC<IArrayBaseAdditionProps> = (props) => {
   const self = useField()
   const array = useArray()
   const prefixCls = usePrefixCls('formily-array-base')
+  const [wrapSSR, hashId] = useStyle(prefixCls)
   if (!array) return null
   if (
     array.field?.pattern !== 'editable' &&
     array.field?.pattern !== 'disabled'
   )
     return null
-  return (
+  return wrapSSR(
     <Button
       type="dashed"
       block
       {...props}
-      disabled={isBool(self?.disabled) ? self?.disabled : array.field?.disabled}
-      className={cls(`${prefixCls}-addition`, props.className)}
+      disabled={self?.disabled}
+      className={cls(`${prefixCls}-addition`, hashId, props.className)}
       onClick={(e) => {
         if (array.props?.disabled) return
         const defaultValue = getDefaultValue(props.defaultValue, array.schema)
@@ -183,19 +199,60 @@ ArrayBase.Addition = (props) => {
   )
 }
 
-ArrayBase.Remove = React.forwardRef((props, ref) => {
-  const index = useIndex(props.index)
+const Copy = forwardRef<HTMLSpanElement, CommonProps>((props, ref) => {
+  const self = useField()
   const array = useArray()
+  const index = useIndex(props.index) || 0
   const prefixCls = usePrefixCls('formily-array-base')
+  const [wrapSSR, hashId] = useStyle(prefixCls)
   if (!array) return null
   if (array.field?.pattern !== 'editable') return null
-  return (
-    <DeleteOutlined
+  return wrapSSR(
+    <CopyOutlined
       {...props}
-      className={cls(`${prefixCls}-remove`, props.className)}
+      className={cls(
+        `${prefixCls}-copy`,
+        hashId,
+        self?.disabled ? `${prefixCls}-copy-disabled` : '',
+        props.className
+      )}
       ref={ref}
       onClick={(e) => {
+        if (self?.disabled) return
+        e.stopPropagation()
         if (array.props?.disabled) return
+        const value = clone(array?.field?.value[index])
+        const distIndex = index + 1
+        array.field?.insert?.(distIndex, value)
+        array.props?.onCopy?.(distIndex)
+        if (props.onClick) {
+          props.onClick(e)
+        }
+      }}
+    />
+  )
+})
+
+const Remove = forwardRef<HTMLSpanElement, CommonProps>((props, ref) => {
+  const index = useIndex(props.index) || 0
+  const self = useField()
+  const array = useArray()
+  const prefixCls = usePrefixCls('formily-array-base')
+  const [wrapSSR, hashId] = useStyle(prefixCls)
+  if (!array) return null
+  if (array.field?.pattern !== 'editable') return null
+  return wrapSSR(
+    <DeleteOutlined
+      {...props}
+      className={cls(
+        `${prefixCls}-remove`,
+        hashId,
+        self?.disabled ? `${prefixCls}-remove-disabled` : '',
+        props.className
+      )}
+      ref={ref}
+      onClick={(e) => {
+        if (self?.disabled) return
         e.stopPropagation()
         array.field?.remove?.(index)
         array.props?.onRemove?.(index)
@@ -207,19 +264,26 @@ ArrayBase.Remove = React.forwardRef((props, ref) => {
   )
 })
 
-ArrayBase.MoveDown = React.forwardRef((props, ref) => {
-  const index = useIndex(props.index)
+const MoveDown = forwardRef<HTMLSpanElement, CommonProps>((props, ref) => {
+  const index = useIndex(props.index) || 0
+  const self = useField()
   const array = useArray()
   const prefixCls = usePrefixCls('formily-array-base')
+  const [wrapSSR, hashId] = useStyle(prefixCls)
   if (!array) return null
   if (array.field?.pattern !== 'editable') return null
-  return (
+  return wrapSSR(
     <DownOutlined
       {...props}
-      className={cls(`${prefixCls}-move-down`, props.className)}
+      className={cls(
+        `${prefixCls}-move-down`,
+        hashId,
+        self?.disabled ? `${prefixCls}-move-down-disabled` : '',
+        props.className
+      )}
       ref={ref}
       onClick={(e) => {
-        if (array.props?.disabled) return
+        if (self?.disabled) return
         e.stopPropagation()
         array.field?.moveDown?.(index)
         array.props?.onMoveDown?.(index)
@@ -231,19 +295,26 @@ ArrayBase.MoveDown = React.forwardRef((props, ref) => {
   )
 })
 
-ArrayBase.MoveUp = React.forwardRef((props, ref) => {
+const MoveUp = forwardRef<HTMLSpanElement, CommonProps>((props, ref) => {
   const index = useIndex(props.index)
+  const self = useField()
   const array = useArray()
   const prefixCls = usePrefixCls('formily-array-base')
+  const [wrapSSR, hashId] = useStyle(prefixCls)
   if (!array) return null
   if (array.field?.pattern !== 'editable') return null
-  return (
+  return wrapSSR(
     <UpOutlined
       {...props}
-      className={cls(`${prefixCls}-move-up`, props.className)}
+      className={cls(
+        `${prefixCls}-move-up`,
+        hashId,
+        self?.disabled ? `${prefixCls}-move-up-disabled` : '',
+        props.className
+      )}
       ref={ref}
       onClick={(e) => {
-        if (array.props?.disabled) return
+        if (self?.disabled) return
         e.stopPropagation()
         array?.field?.moveUp(index)
         array?.props?.onMoveUp?.(index)
@@ -255,20 +326,34 @@ ArrayBase.MoveUp = React.forwardRef((props, ref) => {
   )
 })
 
-ArrayBase.useArray = useArray
-ArrayBase.useIndex = useIndex
-ArrayBase.useRecord = useRecord
-ArrayBase.mixin = (target: any) => {
-  target.Index = ArrayBase.Index
-  target.SortHandle = ArrayBase.SortHandle
-  target.Addition = ArrayBase.Addition
-  target.Remove = ArrayBase.Remove
-  target.MoveDown = ArrayBase.MoveDown
-  target.MoveUp = ArrayBase.MoveUp
-  target.useArray = ArrayBase.useArray
-  target.useIndex = ArrayBase.useIndex
-  target.useRecord = ArrayBase.useRecord
-  return target
+function mixin<T extends object = object>(target: T): T & ArrayBaseMixins {
+  return Object.assign(target, {
+    Index,
+    SortHandle,
+    Addition,
+    Copy,
+    Remove,
+    MoveDown,
+    MoveUp,
+    useArray,
+    useIndex,
+    useRecord,
+  })
 }
+
+export const ArrayBase = Object.assign(InternalArrayBase, {
+  Item,
+  Index,
+  SortHandle,
+  Addition,
+  Copy,
+  Remove,
+  MoveDown,
+  MoveUp,
+  useArray,
+  useIndex,
+  useRecord,
+  mixin,
+})
 
 export default ArrayBase

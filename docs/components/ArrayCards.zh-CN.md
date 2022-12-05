@@ -51,6 +51,7 @@ export default () => {
               x-component="Input"
             />
             <SchemaField.Void x-component="ArrayCards.Remove" />
+            <SchemaField.Void x-component="ArrayCards.Copy" />
             <SchemaField.Void x-component="ArrayCards.MoveUp" />
             <SchemaField.Void x-component="ArrayCards.MoveDown" />
           </SchemaField.Void>
@@ -436,9 +437,9 @@ export default () => {
 
 ## API
 
-### ArrayCards
+### ArrayCards API
 
-参考 https://ant.design/components/card-cn/
+参考 <https://ant.design/components/card-cn/>
 
 ### ArrayCards.Addition
 
@@ -452,7 +453,22 @@ export default () => {
 | method       | `'push' \| 'unshift'` | 添加方式 | `'push'` |
 | defaultValue | `any`                 | 默认值   |          |
 
-其余参考 https://ant.design/components/button-cn/
+其余参考 <https://ant.design/components/button-cn/>
+
+注意：title 属性可以接收 Field 模型中的 title 映射，也就是在 Field 上传 title 也是生效的
+
+### ArrayCards.Copy
+
+> 复制按钮
+
+扩展属性
+
+| 属性名 | 类型                  | 描述     | 默认值   |
+| ------ | --------------------- | -------- | -------- |
+| title  | ReactText             | 文案     |          |
+| method | `'push' \| 'unshift'` | 添加方式 | `'push'` |
+
+其余参考 <https://ant.design/components/button-cn/>
 
 注意：title 属性可以接收 Field 模型中的 title 映射，也就是在 Field 上传 title 也是生效的
 
@@ -464,7 +480,7 @@ export default () => {
 | ------ | --------- | ---- | ------ |
 | title  | ReactText | 文案 |        |
 
-其余参考 https://ant.design/components/icon-cn/
+其余参考 <https://ant.design/components/icon-cn/>
 
 注意：title 属性可以接收 Field 模型中的 title 映射，也就是在 Field 上传 title 也是生效的
 
@@ -476,7 +492,7 @@ export default () => {
 | ------ | --------- | ---- | ------ |
 | title  | ReactText | 文案 |        |
 
-其余参考 https://ant.design/components/icon-cn/
+其余参考 <https://ant.design/components/icon-cn/>
 
 注意：title 属性可以接收 Field 模型中的 title 映射，也就是在 Field 上传 title 也是生效的
 
@@ -488,7 +504,7 @@ export default () => {
 | ------ | --------- | ---- | ------ |
 | title  | ReactText | 文案 |        |
 
-其余参考 https://ant.design/components/icon-cn/
+其余参考 <https://ant.design/components/icon-cn/>
 
 注意：title 属性可以接收 Field 模型中的 title 映射，也就是在 Field 上传 title 也是生效的
 

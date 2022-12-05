@@ -2,123 +2,17 @@
 
 > 数字输入框
 
-## Markup Schema 案例
+## Markup Schema example
 
-```tsx
-import React from 'react'
-import { NumberPicker, FormItem, FormButtonGroup, Submit } from '@formily/antd'
-import { createForm } from '@formily/core'
-import { FormProvider, createSchemaField } from '@formily/react'
+<code src="../demos/number-picker/Markup.zh-CN.tsx"/>
 
-const SchemaField = createSchemaField({
-  components: {
-    NumberPicker,
-    FormItem,
-  },
-})
+## JSON Schema case
 
-const form = createForm()
+<code src="../demos/number-picker/Schema.zh-CN.tsx"/>
 
-export default () => (
-  <FormProvider form={form}>
-    <SchemaField>
-      <SchemaField.String
-        name="input"
-        title="输入框"
-        x-decorator="FormItem"
-        x-component="NumberPicker"
-        required
-        x-component-props={{
-          style: {
-            width: 240,
-          },
-        }}
-      />
-    </SchemaField>
-    <FormButtonGroup>
-      <Submit onSubmit={console.log}>提交</Submit>
-    </FormButtonGroup>
-  </FormProvider>
-)
-```
+## Pure JSX case
 
-## JSON Schema 案例
-
-```tsx
-import React from 'react'
-import { NumberPicker, FormItem, FormButtonGroup, Submit } from '@formily/antd'
-import { createForm } from '@formily/core'
-import { FormProvider, createSchemaField } from '@formily/react'
-
-const SchemaField = createSchemaField({
-  components: {
-    NumberPicker,
-    FormItem,
-  },
-})
-
-const form = createForm()
-
-const schema = {
-  type: 'object',
-  properties: {
-    input: {
-      type: 'string',
-      title: '输入框',
-      'x-decorator': 'FormItem',
-      'x-component': 'NumberPicker',
-      'x-component-props': {
-        style: {
-          width: 240,
-        },
-      },
-    },
-  },
-}
-
-export default () => (
-  <FormProvider form={form}>
-    <SchemaField schema={schema} />
-    <FormButtonGroup>
-      <Submit onSubmit={console.log}>提交</Submit>
-    </FormButtonGroup>
-  </FormProvider>
-)
-```
-
-## 纯 JSX 案例
-
-```tsx
-import React from 'react'
-import { NumberPicker, FormItem, FormButtonGroup, Submit } from '@formily/antd'
-import { createForm } from '@formily/core'
-import { FormProvider, Field } from '@formily/react'
-
-const form = createForm()
-
-export default () => (
-  <FormProvider form={form}>
-    <Field
-      name="input"
-      title="输入框"
-      required
-      decorator={[FormItem]}
-      component={[
-        NumberPicker,
-        {
-          style: {
-            width: 240,
-          },
-        },
-      ]}
-    />
-    <FormButtonGroup>
-      <Submit onSubmit={console.log}>提交</Submit>
-    </FormButtonGroup>
-  </FormProvider>
-)
-```
-
+<code src="../demos/number-picker/PureJsx.zh-CN.tsx"/>
 ## API
 
-参考 https://ant.design/components/input-number-cn/
+Reference <https://ant.design/components/input-number-cn/>

@@ -161,6 +161,6 @@ export default () => {
 
 ## API
 
-### ArrayTabs
+### ArrayTabs API
 
-参考 https://ant.design/components/tabs-cn/
+参考 <https://ant.design/components/tabs-cn/>

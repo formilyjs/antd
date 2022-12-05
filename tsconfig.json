@@ -14,10 +14,11 @@
     "declaration": true,
     "experimentalDecorators": true,
     "downlevelIteration": true,
+    "strictNullChecks": true,
     "baseUrl": ".",
     "paths": {
-      "@formily/*": ["packages/*/src", "devtools/*/src"]
+      "@formily/antd": ["packages/components/src"]
     },
-    "lib": ["ESNext"]
+    "lib": ["ESNext", "DOM"]
   }
 }

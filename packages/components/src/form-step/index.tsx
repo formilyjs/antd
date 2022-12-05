@@ -1,17 +1,17 @@
-import React, { Fragment } from 'react'
-import { action, markRaw, model } from '@formily/reactive'
-import { Steps } from 'antd'
-import cls from 'classnames'
-import { StepsProps, StepProps } from 'antd/lib/steps'
 import { Form, VoidField } from '@formily/core'
+import { Schema, SchemaKey } from '@formily/json-schema'
 import {
   connect,
-  useField,
   observer,
-  useFieldSchema,
   RecursionField,
+  useField,
+  useFieldSchema,
 } from '@formily/react'
-import { Schema, SchemaKey } from '@formily/json-schema'
+import { action, define, markRaw, model, observable } from '@formily/reactive'
+import { Steps } from 'antd'
+import { StepProps, StepsProps } from 'antd/lib/steps'
+import cls from 'classnames'
+import React, { Fragment } from 'react'
 import { usePrefixCls } from '../__builtins__'
 
 export interface IFormStep {
@@ -29,9 +29,9 @@ export interface IFormStepProps extends StepsProps {
   formStep?: IFormStep
 }
 
-type ComposedFormTab = React.FC<IFormStepProps> & {
-  StepPane?: React.FC<StepProps>
-  createFormStep?: (defaultCurrent?: number) => IFormStep
+type ComposedFormStep = React.FC<React.PropsWithChildren<IFormStepProps>> & {
+  StepPane: React.FC<React.PropsWithChildren<StepProps>>
+  createFormStep: (defaultCurrent?: number) => IFormStep
 }
 
 type SchemaStep = {
@@ -41,8 +41,8 @@ type SchemaStep = {
 }
 
 type FormStepEnv = {
-  form: Form
-  field: VoidField
+  form: Form | null
+  field: VoidField | null
   steps: SchemaStep[]
 }
 
@@ -61,16 +61,23 @@ const parseSteps = (schema: Schema) => {
 }
 
 const createFormStep = (defaultCurrent = 0): IFormStep => {
-  const env: FormStepEnv = {
-    form: null,
-    field: null,
-    steps: [],
-  }
+  const env: FormStepEnv = define(
+    {
+      form: null,
+      field: null,
+      steps: [],
+    },
+    {
+      form: observable.ref,
+      field: observable.ref,
+      steps: observable.shallow,
+    }
+  )
 
-  const setDisplay = action.bound((target: number) => {
+  const setDisplay = action.bound?.((target: number) => {
     const currentStep = env.steps[target]
     env.steps.forEach(({ name }) => {
-      env.form.query(`${env.field.address}.${name}`).take((field) => {
+      env.form?.query(`${env.field?.address}.${name}`).take((field) => {
         if (name === currentStep.name) {
           field.setDisplay('visible')
         } else {
@@ -80,16 +87,14 @@ const createFormStep = (defaultCurrent = 0): IFormStep => {
     })
   })
 
-  const next = action.bound(() => {
+  const next = action.bound?.(() => {
     if (formStep.allowNext) {
-      setDisplay(formStep.current + 1)
       formStep.setCurrent(formStep.current + 1)
     }
   })
 
-  const back = action.bound(() => {
+  const back = action.bound?.(() => {
     if (formStep.allowBack) {
-      setDisplay(formStep.current - 1)
       formStep.setCurrent(formStep.current - 1)
     }
   })
@@ -102,6 +107,7 @@ const createFormStep = (defaultCurrent = 0): IFormStep => {
     },
     current: defaultCurrent,
     setCurrent(key: number) {
+      setDisplay?.(key)
       formStep.current = key
     },
     get allowNext() {
@@ -112,21 +118,23 @@ const createFormStep = (defaultCurrent = 0): IFormStep => {
     },
     async next() {
       try {
-        await env.form.validate()
-        next()
+        await env.form?.validate()
+        if (env.form?.valid) {
+          next?.()
+        }
       } catch {}
     },
     async back() {
-      back()
+      back?.()
     },
     async submit(onSubmit) {
-      return env.form?.submit?.(onSubmit)
+      return env.form?.submit?.(onSubmit) as Promise<any>
     },
   })
   return markRaw(formStep)
 }
 
-export const FormStep: ComposedFormTab = connect(
+export const FormStep = connect(
   observer(({ formStep, className, ...props }: IFormStepProps) => {
     const field = useField<VoidField>()
     const prefixCls = usePrefixCls('formily-step', props)
@@ -152,9 +160,11 @@ export const FormStep: ComposedFormTab = connect(
       </div>
     )
   })
-)
+) as unknown as ComposedFormStep
 
-const StepPane: React.FC<StepProps> = ({ children }) => {
+const StepPane: React.FC<React.PropsWithChildren<StepProps>> = ({
+  children,
+}) => {
   return <Fragment>{children}</Fragment>
 }
 

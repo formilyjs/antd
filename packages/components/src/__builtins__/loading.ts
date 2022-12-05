@@ -4,7 +4,7 @@ export const loading = async (
   title: React.ReactNode = 'Loading...',
   processor: () => Promise<any>
 ) => {
-  let hide = null
+  let hide: any = null
   let loading = setTimeout(() => {
     hide = message.loading(title)
   }, 100)

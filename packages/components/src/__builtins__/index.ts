@@ -1,4 +1,4 @@
-export * from './day'
+export * from './dayjs'
 export * from './hooks'
 export * from './loading'
 export * from './pickDataProps'

@@ -1,12 +1,7 @@
-import type { FullToken } from 'antd/es/theme'
 import { GenerateStyle, genStyleHook } from '../../__builtins__'
 import { getAnimationStyle } from './animation'
 import { getGridStyle } from './grid'
 import { genOtherStyle } from './other'
-
-export interface FormToken extends FullToken<'Form'> {
-  formItemCls: string
-}
 
 const genSmallStyle: GenerateStyle = (token) => {
   const { componentCls, antCls, controlHeightSM, marginLG, fontSizeSM } = token

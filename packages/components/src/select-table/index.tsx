@@ -29,7 +29,7 @@ import { getOutputData, getUISelected } from './utils'
 const { Search } = Input
 
 interface ObservableColumnSource {
-  field: GeneralField
+  field?: GeneralField
   columnProps: ColumnProps<any>
   schema: Schema
   display: FieldDisplayTypes

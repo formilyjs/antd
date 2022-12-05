@@ -14,7 +14,7 @@ jobs:
     if: contains(github.event.head_commit.message, 'chore(versions)') == false
     strategy:
       matrix:
-        node_version: [14.x]
+        node_version: [10.x, 11.x]
         os: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v1
@@ -31,6 +31,13 @@ jobs:
           reporter: github-check
           eslint_flags: '.'
       - run: yarn build
+      - run: yarn test:prod
+        env:
+          CI: true
+          HEADLESS: false
+          PROGRESS: none
+          NODE_ENV: test
+          NODE_OPTIONS: --max_old_space_size=4096
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1

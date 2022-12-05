@@ -27,7 +27,7 @@ export default {
     ],
     'en-US': [
       {
-        title: 'Ant Design',
+        title: 'Ant Design V5',
         path: '/components',
       },
       {

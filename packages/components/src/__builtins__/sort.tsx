@@ -6,6 +6,7 @@ import React, { createContext, useContext } from 'react'
 
 export interface ISortableContainerProps {
   list: any[]
+  start?: number
   accessibility?: {
     container?: Element
   }
@@ -16,7 +17,14 @@ export interface ISortableContainerProps {
 export function SortableContainer<T extends React.HTMLAttributes<HTMLElement>>(
   Component: ReactFC<T>
 ): ReactFC<ISortableContainerProps & T> {
-  return ({ list, accessibility, onSortStart, onSortEnd, ...props }) => {
+  return ({
+    list,
+    start = 0,
+    accessibility,
+    onSortStart,
+    onSortEnd,
+    ...props
+  }) => {
     const _onSortEnd = (event: DragEndEvent) => {
       const { active, over } = event
       const oldIndex = (active.id as number) - 1
@@ -33,7 +41,7 @@ export function SortableContainer<T extends React.HTMLAttributes<HTMLElement>>(
         onDragStart={onSortStart}
         onDragEnd={_onSortEnd}
       >
-        <SortableContext items={list.map((_, index) => index + 1)}>
+        <SortableContext items={list.map((_, index) => index + start + 1)}>
           <Component {...(props as unknown as T)}>{props.children}</Component>
         </SortableContext>
       </DndContext>

@@ -48,7 +48,10 @@ interface IArrayTablePaginationProps extends PaginationProps {
   dataSource?: any[]
   children?: (
     dataSource: any[],
-    pagination: React.ReactNode
+    pagination: React.ReactNode,
+    options: {
+      startIndex: number
+    }
   ) => React.ReactElement
 }
 
@@ -300,7 +303,10 @@ const ArrayTablePagination: ReactFC<IArrayTablePaginationProps> = (props) => {
       >
         {props.children?.(
           dataSource?.slice(startIndex, endIndex + 1),
-          renderPagination()
+          renderPagination(),
+          {
+            startIndex,
+          }
         )}
       </PaginationContext.Provider>
     </Fragment>
@@ -315,11 +321,7 @@ const RowComp: ReactFC<React.HTMLAttributes<HTMLTableRowElement>> = (props) => {
       lockAxis="y"
       {...props}
       index={index}
-      className={cls(
-        props.className,
-        `${prefixCls}-sort-helper`,
-        `${prefixCls}-row-${index + 1}`
-      )}
+      className={cls(props.className, `${prefixCls}-row-${index + 1}`)}
     />
   )
 }
@@ -354,69 +356,71 @@ const InternalArrayTable: ReactFC<TableProps<any>> = observer(
         }
       }
     }
-    const WrapperComp = useCallback(
-      (props: React.HTMLAttributes<HTMLTableSectionElement>) => {
-        const list = Array.isArray(field.value) ? field.value.slice() : []
-
-        return (
-          <SortableBody
-            {...props}
-            accessibility={{
-              container: ref.current || undefined,
-            }}
-            list={list}
-            onSortStart={(event) => {
-              addTdStyles(event.active.id as number)
-            }}
-            onSortEnd={(event) => {
-              const { oldIndex, newIndex } = event
-              field.move(oldIndex, newIndex)
-            }}
-            className={cls(`${prefixCls}-sort-helper`, props.className)}
-          >
-            {props.children}
-          </SortableBody>
-        )
-      },
+    const genWrapperComp = useCallback(
+      (list: any[], start: number) =>
+        (props: React.HTMLAttributes<HTMLTableSectionElement>) => {
+          return (
+            <SortableBody
+              {...props}
+              accessibility={{
+                container: ref.current || undefined,
+              }}
+              start={start}
+              list={list}
+              onSortStart={(event) => {
+                addTdStyles(event.active.id as number)
+              }}
+              onSortEnd={(event) => {
+                const { oldIndex, newIndex } = event
+                field.move(oldIndex, newIndex)
+              }}
+              className={cls(`${prefixCls}-sort-helper`, props.className)}
+            >
+              {props.children}
+            </SortableBody>
+          )
+        },
       [field]
     )
 
     return wrapSSR(
       <ArrayTablePagination {...pagination} dataSource={dataSource}>
-        {(dataSource, pager) => (
-          <div ref={ref} className={cls(prefixCls, hashId)}>
-            <ArrayBase>
-              <Table
-                size="small"
-                bordered
-                rowKey={defaultRowKey}
-                {...props}
-                onChange={() => {}}
-                pagination={false}
-                columns={columns}
-                dataSource={dataSource}
-                components={{
-                  body: {
-                    wrapper: WrapperComp,
-                    row: RowComp,
-                  },
-                }}
-              />
-              <div style={{ marginTop: 5, marginBottom: 5 }}>{pager}</div>
-              {sources.map((column, key) => {
-                //专门用来承接对Column的状态管理
-                if (!isColumnComponent(column.schema)) return
-                return React.createElement(RecursionField, {
-                  name: column.name,
-                  schema: column.schema,
-                  onlyRenderSelf: true,
-                  key,
-                })
-              })}
-              {addition}
-            </ArrayBase>
-          </div>
-        )}
+        {(dataSource, pager, { startIndex }) => {
+          return (
+            <div ref={ref} className={cls(prefixCls, hashId)}>
+              <ArrayBase>
+                <Table
+                  size="small"
+                  bordered
+                  rowKey={defaultRowKey}
+                  {...props}
+                  onChange={() => {}}
+                  pagination={false}
+                  columns={columns}
+                  dataSource={dataSource}
+                  components={{
+                    body: {
+                      wrapper: genWrapperComp(dataSource, startIndex),
+                      row: RowComp,
+                    },
+                  }}
+                />
+                <div style={{ marginTop: 5, marginBottom: 5 }}>{pager}</div>
+                {sources.map((column, key) => {
+                  //专门用来承接对Column的状态管理
+                  if (!isColumnComponent(column.schema)) return
+                  return React.createElement(RecursionField, {
+                    name: column.name,
+                    schema: column.schema,
+                    onlyRenderSelf: true,
+                    key,
+                  })
+                })}
+                {addition}
+              </ArrayBase>
+            </div>
+          )
+        }}
       </ArrayTablePagination>
     )
   }

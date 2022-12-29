@@ -1,6 +1,6 @@
 {
   "name": "@formily/antd",
-  "version": "3.0.0-alpha.1",
+  "version": "3.0.0-alpha.2",
   "license": "MIT",
   "main": "lib",
   "types": "lib/index.d.ts",
@@ -44,8 +44,8 @@
     "react-is": ">=16.8.0 || >=17.0.0"
   },
   "dependencies": {
-    "@ant-design/icons": "^4.0.0",
     "@ant-design/cssinjs": "^1.3.1",
+    "@ant-design/icons": "^4.0.0",
     "@dnd-kit/core": "^6.0.0",
     "@dnd-kit/sortable": "^7.0.0",
     "@formily/core": "^2.2.0",

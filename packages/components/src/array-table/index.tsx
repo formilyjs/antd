@@ -426,7 +426,7 @@ const InternalArrayTable: ReactFC<TableProps<any>> = observer(
   }
 )
 
-const Column: ReactFC = () => {
+const Column: ReactFC<ColumnProps<any>> = () => {
   return <Fragment />
 }
 

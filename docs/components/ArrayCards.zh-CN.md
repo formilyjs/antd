@@ -14,7 +14,7 @@ import {
   ArrayCards,
   FormButtonGroup,
   Submit,
-} from '@formily/antd'
+} from '@formily/antd-v5'
 import { createForm } from '@formily/core'
 import { FormProvider, createSchemaField } from '@formily/react'
 
@@ -106,7 +106,7 @@ import {
   ArrayCards,
   FormButtonGroup,
   Submit,
-} from '@formily/antd'
+} from '@formily/antd-v5'
 import { createForm } from '@formily/core'
 import { FormProvider, createSchemaField } from '@formily/react'
 
@@ -236,7 +236,7 @@ import {
   ArrayCards,
   FormButtonGroup,
   Submit,
-} from '@formily/antd'
+} from '@formily/antd-v5'
 import { createForm, onFieldChange, onFieldReact } from '@formily/core'
 import { FormProvider, createSchemaField } from '@formily/react'
 
@@ -336,7 +336,7 @@ import {
   ArrayCards,
   FormButtonGroup,
   Submit,
-} from '@formily/antd'
+} from '@formily/antd-v5'
 import { createForm } from '@formily/core'
 import { FormProvider, createSchemaField } from '@formily/react'
 

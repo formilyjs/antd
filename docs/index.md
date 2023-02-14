@@ -26,6 +26,6 @@ footer: Open-source MIT Licensed | Copyright © 2019-present<br />Powered by sel
 
 ```bash
 npm install --save antd moment
-npm install --save @formily/core @formily/react @formily/antd
+npm install --save @formily/core @formily/react @formily/antd-v5
 
 ```

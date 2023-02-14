@@ -1,5 +1,5 @@
 import React from 'react'
-import { Select, FormItem, FormButtonGroup, Submit } from '@formily/antd'
+import { Select, FormItem, FormButtonGroup, Submit } from '@formily/antd-v5'
 import {
   createForm,
   onFieldReact,

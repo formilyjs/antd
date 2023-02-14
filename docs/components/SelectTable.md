@@ -6,7 +6,12 @@
 
 ```tsx
 import React from 'react'
-import { FormItem, FormButtonGroup, Submit, SelectTable } from '@formily/antd'
+import {
+  FormItem,
+  FormButtonGroup,
+  Submit,
+  SelectTable,
+} from '@formily/antd-v5'
 import { createForm } from '@formily/core'
 import { FormProvider, createSchemaField } from '@formily/react'
 
@@ -61,7 +66,12 @@ export default () => {
 
 ```tsx
 import React from 'react'
-import { FormItem, FormButtonGroup, Submit, SelectTable } from '@formily/antd'
+import {
+  FormItem,
+  FormButtonGroup,
+  Submit,
+  SelectTable,
+} from '@formily/antd-v5'
 import { createForm } from '@formily/core'
 import { FormProvider, createSchemaField } from '@formily/react'
 
@@ -119,7 +129,12 @@ export default () => {
 
 ```tsx
 import React from 'react'
-import { FormItem, FormButtonGroup, Submit, SelectTable } from '@formily/antd'
+import {
+  FormItem,
+  FormButtonGroup,
+  Submit,
+  SelectTable,
+} from '@formily/antd-v5'
 import { createForm } from '@formily/core'
 import { FormProvider, createSchemaField } from '@formily/react'
 
@@ -203,7 +218,7 @@ import {
   FormButtonGroup,
   Submit,
   SelectTable,
-} from '@formily/antd'
+} from '@formily/antd-v5'
 import { createForm } from '@formily/core'
 import { createSchemaField } from '@formily/react'
 
@@ -348,7 +363,12 @@ export default () => {
 
 ```tsx
 import React from 'react'
-import { FormItem, FormButtonGroup, Submit, SelectTable } from '@formily/antd'
+import {
+  FormItem,
+  FormButtonGroup,
+  Submit,
+  SelectTable,
+} from '@formily/antd-v5'
 import { createForm } from '@formily/core'
 import { FormProvider, createSchemaField } from '@formily/react'
 
@@ -412,7 +432,12 @@ export default () => (
 
 ```tsx
 import React from 'react'
-import { FormItem, FormButtonGroup, Submit, SelectTable } from '@formily/antd'
+import {
+  FormItem,
+  FormButtonGroup,
+  Submit,
+  SelectTable,
+} from '@formily/antd-v5'
 import { createForm } from '@formily/core'
 import { FormProvider, createSchemaField } from '@formily/react'
 
@@ -512,7 +537,12 @@ export default () => (
 
 ```tsx
 import React from 'react'
-import { FormItem, FormButtonGroup, Submit, SelectTable } from '@formily/antd'
+import {
+  FormItem,
+  FormButtonGroup,
+  Submit,
+  SelectTable,
+} from '@formily/antd-v5'
 import { createForm } from '@formily/core'
 import { FormProvider, createSchemaField } from '@formily/react'
 
@@ -598,7 +628,12 @@ export default () => (
 
 ```tsx
 import React from 'react'
-import { FormItem, FormButtonGroup, Submit, SelectTable } from '@formily/antd'
+import {
+  FormItem,
+  FormButtonGroup,
+  Submit,
+  SelectTable,
+} from '@formily/antd-v5'
 import { createForm } from '@formily/core'
 import { FormProvider, Field } from '@formily/react'
 

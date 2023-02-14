@@ -1,5 +1,5 @@
 import React from 'react'
-import { Cascader, FormItem, FormButtonGroup, Submit } from '@formily/antd'
+import { Cascader, FormItem, FormButtonGroup, Submit } from '@formily/antd-v5'
 import { createForm, FieldDataSource, Field } from '@formily/core'
 import { FormProvider, createSchemaField } from '@formily/react'
 import { action } from '@formily/reactive'

@@ -1,6 +1,6 @@
 # Changelog
 
-## v3.0.0-alpha.2(2022-12-29)
+## v1.0.0(2022-12-29)
 
 ### :blush: Other Changes
 

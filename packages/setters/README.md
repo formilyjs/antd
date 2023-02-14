@@ -1,9 +1,9 @@
-# @formily/antd-setters
+# @formily/antd-v5-setters
 
 > Formily Designable Component Adaptor
 
 ## Install
 
 ```bash
-npm install @formily/antd-setters --save
+npm install @formily/antd-v5-setters --save
 ```

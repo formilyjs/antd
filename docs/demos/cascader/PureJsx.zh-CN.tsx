@@ -1,4 +1,4 @@
-import { Cascader, FormButtonGroup, FormItem, Submit } from '@formily/antd'
+import { Cascader, FormButtonGroup, FormItem, Submit } from '@formily/antd-v5'
 import {
   createForm,
   Field as FieldType,

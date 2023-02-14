@@ -17,7 +17,7 @@
     "strictNullChecks": true,
     "baseUrl": ".",
     "paths": {
-      "@formily/antd": ["packages/components/src"]
+      "@formily/antd-v5": ["packages/components/src"]
     },
     "lib": ["ESNext", "DOM"]
   }

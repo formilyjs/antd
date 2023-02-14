@@ -6,7 +6,7 @@
 
 ```tsx
 import React from 'react'
-import { Input, Select, FormItem, FormLayout } from '@formily/antd'
+import { Input, Select, FormItem, FormLayout } from '@formily/antd-v5'
 import { createForm } from '@formily/core'
 import { FormProvider, createSchemaField } from '@formily/react'
 
@@ -58,7 +58,7 @@ export default () => (
 
 ```tsx
 import React from 'react'
-import { Input, Select, FormItem, FormLayout } from '@formily/antd'
+import { Input, Select, FormItem, FormLayout } from '@formily/antd-v5'
 import { createForm } from '@formily/core'
 import { FormProvider, createSchemaField } from '@formily/react'
 
@@ -125,7 +125,7 @@ import {
   FormButtonGroup,
   Submit,
   FormLayout,
-} from '@formily/antd'
+} from '@formily/antd-v5'
 import { createForm } from '@formily/core'
 import { FormProvider, Field } from '@formily/react'
 

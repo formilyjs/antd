@@ -25,7 +25,7 @@ footer: Open-source MIT Licensed | Copyright © 2019-present<br />Powered by sel
 ## Installation
 
 ```bash
-npm install --save antd moment
+npm install --save antd dayjs
 npm install --save @formily/core @formily/react @formily/antd-v5
 
 ```

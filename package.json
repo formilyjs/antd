@@ -12,7 +12,7 @@
     "build": "formily-tpl build",
     "build:docs": "dumi build",
     "lint": "eslint .",
-    "release": "lerna publish from-package --yes --dist-tag next",
+    "release": "lerna publish from-package --yes",
     "start": "dumi dev",
     "test": "jest --coverage",
     "test:prod": "jest --coverage --silent",

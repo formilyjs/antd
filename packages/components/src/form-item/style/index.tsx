@@ -319,6 +319,9 @@ const genLableStyle: GenerateStyle = (token) => {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
+      label: {
+        whiteSpace: 'nowrap',
+      },
     },
 
     '&-tooltip': {

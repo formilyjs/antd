@@ -14,6 +14,20 @@
 
 ### No Change Log
 
+## v1.0.1-rc.1(2023-02-17)
+
+### :bug: Bug Fixes
+
+1. [fix: lable style](https://github.com/formilyjs/antd/commit/b9d0d03) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
+1. [fix: wrapperCol style](https://github.com/formilyjs/antd/commit/651786a) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
+1. [fix: del --dist-tag next](https://github.com/formilyjs/antd/commit/5509501) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
+### :memo: Documents Changes
+
+1. [docs: change moment to dayjs](https://github.com/formilyjs/antd/commit/9960aae) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
 ## v1.0.1-rc.0(2023-02-14)
 
 ### :tada: Enhancements

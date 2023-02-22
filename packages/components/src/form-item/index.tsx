@@ -80,7 +80,7 @@ export const BaseItem: React.FC<React.PropsWithChildren<IFormItemProps>> = ({
     }
     if (wrapperWidth) {
       wrapperStyle.width = wrapperWidth === 'auto' ? undefined : wrapperWidth
-      wrapperStyle.maxWidth = wrapperWidth === 'auto' ? undefined : wrapperWidth
+      wrapperStyle.maxWidth = wrapperWidth === 'auto' ? `calc(100% - ${labelWidth?labelWidth:0}px)` : wrapperWidth
     }
     // 栅格模式
   }

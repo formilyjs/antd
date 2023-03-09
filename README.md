@@ -37,7 +37,7 @@ The Awesome Components Library with Formily & Ant Design.
 
 ## WebSite
 
-<https://antd.formilyjs.org>
+<https://antd5.formilyjs.org>
 
 ## Community
 

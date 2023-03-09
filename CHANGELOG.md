@@ -14,6 +14,16 @@
 
 ### No Change Log
 
+## v1.0.1-rc.2(2023-03-09)
+
+### :bug: Bug Fixes
+
+1. [fix: fix format error](https://github.com/formilyjs/antd/commit/063de9c) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
+### :memo: Documents Changes
+
+1. [docs: change url to antd5](https://github.com/formilyjs/antd/commit/64dcefd) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
 ## v1.0.1-rc.1(2023-02-17)
 
 ### :bug: Bug Fixes

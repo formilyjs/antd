@@ -12,11 +12,15 @@ export function dayjsable(
   if (Array.isArray(value)) {
     return value.map((val) => {
       const date = dayjs(val, format)
-      return date.isValid() ? date : val
+      if (date.isValid()) return date
+      const _date = dayjs(val)
+      return _date.isValid() ? _date : val
     })
   } else {
     const date = dayjs(value, format)
-    return date.isValid() ? date : value
+    if (date.isValid()) return date
+    const _date = dayjs(value)
+    return _date.isValid() ? _date : value
   }
 }
 

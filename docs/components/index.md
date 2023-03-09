@@ -2,7 +2,7 @@
 
 ## Introduction
 
-@formily/antd-v5 3.0 is a professional component library for form scenarios based on Ant Design V5 encapsulation. It has the following characteristics:
+@formily/antd-v5 is a professional component library for form scenarios based on Ant Design V5 encapsulation. It has the following characteristics:
 
 - Only Formily 2.x is supported
   - Most components are not backward compatible

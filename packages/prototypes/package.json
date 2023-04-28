@@ -1,6 +1,6 @@
 {
   "name": "@formily/antd-v5-prototypes",
-  "version": "1.0.1-rc.2",
+  "version": "1.1.0-beta.0",
   "license": "MIT",
   "main": "lib",
   "types": "lib/index.d.ts",

@@ -14,6 +14,22 @@
 
 ### No Change Log
 
+## v1.1.0-beta.0(2023-04-28)
+
+### :bug: Bug Fixes
+
+1. [fix(array-table): fix sort error (#7)](https://github.com/formilyjs/antd/commit/22aac37) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
+### :memo: Documents Changes
+
+1. [docs: update antd 5.4](https://github.com/formilyjs/antd/commit/aa1e5be) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
+1. [docs: del 3.0](https://github.com/formilyjs/antd/commit/48dab1c) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
+### :blush: Other Changes
+
+1. [chore: @ant-design/icons 升级到 v5 (#5)](https://github.com/formilyjs/antd/commit/e1102b3) :point_right: ( [lvisei](https://github.com/lvisei) )
+
 ## v1.0.1-rc.2(2023-03-09)
 
 ### :bug: Bug Fixes

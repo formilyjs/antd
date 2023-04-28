@@ -46,6 +46,10 @@ export default genStyleHook('array-table', (token) => {
             },
           },
         },
+
+        table: {
+          overflow: 'hidden',
+        },
       },
 
       [`${componentCls}-sort-helper`]: {

@@ -1,5 +1,9 @@
 import { DndContext, DragEndEvent, DragStartEvent } from '@dnd-kit/core'
-import { SortableContext, useSortable } from '@dnd-kit/sortable'
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { ReactFC } from '@formily/reactive-react'
 import React, { createContext, useContext } from 'react'
@@ -41,7 +45,10 @@ export function SortableContainer<T extends React.HTMLAttributes<HTMLElement>>(
         onDragStart={onSortStart}
         onDragEnd={_onSortEnd}
       >
-        <SortableContext items={list.map((_, index) => index + start + 1)}>
+        <SortableContext
+          items={list.map((_, index) => index + start + 1)}
+          strategy={verticalListSortingStrategy}
+        >
           <Component {...(props as unknown as T)}>{props.children}</Component>
         </SortableContext>
       </DndContext>
@@ -69,7 +76,7 @@ export function SortableElement<T extends React.HTMLAttributes<HTMLElement>>(
     const sortable = useSortable({
       id: index + 1,
     })
-    const { setNodeRef, transform } = sortable
+    const { setNodeRef, transform, isDragging } = sortable
     if (transform) {
       switch (lockAxis) {
         case 'x':
@@ -86,6 +93,7 @@ export function SortableElement<T extends React.HTMLAttributes<HTMLElement>>(
     const style = {
       ...props.style,
       transform: CSS.Transform.toString(transform),
+      zIndex: isDragging ? 999 : 0,
     }
 
     return (

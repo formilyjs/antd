@@ -4,7 +4,14 @@ import { getGridStyle } from './grid'
 import { genOtherStyle } from './other'
 
 const genSmallStyle: GenerateStyle = (token) => {
-  const { componentCls, antCls, controlHeightSM, marginLG, fontSizeSM } = token
+  const {
+    componentCls,
+    antCls,
+    controlHeightSM,
+    marginLG,
+    fontSizeSM,
+    lineHeightSM,
+  } = token
   return {
     fontSize: fontSizeSM,
     lineHeight: controlHeightSM,
@@ -20,7 +27,7 @@ const genSmallStyle: GenerateStyle = (token) => {
     [`${componentCls}-control-content`]: {
       ' &-component': {
         minHeight: controlHeightSM - 4,
-        lineHeight: `${controlHeightSM}px`,
+        lineHeight: lineHeightSM,
       },
     },
 
@@ -147,6 +154,7 @@ const genLargeStyle: GenerateStyle = (token) => {
     controlHeightLG,
     controlHeightSM,
     marginLG,
+    lineHeightLG,
   } = token
   return {
     fontSize: fontSizeLG,
@@ -163,7 +171,7 @@ const genLargeStyle: GenerateStyle = (token) => {
     [`${componentCls}-control-content`]: {
       ' &-component': {
         minHeight: controlHeightLG - 2,
-        lineHeight: `${controlHeightLG + 2}px`,
+        lineHeight: lineHeightLG,
       },
     },
 
@@ -302,8 +310,14 @@ const genLargeStyle: GenerateStyle = (token) => {
 }
 
 const genLableStyle: GenerateStyle = (token) => {
-  const { componentCls, controlHeight, controlHeightSM, marginLG, marginSM } =
-    token
+  const {
+    componentCls,
+    controlHeight,
+    controlHeightSM,
+    marginLG,
+    marginSM,
+    lineHeight,
+  } = token
   return {
     lineHeight: `${controlHeight}px`,
     minHeight: controlHeight - 2,
@@ -364,7 +378,7 @@ const genLableStyle: GenerateStyle = (token) => {
         '&-component': {
           width: '100%',
           minHeight: controlHeight - 2,
-          lineHeight: `${controlHeight}px`,
+          lineHeight: lineHeight,
 
           '&-has-feedback-icon': {
             flex: 1,

@@ -1,6 +1,28 @@
 # Changelog
 
+## v3.0.0-alpha.2(2022-12-29)
+
+### :blush: Other Changes
+
+1. [ci: update cssinjs (#3)](https://github.com/formilyjs/antd/commit/d7825f2) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
+1. [ci: add tag next](https://github.com/formilyjs/antd/commit/cbbe499) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
+1. [ci: use codecov-action@v3](https://github.com/formilyjs/antd/commit/6f87b9e) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
+## v3.0.0-alpha.1(2022-12-05)
+
 ### No Change Log
+
+## v1.1.0-beta.1(2023-05-08)
+
+### :bug: Bug Fixes
+
+1. [fix: form-item line-height (#8)](https://github.com/formilyjs/antd/commit/71bc893) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
+### :memo: Documents Changes
+
+1. [docs: del invalid changelog](https://github.com/formilyjs/antd/commit/967a72f) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
 
 ## v1.1.0-beta.0(2023-04-28)
 

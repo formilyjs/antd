@@ -172,7 +172,7 @@ const getPlaceholder = (props: IUploadProps) => {
       </Button>
     )
   }
-  return <UploadOutlined style={{ fontSize: 20 }} />
+  return null
 }
 
 export const Upload: ComposedUpload = connect(

@@ -42,6 +42,9 @@
       "commit-msg": "commitlint --edit"
     }
   },
+  "resolutions": {
+    "rollup-plugin-typescript2": "^0.34.1"
+  },
   "dependencies": {},
   "devDependencies": {
     "@commitlint/cli": "^17.3.0",

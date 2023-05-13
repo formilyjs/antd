@@ -14,6 +14,16 @@
 
 ### No Change Log
 
+## v1.1.0-beta.2(2023-05-13)
+
+### :bug: Bug Fixes
+
+1. [fix: input -number style](https://github.com/formilyjs/antd/commit/14baa8f) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
+1. [fix(upload): upload button disappears when the maximum number of uploaded photos is reached(#3813) (#10)](https://github.com/formilyjs/antd/commit/b80e2b6) :point_right: ( [yangqian](https://github.com/yangqian) )
+
+1. [fix: form-item label wrap (#12)](https://github.com/formilyjs/antd/commit/343b1d2) :point_right: ( [大雄呀](https://github.com/大雄呀) )
+
 ## v1.1.0-beta.1(2023-05-08)
 
 ### :bug: Bug Fixes

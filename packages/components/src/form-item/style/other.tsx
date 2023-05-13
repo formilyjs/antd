@@ -498,6 +498,7 @@ export const genOtherStyle: GenerateStyle = (token) => {
 
       [`${antCls}-input-number`]: {
         width: '100%',
+        verticalAlign: 'top',
 
         [`+ ${antCls}-form-text`]: {
           marginInlineStart: marginSM,

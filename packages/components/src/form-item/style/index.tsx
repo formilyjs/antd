@@ -309,7 +309,7 @@ const genLargeStyle: GenerateStyle = (token) => {
   }
 }
 
-const genLableStyle: GenerateStyle = (token) => {
+const genLabelStyle: GenerateStyle = (token) => {
   const {
     componentCls,
     controlHeight,
@@ -425,6 +425,12 @@ const genFormItemStyle: GenerateStyle = (token) => {
       marginBottom: marginLG,
       fontSize: fontSize,
 
+      [`${componentCls}-label`]: genLabelStyle(token),
+
+      [`&${componentCls}-size-small`]: genSmallStyle(token),
+
+      [`&${componentCls}-size-large`]: genLargeStyle(token),
+
       '&-label': {
         '&-align': {
           [`&-left`]: {
@@ -436,15 +442,10 @@ const genFormItemStyle: GenerateStyle = (token) => {
           [`&-right`]: {
             [`> ${componentCls}-label`]: {
               justifyContent: 'flex-end',
-
-              label: {
-                whiteSpace: 'pre-line',
-                wordBreak: 'break-all',
-              },
             },
           },
         },
-        '&-wrap': {
+        ['&-wrap']: {
           [`${componentCls}-label`]: {
             label: {
               whiteSpace: 'pre-line',
@@ -453,12 +454,6 @@ const genFormItemStyle: GenerateStyle = (token) => {
           },
         },
       },
-
-      [`${componentCls}-label`]: genLableStyle(token),
-
-      [`&${componentCls}-size-small`]: genSmallStyle(token),
-
-      [`&${componentCls}-size-large`]: genLargeStyle(token),
     },
   }
 }

@@ -313,11 +313,11 @@ export const FormItem: ComposeFormItem = Object.assign(
         if (field.selfSuccesses.length) return split(field.selfSuccesses)
       }
       const takeAsterisk = () => {
-        if (field.required && field.pattern !== 'readPretty') {
-          return true
-        }
         if ('asterisk' in props) {
           return props.asterisk
+        }
+        if (field.required && field.pattern !== 'readPretty') {
+          return true
         }
         return false
       }

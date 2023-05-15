@@ -14,6 +14,16 @@
 
 ### No Change Log
 
+## v1.1.0-beta.3(2023-05-15)
+
+### :bug: Bug Fixes
+
+1. [fix: form-item always take asterisk from props if provided (#13)](https://github.com/formilyjs/antd/commit/95179e8) :point_right: ( [Stephen Zhang](https://github.com/Stephen Zhang) )
+
+### :blush: Other Changes
+
+1. [ci: fix tslib warn](https://github.com/formilyjs/antd/commit/8af2afd) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
 ## v1.1.0-beta.2(2023-05-13)
 
 ### :bug: Bug Fixes

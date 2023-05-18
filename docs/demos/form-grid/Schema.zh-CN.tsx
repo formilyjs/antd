@@ -1,4 +1,10 @@
-import { FormButtonGroup, FormItem, Input, Submit } from '@formily/antd-v5'
+import {
+  FormButtonGroup,
+  FormGrid,
+  FormItem,
+  Input,
+  Submit,
+} from '@formily/antd-v5'
 import { createForm } from '@formily/core'
 import { createSchemaField, FormProvider, ISchema } from '@formily/react'
 import React from 'react'
@@ -7,6 +13,7 @@ const SchemaField = createSchemaField({
   components: {
     Input,
     FormItem,
+    FormGrid,
   },
 })
 
@@ -15,39 +22,65 @@ const form = createForm()
 const schema: ISchema = {
   type: 'object',
   properties: {
-    input: {
-      type: 'string',
-      title: '输入框',
-      'x-decorator': 'FormItem',
-      'x-component': 'Input',
-      required: true,
+    grid: {
+      type: 'void',
+      'x-component': 'FormGrid',
       'x-component-props': {
-        style: {
-          width: 240,
-        },
+        minColumns: [4, 6, 10],
       },
-    },
-    textarea: {
-      type: 'string',
-      title: '文本框',
-      required: true,
-      'x-decorator': 'FormItem',
-      'x-component': 'Input.TextArea',
-      'x-component-props': {
-        style: {
-          width: 400,
+      properties: {
+        aaa: {
+          type: 'string',
+          title: 'AAA',
+          'x-decorator': 'FormItem',
+          'x-component': 'Input',
+        },
+        bbb: {
+          type: 'string',
+          title: 'BBB',
+          'x-decorator': 'FormItem',
+          'x-component': 'Input',
+        },
+        ccc: {
+          type: 'string',
+          title: 'CCC',
+          'x-decorator': 'FormItem',
+          'x-component': 'Input',
+        },
+        ddd: {
+          type: 'string',
+          title: 'DDD',
+          'x-decorator': 'FormItem',
+          'x-component': 'Input',
+        },
+        eee: {
+          type: 'string',
+          title: 'EEE',
+          'x-decorator': 'FormItem',
+          'x-component': 'Input',
+        },
+        fff: {
+          type: 'string',
+          title: 'FFF',
+          'x-decorator': 'FormItem',
+          'x-component': 'Input',
+        },
+        ggg: {
+          type: 'string',
+          title: 'GGG',
+          'x-decorator': 'FormItem',
+          'x-component': 'Input',
         },
       },
     },
   },
 }
-
 const Demo: React.FC = () => {
   return (
     <FormProvider form={form}>
       <SchemaField schema={schema} />
       <FormButtonGroup>
-        <Submit onSubmit={console.log}>提交</Submit>
+        <Submit onSubmit={console.log}>Submit</Submit>
       </FormButtonGroup>
     </FormProvider>
   )

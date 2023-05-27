@@ -372,7 +372,9 @@ const InternalArrayTable: ReactFC<TableProps<any>> = observer(
               }}
               onSortEnd={(event) => {
                 const { oldIndex, newIndex } = event
-                field.move(oldIndex, newIndex)
+                window.requestAnimationFrame(() => {
+                  field.move(oldIndex, newIndex)
+                })
               }}
               className={cls(`${prefixCls}-sort-helper`, props.className)}
             >

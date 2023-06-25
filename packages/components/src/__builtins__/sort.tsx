@@ -6,7 +6,7 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { ReactFC } from '@formily/reactive-react'
-import React, { createContext, useContext } from 'react'
+import React, { createContext, useContext, useMemo } from 'react'
 
 export interface ISortableContainerProps {
   list: any[]
@@ -76,7 +76,7 @@ export function SortableElement<T extends React.HTMLAttributes<HTMLElement>>(
     const sortable = useSortable({
       id: index + 1,
     })
-    const { setNodeRef, transform, isDragging } = sortable
+    const { setNodeRef, transform, transition, isDragging } = sortable
     if (transform) {
       switch (lockAxis) {
         case 'x':
@@ -90,11 +90,38 @@ export function SortableElement<T extends React.HTMLAttributes<HTMLElement>>(
           break
       }
     }
-    const style = {
-      ...props.style,
-      transform: CSS.Transform.toString(transform),
-      zIndex: isDragging ? 999 : 0,
-    }
+
+    const style = useMemo(() => {
+      const itemStyle: React.CSSProperties = {
+        position: 'relative',
+        touchAction: 'none',
+        zIndex: 1,
+        transform: `translate3d(${transform?.x || 0}px, ${
+          transform?.y || 0
+        }px, 0)`,
+        transition: `${transform ? 'all 200ms ease' : ''}`,
+      }
+      const dragStyle = {
+        transition,
+        opacity: '0.8',
+        transform: `translate3d(${transform?.x || 0}px, ${
+          transform?.y || 0
+        }px, 0)`,
+      }
+
+      const computedStyle = isDragging
+        ? {
+            ...itemStyle,
+            ...dragStyle,
+            ...props.style,
+          }
+        : {
+            ...itemStyle,
+            ...props.style,
+          }
+
+      return computedStyle
+    }, [isDragging, transform, transition, props.style])
 
     return (
       <SortableItemContext.Provider value={sortable}>

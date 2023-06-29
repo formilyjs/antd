@@ -4,7 +4,6 @@ import {
   useSortable,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
 import { ReactFC } from '@formily/reactive-react'
 import React, { createContext, useContext, useMemo } from 'react'
 

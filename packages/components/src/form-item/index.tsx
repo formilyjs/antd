@@ -140,11 +140,7 @@ export const BaseItem: React.FC<React.PropsWithChildren<IFormItemProps>> = ({
 
     if ((tooltipLayout === 'text' && tooltip) || overflow) {
       return (
-        <Tooltip
-          placement="top"
-          align={{ offset: [0, 10] }}
-          title={getOverflowTooltip()}
-        >
+        <Tooltip placement="top" title={getOverflowTooltip()}>
           {labelChildren}
         </Tooltip>
       )
@@ -156,7 +152,7 @@ export const BaseItem: React.FC<React.PropsWithChildren<IFormItemProps>> = ({
     if (tooltip && tooltipLayout === 'icon' && !overflow) {
       return (
         <span className={`${prefixCls}-label-tooltip-icon`}>
-          <Tooltip placement="top" align={{ offset: [0, 2] }} title={tooltip}>
+          <Tooltip placement="top" title={tooltip}>
             {tooltipIcon}
           </Tooltip>
         </span>

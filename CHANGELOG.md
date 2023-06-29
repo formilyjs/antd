@@ -14,6 +14,22 @@
 
 ### No Change Log
 
+## v1.1.0-beta.4(2023-06-29)
+
+### :bug: Bug Fixes
+
+1. [fix: fix race condition (#14)](https://github.com/formilyjs/antd/commit/ef7f993) :point_right: ( [csc-bo](https://github.com/csc-bo) )
+
+1. [fix: fix FormItem Tooltip #3876 (#16)](https://github.com/formilyjs/antd/commit/c0913a1) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
+### :memo: Documents Changes
+
+1. [docs: change FormGrid demo](https://github.com/formilyjs/antd/commit/f4e29f8) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
+### :rocket: Improve Performance
+
+1. [perf: ⚡️ 优化数组拖动动画 array-items/array-table (#15)](https://github.com/formilyjs/antd/commit/03376f8) :point_right: ( [ChaoGPT](https://github.com/ChaoGPT) )
+
 ## v1.1.0-beta.3(2023-05-15)
 
 ### :bug: Bug Fixes

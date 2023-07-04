@@ -2,6 +2,7 @@ import React from 'react'
 import { Checkbox, FormItem, FormButtonGroup, Submit } from '@formily/antd-v5'
 import { createForm } from '@formily/core'
 import { FormProvider, createSchemaField } from '@formily/react'
+import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 
 const SchemaField = createSchemaField({
   components: {
@@ -20,6 +21,11 @@ const schema = {
       title: '是否确认',
       'x-decorator': 'FormItem',
       'x-component': 'Checkbox',
+      'x-component-props': {
+        onInput(e: CheckboxChangeEvent) {
+          console.log(`checked = ${e.target.checked}`)
+        },
+      },
     },
     multiple: {
       type: 'array',

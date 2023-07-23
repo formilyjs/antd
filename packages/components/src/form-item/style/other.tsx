@@ -404,7 +404,7 @@ export const genOtherStyle: GenerateStyle = (token) => {
           [`${componentCls}-control-content-component`]: {
             width: '100%',
             minHeight: controlHeight - 2,
-            lineHeight: `${controlHeight + 2}px`,
+            lineHeight: `${controlHeight - 2}px`,
 
             [`&-has-feedback-icon`]: {
               flex: 1,

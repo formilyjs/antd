@@ -183,7 +183,6 @@ export const genOtherStyle: GenerateStyle = (token) => {
         [`${antCls}-select:not(${antCls}-select-disabled):not(${antCls}-select-customize-input)`]:
           {
             [`${antCls}-select-selector`]: {
-              backgroundColor: colorErrorBg,
               borderColor: `${colorError}  !important`,
             },
 
@@ -195,7 +194,6 @@ export const genOtherStyle: GenerateStyle = (token) => {
 
         [`${antCls}-input-number,
             ${antCls}-picker`]: {
-          backgroundColor: colorErrorBg,
           borderColor: colorError,
 
           [`&-focused,
@@ -204,13 +202,11 @@ export const genOtherStyle: GenerateStyle = (token) => {
           },
 
           [`&:not([disabled]):hover`]: {
-            backgroundColor: colorErrorBg,
             borderColor: colorError,
           },
         },
 
         [`${antCls}-cascader-picker:focus ${antCls}-cascader-input`]: {
-          backgroundColor: colorErrorBg,
           ...active(colorError),
         },
 

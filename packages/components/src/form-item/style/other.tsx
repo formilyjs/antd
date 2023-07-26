@@ -46,8 +46,8 @@ export const genOtherStyle: GenerateStyle = (token) => {
 
         // Vertical Label: https://github.com/ant-design/ant-design/blob/master/components/form/style/index.ts#L391C1-L404C4
         [`${componentCls}-label`]: {
-          lineHeight: 'unset',
-          minHeight: 'unset',
+          minHeight: lineHeight * fontSize + paddingXS,
+          lineHeight,
           padding: `0 0 ${paddingXS}px`,
 
           '&-content': {

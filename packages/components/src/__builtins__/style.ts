@@ -84,6 +84,7 @@ export const genStyleHook = <ComponentName extends OverrideComponent>(
         () => {
           const componentCls = `.${prefixCls}`
           const mergedToken: TokenWithCommonCls<GlobalToken> = merge(token, {
+            ...token['Form'], // Merge the antd form token
             componentCls,
             prefixCls,
             iconCls: `.${iconPrefixCls}`,

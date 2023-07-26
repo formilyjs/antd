@@ -16,6 +16,7 @@ export const genOtherStyle: GenerateStyle = (token) => {
     antCls,
     fontSize,
     marginSM,
+    marginLG,
     controlHeight,
     controlHeightSM,
     lineHeight,
@@ -23,6 +24,7 @@ export const genOtherStyle: GenerateStyle = (token) => {
     controlOutline,
     colorPrimaryHover,
     colorTextSecondary,
+    paddingXS,
   } = token
 
   const hover = (color = colorPrimaryBorderHover): CSSProperties => ({
@@ -41,6 +43,18 @@ export const genOtherStyle: GenerateStyle = (token) => {
     [componentCls]: {
       '&-layout-vertical': {
         display: 'block',
+
+        // Vertical Label: https://github.com/ant-design/ant-design/blob/master/components/form/style/index.ts#L391C1-L404C4
+        [`${componentCls}-label`]: {
+          lineHeight: 'unset',
+          minHeight: 'unset',
+          padding: `0 0 ${paddingXS}px`,
+
+          '&-content': {
+            whiteSpace: 'initial',
+            textAlign: 'start',
+          },
+        },
 
         [`${antCls}-label`]: {
           minHeight: controlHeight - 10,
@@ -210,7 +224,7 @@ export const genOtherStyle: GenerateStyle = (token) => {
 
       '&-feedback-layout': {
         '&-terse': {
-          marginBottom: 8,
+          marginBottom: marginSM,
 
           [`&${componentCls}-feedback-has-text:not(${componentCls}-inset)`]: {
             marginBottom: 0,
@@ -218,7 +232,7 @@ export const genOtherStyle: GenerateStyle = (token) => {
         },
 
         '&-loose': {
-          marginBottom: 22,
+          marginBottom: marginLG,
           [`&${componentCls}-feedback-has-text:not(${componentCls}-inset)`]: {
             marginBottom: 0,
           },
@@ -390,7 +404,7 @@ export const genOtherStyle: GenerateStyle = (token) => {
           [`${componentCls}-control-content-component`]: {
             width: '100%',
             minHeight: controlHeight - 2,
-            lineHeight: `${controlHeight + 2}px`,
+            lineHeight: `${controlHeight - 2}px`,
 
             [`&-has-feedback-icon`]: {
               flex: 1,

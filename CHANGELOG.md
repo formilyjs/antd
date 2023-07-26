@@ -14,6 +14,26 @@
 
 ### No Change Log
 
+## v1.1.0(2023-07-26)
+
+### :tada: Enhancements
+
+1. [feat(components): fix antd vertical label style & merge the form token of antd theme (#18)](https://github.com/formilyjs/antd/commit/458da30) :point_right: ( [Yee](https://github.com/Yee) )
+
+1. [feat: support https://github.com/ant-design/antd-moment-webpack-plugin (#19)](https://github.com/formilyjs/antd/commit/e44cf8b) :point_right: ( [Yee](https://github.com/Yee) )
+
+### :bug: Bug Fixes
+
+1. [fix(components): vertical label bg (#23)](https://github.com/formilyjs/antd/commit/64e9c0a) :point_right: ( [Yee](https://github.com/Yee) )
+
+### :blush: Other Changes
+
+1. [ci: 去除 Upload coverage to Codecov](https://github.com/formilyjs/antd/commit/17744f9) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
+1. [ci: use codecov-action@v1](https://github.com/formilyjs/antd/commit/a090971) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
+1. [style: del code](https://github.com/formilyjs/antd/commit/876198c) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
 ## v1.1.0-beta.4(2023-06-29)
 
 ### :bug: Bug Fixes

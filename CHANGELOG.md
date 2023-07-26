@@ -1,30 +1,16 @@
 # Changelog
 
-## v3.0.0-alpha.2(2022-12-29)
-
-### :blush: Other Changes
-
-1. [ci: update cssinjs (#3)](https://github.com/formilyjs/antd/commit/d7825f2) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
-
-1. [ci: add tag next](https://github.com/formilyjs/antd/commit/cbbe499) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
-
-1. [ci: use codecov-action@v3](https://github.com/formilyjs/antd/commit/6f87b9e) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
-
-## v3.0.0-alpha.1(2022-12-05)
-
-### No Change Log
-
 ## v1.1.0(2023-07-26)
 
 ### :tada: Enhancements
 
-1. [feat(components): fix antd vertical label style & merge the form token of antd theme (#18)](https://github.com/formilyjs/antd/commit/458da30) :point_right: ( [Yee](https://github.com/Yee) )
+1. [feat(components): fix antd vertical label style & merge the form token of antd theme (#18)](https://github.com/formilyjs/antd/commit/458da30) :point_right: ( [yee94](https://github.com/yee94) )
 
-1. [feat: support https://github.com/ant-design/antd-moment-webpack-plugin (#19)](https://github.com/formilyjs/antd/commit/e44cf8b) :point_right: ( [Yee](https://github.com/Yee) )
+1. [feat: support https://github.com/ant-design/antd-moment-webpack-plugin (#19)](https://github.com/formilyjs/antd/commit/e44cf8b) :point_right: ( [yee94](https://github.com/yee94) )
 
 ### :bug: Bug Fixes
 
-1. [fix(components): vertical label bg (#23)](https://github.com/formilyjs/antd/commit/64e9c0a) :point_right: ( [Yee](https://github.com/Yee) )
+1. [fix(components): vertical label bg (#23)](https://github.com/formilyjs/antd/commit/64e9c0a) :point_right: ( [yee94](https://github.com/yee94) )
 
 ### :blush: Other Changes
 

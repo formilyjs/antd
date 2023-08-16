@@ -8,6 +8,7 @@ export default genStyleHook('array-table', (token) => {
     fontSizeSM,
     colorBgBase,
     colorBorder,
+    colorBgContainer,
   } = token
   const itemCls = `${antCls}-formily-item`
 
@@ -53,8 +54,8 @@ export default genStyleHook('array-table', (token) => {
       },
 
       [`${componentCls}-sort-helper`]: {
-        background: '#fff',
-        border: '1px solid #eee',
+        background: colorBgContainer,
+        border: `1px solid ${colorBorder}`,
         zIndex: 10,
       },
     },

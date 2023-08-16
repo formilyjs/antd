@@ -5,7 +5,6 @@ export const genOtherStyle: GenerateStyle = (token) => {
   const {
     componentCls,
     colorError,
-    colorErrorBg,
     colorWarningBg,
     colorWarning,
     colorBorder,

@@ -30,8 +30,9 @@ export function SortableContainer<T extends React.HTMLAttributes<HTMLElement>>(
   }) => {
     const _onSortEnd = (event: DragEndEvent) => {
       const { active, over } = event
-      const oldIndex = (active.id as number) - 1
-      const newIndex = (over?.id as number) - 1
+      if (!over) return
+      const oldIndex = +active.id - 1
+      const newIndex = +over.id - 1
       onSortEnd?.({
         oldIndex,
         newIndex,
@@ -91,13 +92,14 @@ export function SortableElement<T extends React.HTMLAttributes<HTMLElement>>(
     }
 
     const style = useMemo(() => {
+      const zIndex = transform ? 1 : 'none'
       const itemStyle: React.CSSProperties = {
         position: 'relative',
         touchAction: 'none',
-        zIndex: 1,
-        transform: `translate3d(${transform?.x || 0}px, ${
-          transform?.y || 0
-        }px, 0)`,
+        zIndex,
+        transform: transform
+          ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
+          : 'none',
         transition: `${transform ? 'all 200ms ease' : ''}`,
       }
       const dragStyle = {

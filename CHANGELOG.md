@@ -14,6 +14,14 @@
 
 ### No Change Log
 
+## v1.1.2(2023-09-21)
+
+### :bug: Bug Fixes
+
+1. [fix: fix table drag and style bugs (#26)](https://github.com/formilyjs/antd/commit/ac4c821) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
+1. [fix: del dead code](https://github.com/formilyjs/antd/commit/a2dbe1f) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
 ## v1.1.1(2023-08-16)
 
 ### :tada: Enhancements

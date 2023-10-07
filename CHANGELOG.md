@@ -1,6 +1,24 @@
 # Changelog
 
+## v3.0.0-alpha.2(2022-12-29)
+
+### :blush: Other Changes
+
+1. [ci: update cssinjs (#3)](https://github.com/formilyjs/antd/commit/d7825f2) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
+1. [ci: add tag next](https://github.com/formilyjs/antd/commit/cbbe499) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
+1. [ci: use codecov-action@v3](https://github.com/formilyjs/antd/commit/6f87b9e) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
+## v3.0.0-alpha.1(2022-12-05)
+
 ### No Change Log
+
+## v1.1.3(2023-10-07)
+
+### :bug: Bug Fixes
+
+1. [fix: fix style position error (#27)](https://github.com/formilyjs/antd/commit/8ff04c8) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
 
 ## v1.1.2(2023-09-21)
 

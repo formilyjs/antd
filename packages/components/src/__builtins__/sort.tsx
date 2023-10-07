@@ -93,8 +93,9 @@ export function SortableElement<T extends React.HTMLAttributes<HTMLElement>>(
 
     const style = useMemo(() => {
       const zIndex = transform ? 1 : 'none'
+      const position = transform ? 'relative' : 'unset'
       const itemStyle: React.CSSProperties = {
-        position: 'relative',
+        position,
         touchAction: 'none',
         zIndex,
         transform: transform

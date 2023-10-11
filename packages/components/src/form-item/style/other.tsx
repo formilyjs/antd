@@ -529,6 +529,20 @@ export const genOtherStyle: GenerateStyle = (token) => {
           ${antCls}-input-group ${antCls}-cascader-picker`]: {
         width: 'auto',
       },
+
+      '&-popover': {
+        [`${componentCls}-error-help`]: {
+          color: `${colorError}  !important`,
+        },
+
+        [`${componentCls}-warning-help`]: {
+          color: colorWarning,
+        },
+
+        [`${componentCls}-success-help`]: {
+          color: `${colorSuccess} !important`,
+        },
+      },
     },
   }
 }

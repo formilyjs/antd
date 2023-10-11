@@ -94,6 +94,10 @@ export const BaseItem: React.FC<React.PropsWithChildren<IFormItemProps>> = ({
     feedbackLayout === 'popover' ? (
       <Popover
         autoAdjustOverflow
+        overlayClassName={cls(
+          `${prefixCls}-popover`,
+          `${prefixCls}-${feedbackStatus}-popover`
+        )}
         placement="top"
         content={
           <div

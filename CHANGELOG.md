@@ -14,6 +14,12 @@
 
 ### No Change Log
 
+## v1.1.5(2023-10-11)
+
+### :bug: Bug Fixes
+
+1. [fix(antd): fix the style of feedback popover](https://github.com/formilyjs/antd/commit/311906c) :point_right: ( [yee.wang](https://github.com/yee.wang) )
+
 ## v1.1.4(2023-10-11)
 
 ### :bug: Bug Fixes

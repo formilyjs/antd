@@ -94,10 +94,7 @@ export const BaseItem: React.FC<React.PropsWithChildren<IFormItemProps>> = ({
     feedbackLayout === 'popover' ? (
       <Popover
         autoAdjustOverflow
-        overlayClassName={cls(
-          `${prefixCls}-popover`,
-          `${prefixCls}-${feedbackStatus}-popover`
-        )}
+        overlayClassName={cls(prefixCls, `${prefixCls}-popover`)}
         placement="top"
         content={
           <div
@@ -112,7 +109,7 @@ export const BaseItem: React.FC<React.PropsWithChildren<IFormItemProps>> = ({
         open={!!feedbackText}
         getPopupContainer={getPopupContainer}
       >
-        {children}
+        <>{children}</>
       </Popover>
     ) : (
       children

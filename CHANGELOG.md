@@ -14,6 +14,12 @@
 
 ### No Change Log
 
+## v1.1.4(2023-10-11)
+
+### :bug: Bug Fixes
+
+1. [fix: the feedback popup layout style (#28)](https://github.com/formilyjs/antd/commit/68fb095) :point_right: ( [Yee](https://github.com/Yee) )
+
 ## v1.1.3(2023-10-07)
 
 ### :bug: Bug Fixes

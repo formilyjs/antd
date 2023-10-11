@@ -14,6 +14,12 @@
 
 ### No Change Log
 
+## v1.1.6(2023-10-11)
+
+### :bug: Bug Fixes
+
+1. [fix(antd): popover style exception](https://github.com/formilyjs/antd/commit/128b1c9) :point_right: ( [yee.wang](https://github.com/yee.wang) )
+
 ## v1.1.5(2023-10-11)
 
 ### :bug: Bug Fixes

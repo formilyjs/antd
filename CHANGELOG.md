@@ -14,6 +14,12 @@
 
 ### No Change Log
 
+## v1.1.7(2023-10-13)
+
+### :bug: Bug Fixes
+
+1. [fix: fix collapse and tab props error (#29)](https://github.com/formilyjs/antd/commit/be653bd) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
 ## v1.1.6(2023-10-11)
 
 ### :bug: Bug Fixes

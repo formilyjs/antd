@@ -37,11 +37,14 @@ const usePanels = () => {
     const field = collapseField.query(collapseField.address.concat(name)).take()
     if (field?.display === 'none' || field?.display === 'hidden') return
     if (schema['x-component']?.indexOf('CollapsePanel') > -1) {
+      const key =
+        field?.componentProps?.key || schema?.['x-component-props']?.key || name
       panels.push({
         name,
         props: {
           ...schema?.['x-component-props'],
-          key: schema?.['x-component-props']?.key || name,
+          ...field?.componentProps,
+          key,
         },
         schema,
       })

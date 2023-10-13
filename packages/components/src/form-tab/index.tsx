@@ -43,11 +43,14 @@ const useTabs = () => {
     const field = tabsField.query(tabsField.address.concat(name)).take()
     if (field?.display === 'none' || field?.display === 'hidden') return
     if (schema['x-component']?.indexOf('TabPane') > -1) {
+      const key =
+        field?.componentProps?.key || schema?.['x-component-props']?.key || name
       tabs.push({
         name,
         props: {
-          key: schema?.['x-component-props']?.key || name,
           ...schema?.['x-component-props'],
+          ...field?.componentProps,
+          key,
         },
         schema,
       })

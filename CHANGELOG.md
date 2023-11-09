@@ -14,6 +14,16 @@
 
 ### No Change Log
 
+## v1.1.8(2023-11-09)
+
+### :bug: Bug Fixes
+
+1. [fix: recover array-base actors icon button wrap (#30)](https://github.com/formilyjs/antd/commit/9f6fe64) :point_right: ( [bob](https://github.com/bob) )
+
+### :memo: Documents Changes
+
+1. [docs(antd/checkbox): add an example of the checkbox change event (#17)](https://github.com/formilyjs/antd/commit/8246938) :point_right: ( [zhangfeixiang](https://github.com/zhangfeixiang) )
+
 ## v1.1.7(2023-10-13)
 
 ### :bug: Bug Fixes

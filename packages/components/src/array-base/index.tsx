@@ -6,7 +6,6 @@ import {
   PlusOutlined,
   UpOutlined,
 } from '@ant-design/icons'
-import { AntdIconProps } from '@ant-design/icons/lib/components/AntdIcon'
 import { ArrayField } from '@formily/core'
 import {
   ReactFC,
@@ -16,7 +15,7 @@ import {
   useField,
   useFieldSchema,
 } from '@formily/react'
-import { clone, isValid } from '@formily/shared'
+import { clone, isUndef, isValid } from '@formily/shared'
 import { Button, ButtonProps } from 'antd'
 import cls from 'classnames'
 import React, { createContext, forwardRef, useContext } from 'react'
@@ -40,7 +39,7 @@ export interface IArrayBaseItemProps {
   record: ((index: number) => Record<string, any>) | Record<string, any>
 }
 
-type CommonProps = AntdIconProps & {
+type CommonProps = ButtonProps & {
   index?: number
 }
 
@@ -198,8 +197,7 @@ const Addition: ReactFC<IArrayBaseAdditionProps> = (props) => {
     </Button>
   )
 }
-
-const Copy = forwardRef<HTMLSpanElement, CommonProps>((props, ref) => {
+const Copy = forwardRef<HTMLButtonElement, CommonProps>((props, ref) => {
   const self = useField()
   const array = useArray()
   const index = useIndex(props.index) || 0
@@ -208,8 +206,16 @@ const Copy = forwardRef<HTMLSpanElement, CommonProps>((props, ref) => {
   if (!array) return null
   if (array.field?.pattern !== 'editable') return null
   return wrapSSR(
-    <CopyOutlined
+    <Button
+      type="ghost"
       {...props}
+      style={{
+        padding: '0 0 0 6px',
+        width: 'auto',
+        height: 'auto',
+        ...props.style,
+      }}
+      disabled={self?.disabled}
       className={cls(
         `${prefixCls}-copy`,
         hashId,
@@ -221,29 +227,42 @@ const Copy = forwardRef<HTMLSpanElement, CommonProps>((props, ref) => {
         if (self?.disabled) return
         e.stopPropagation()
         if (array.props?.disabled) return
+        if (props.onClick) {
+          props.onClick(e)
+          if (e.defaultPrevented) return
+        }
         const value = clone(array?.field?.value[index])
         const distIndex = index + 1
         array.field?.insert?.(distIndex, value)
         array.props?.onCopy?.(distIndex)
-        if (props.onClick) {
-          props.onClick(e)
-        }
       }}
-    />
+      icon={isUndef(props.icon) ? <CopyOutlined /> : props.icon}
+    >
+      {props.title || self.title}
+    </Button>
   )
 })
 
 const Remove = forwardRef<HTMLSpanElement, CommonProps>((props, ref) => {
-  const index = useIndex(props.index) || 0
+  const index = useIndex(props.index)
   const self = useField()
   const array = useArray()
   const prefixCls = usePrefixCls('formily-array-base')
   const [wrapSSR, hashId] = useStyle(prefixCls)
+
   if (!array) return null
   if (array.field?.pattern !== 'editable') return null
   return wrapSSR(
-    <DeleteOutlined
+    <Button
+      type="ghost"
       {...props}
+      style={{
+        padding: '0 0 0 6px',
+        width: 'auto',
+        height: 'auto',
+        ...props.style,
+      }}
+      disabled={self?.disabled}
       className={cls(
         `${prefixCls}-remove`,
         hashId,
@@ -254,30 +273,40 @@ const Remove = forwardRef<HTMLSpanElement, CommonProps>((props, ref) => {
       onClick={(e) => {
         if (self?.disabled) return
         e.stopPropagation()
-        array.field?.remove?.(index)
-        array.props?.onRemove?.(index)
         if (props.onClick) {
           props.onClick(e)
+          if (e.defaultPrevented) return
         }
+        array.field?.remove?.(index)
+        array.props?.onRemove?.(index)
       }}
-    />
+      icon={isUndef(props.icon) ? <DeleteOutlined /> : props.icon}
+    >
+      {props.title || self.title}
+    </Button>
   )
 })
 
 const MoveDown = forwardRef<HTMLSpanElement, CommonProps>((props, ref) => {
-  const index = useIndex(props.index) || 0
+  const index = useIndex(props.index)
   const self = useField()
   const array = useArray()
   const prefixCls = usePrefixCls('formily-array-base')
-  const [wrapSSR, hashId] = useStyle(prefixCls)
   if (!array) return null
   if (array.field?.pattern !== 'editable') return null
-  return wrapSSR(
-    <DownOutlined
+  return (
+    <Button
+      type="ghost"
       {...props}
+      style={{
+        padding: '0 0 0 6px',
+        width: 'auto',
+        height: 'auto',
+        ...props.style,
+      }}
+      disabled={self?.disabled}
       className={cls(
         `${prefixCls}-move-down`,
-        hashId,
         self?.disabled ? `${prefixCls}-move-down-disabled` : '',
         props.className
       )}
@@ -285,13 +314,17 @@ const MoveDown = forwardRef<HTMLSpanElement, CommonProps>((props, ref) => {
       onClick={(e) => {
         if (self?.disabled) return
         e.stopPropagation()
-        array.field?.moveDown?.(index)
-        array.props?.onMoveDown?.(index)
         if (props.onClick) {
           props.onClick(e)
+          if (e.defaultPrevented) return
         }
+        array.field?.moveDown?.(index)
+        array.props?.onMoveDown?.(index)
       }}
-    />
+      icon={isUndef(props.icon) ? <DownOutlined /> : props.icon}
+    >
+      {props.title || self.title}
+    </Button>
   )
 })
 
@@ -300,15 +333,21 @@ const MoveUp = forwardRef<HTMLSpanElement, CommonProps>((props, ref) => {
   const self = useField()
   const array = useArray()
   const prefixCls = usePrefixCls('formily-array-base')
-  const [wrapSSR, hashId] = useStyle(prefixCls)
   if (!array) return null
   if (array.field?.pattern !== 'editable') return null
-  return wrapSSR(
-    <UpOutlined
+  return (
+    <Button
+      type="ghost"
       {...props}
+      style={{
+        padding: '0 0 0 6px',
+        width: 'auto',
+        height: 'auto',
+        ...props.style,
+      }}
+      disabled={self?.disabled}
       className={cls(
         `${prefixCls}-move-up`,
-        hashId,
         self?.disabled ? `${prefixCls}-move-up-disabled` : '',
         props.className
       )}
@@ -316,13 +355,17 @@ const MoveUp = forwardRef<HTMLSpanElement, CommonProps>((props, ref) => {
       onClick={(e) => {
         if (self?.disabled) return
         e.stopPropagation()
-        array?.field?.moveUp(index)
-        array?.props?.onMoveUp?.(index)
         if (props.onClick) {
           props.onClick(e)
+          if (e.defaultPrevented) return
         }
+        array?.field?.moveUp(index)
+        array?.props?.onMoveUp?.(index)
       }}
-    />
+      icon={isUndef(props.icon) ? <UpOutlined /> : props.icon}
+    >
+      {props.title || self.title}
+    </Button>
   )
 })
 

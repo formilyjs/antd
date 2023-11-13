@@ -103,7 +103,7 @@ export const genOtherStyle: GenerateStyle = (token) => {
           ${antCls}-input-affix-wrapper,
           ${antCls}-input-affix-wrapper,
           ${antCls}-input`]: {
-          borderColor: colorSuccess,
+          borderColor: colorWarning,
         },
 
         [`${antCls}-select-selector,
@@ -114,14 +114,14 @@ export const genOtherStyle: GenerateStyle = (token) => {
           ${antCls}-input-affix-wrapper,
           ${antCls}-input-affix-wrapper:hover,
           ${antCls}-input:hover`]: {
-          borderColor: colorSuccess,
+          borderColor: colorWarning,
         },
 
         [`${antCls}-select:not(${antCls}-select-disabled):not(${antCls}-select-customize-input)`]:
           {
             [`${antCls}-select-selector`]: {
               backgroundColor: colorWarningBg,
-              borderColor: colorSuccess,
+              borderColor: colorWarning,
             },
 
             [`&${antCls}-select-open ${antCls}-select-selector,

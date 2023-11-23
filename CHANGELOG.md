@@ -14,6 +14,14 @@
 
 ### No Change Log
 
+## v1.1.9(2023-11-23)
+
+### :bug: Bug Fixes
+
+1. [fix: the style of form-item (#31)](https://github.com/formilyjs/antd/commit/1ed63ec) :point_right: ( [John](https://github.com/John) )
+
+1. [fix: fix arrayBase.addition icon custom (#33)](https://github.com/formilyjs/antd/commit/0e9c349) :point_right: ( [光光](https://github.com/光光) )
+
 ## v1.1.8(2023-11-09)
 
 ### :bug: Bug Fixes

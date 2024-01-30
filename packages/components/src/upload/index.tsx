@@ -104,7 +104,18 @@ const normalizeFileList = (fileList?: UploadFile[]) => {
         thumbUrl: getImageByUrl(
           getThumbURL(file) || getThumbURL(file?.response),
           {
-            exclude: ['.png', '.jpg', '.jpeg', '.gif'],
+            exclude: [
+              '.png',
+              '.jpg',
+              '.jpeg',
+              '.gif',
+              '.svg',
+              '.webp',
+              '.ico',
+              '.icon',
+              '.tif',
+              '.tiff',
+            ],
           }
         ),
       }

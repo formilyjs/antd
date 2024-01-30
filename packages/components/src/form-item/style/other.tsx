@@ -21,7 +21,8 @@ export const genOtherStyle: GenerateStyle = (token) => {
     lineHeight,
     controlOutlineWidth,
     controlOutline,
-    colorPrimaryHover,
+    colorErrorOutline,
+    colorWarningOutline,
     colorTextSecondary,
     paddingXS,
   } = token
@@ -31,11 +32,14 @@ export const genOtherStyle: GenerateStyle = (token) => {
     borderInlineEndWidth: lineWidth,
   })
 
-  const active = (color = colorPrimary): CSSProperties => ({
+  const active = (
+    color = colorPrimary,
+    outlineColor = controlOutline
+  ): CSSProperties => ({
     borderColor: color,
     borderInlineEndWidth: lineWidth,
     outline: 0,
-    boxShadow: `${controlOutlineWidth} 0 ${controlOutline} ${colorPrimaryHover}`,
+    boxShadow: `0 0 0 ${controlOutlineWidth}px ${outlineColor}`,
   })
 
   const extraLabelHeight = controlHeightSM - 2
@@ -103,7 +107,7 @@ export const genOtherStyle: GenerateStyle = (token) => {
           ${antCls}-input-affix-wrapper,
           ${antCls}-input-affix-wrapper,
           ${antCls}-input`]: {
-          borderColor: colorSuccess,
+          borderColor: colorWarning,
         },
 
         [`${antCls}-select-selector,
@@ -114,19 +118,19 @@ export const genOtherStyle: GenerateStyle = (token) => {
           ${antCls}-input-affix-wrapper,
           ${antCls}-input-affix-wrapper:hover,
           ${antCls}-input:hover`]: {
-          borderColor: colorSuccess,
+          borderColor: colorWarning,
         },
 
         [`${antCls}-select:not(${antCls}-select-disabled):not(${antCls}-select-customize-input)`]:
           {
             [`${antCls}-select-selector`]: {
               backgroundColor: colorWarningBg,
-              borderColor: colorSuccess,
+              borderColor: colorWarning,
             },
 
             [`&${antCls}-select-open ${antCls}-select-selector,
               &${antCls}-select-focused ${antCls}-select-selector`]: {
-              ...active(colorWarning),
+              ...active(colorWarning, colorWarningOutline),
             },
           },
 
@@ -137,7 +141,7 @@ export const genOtherStyle: GenerateStyle = (token) => {
 
           [`&-focused,
             &:focus`]: {
-            ...active(colorWarning),
+            ...active(colorWarning, colorWarningOutline),
           },
 
           '&:not([disabled]):hover': {
@@ -148,14 +152,14 @@ export const genOtherStyle: GenerateStyle = (token) => {
 
         [`${antCls}-cascader-picker:focus ${antCls}-cascader-input`]: {
           backgroundColor: colorWarningBg,
-          ...active(colorWarning),
+          ...active(colorWarning, colorWarningOutline),
         },
 
         [`${antCls}-input-affix-wrapper-focused,
           ${antCls}-input-affix-wrapper:focus,
           ${antCls}-input-focused,
           ${antCls}-input:focus`]: {
-          ...active(colorWarning),
+          ...active(colorWarning, colorWarningOutline),
         },
       },
 
@@ -189,7 +193,7 @@ export const genOtherStyle: GenerateStyle = (token) => {
 
             [`&${antCls}-select-open ${antCls}-select-selector,
                 &${antCls}-select-focused ${antCls}-select-selector`]: {
-              ...active(colorError),
+              ...active(colorError, colorErrorOutline),
             },
           },
 
@@ -199,7 +203,7 @@ export const genOtherStyle: GenerateStyle = (token) => {
 
           [`&-focused,
             &:focus`]: {
-            ...active(colorError),
+            ...active(colorError, colorErrorOutline),
           },
 
           [`&:not([disabled]):hover`]: {
@@ -208,14 +212,14 @@ export const genOtherStyle: GenerateStyle = (token) => {
         },
 
         [`${antCls}-cascader-picker:focus ${antCls}-cascader-input`]: {
-          ...active(colorError),
+          ...active(colorError, colorErrorOutline),
         },
 
         [`${antCls}-input-affix-wrapper-focused,
             ${antCls}-input-affix-wrapper:focus,
             ${antCls}-input-focused,
             ${antCls}-input:focus`]: {
-          ...active(colorError),
+          ...active(colorError, colorErrorOutline),
         },
       },
 

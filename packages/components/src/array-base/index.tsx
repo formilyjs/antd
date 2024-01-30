@@ -191,7 +191,7 @@ const Addition: ReactFC<IArrayBaseAdditionProps> = (props) => {
           props.onClick(e)
         }
       }}
-      icon={<PlusOutlined />}
+      icon={isUndef(props.icon) ? <PlusOutlined /> : props.icon}
     >
       {props.title || self.title}
     </Button>

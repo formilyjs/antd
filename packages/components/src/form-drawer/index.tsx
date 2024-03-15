@@ -179,7 +179,7 @@ const DrawerExtra: ReactFC = (props) => {
   const prefixCls = usePrefixCls('drawer')
   useLayoutEffect(() => {
     const content = ref.current
-      ?.closest(`.${prefixCls}-wrapper-body`)
+      ?.closest(`.${prefixCls}-content`)
       ?.querySelector(`.${prefixCls}-header`)
     if (content) {
       if (!extraRef.current) {
@@ -211,7 +211,7 @@ const DrawerFooter: ReactFC = (props) => {
   const footerRef = useRef<HTMLDivElement>()
   const prefixCls = usePrefixCls('drawer')
   useLayoutEffect(() => {
-    const content = ref.current?.closest(`.${prefixCls}-wrapper-body`)
+    const content = ref.current?.closest(`.${prefixCls}-content`)
     if (content) {
       if (!footerRef.current) {
         footerRef.current = content.querySelector(

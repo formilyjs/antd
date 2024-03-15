@@ -76,6 +76,20 @@ export default () => {
                   <Reset>重置</Reset>
                 </FormButtonGroup>
               </FormDrawer.Extra>
+              <FormDrawer.Footer>
+                <FormButtonGroup align="right">
+                  <Submit
+                    onSubmit={() => {
+                      return new Promise((resolve) => {
+                        setTimeout(resolve, 1000)
+                      })
+                    }}
+                  >
+                    Submit
+                  </Submit>
+                  <Reset>Reset</Reset>
+                </FormButtonGroup>
+              </FormDrawer.Footer>
             </FormLayout>
           )
         })

@@ -14,6 +14,12 @@
 
 ### No Change Log
 
+## v1.2.0(2024-04-10)
+
+### :tada: Enhancements
+
+1. [feat: formdrawer 支持 antd^5.13.0 版本,解决 footer/extra 不显示问题 (#36)](https://github.com/formilyjs/antd/commit/dc41909) :point_right: ( [ove](https://github.com/ove) )
+
 ## v1.1.9(2023-11-23)
 
 ### :bug: Bug Fixes

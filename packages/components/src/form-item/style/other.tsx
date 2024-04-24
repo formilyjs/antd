@@ -474,7 +474,7 @@ export const genOtherStyle: GenerateStyle = (token) => {
       },
 
       [`${componentCls}-warning-help`]: {
-        color: colorWarning,
+        color: `${colorWarning} !important`,
       },
 
       [`${componentCls}-success-help`]: {

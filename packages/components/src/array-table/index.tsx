@@ -246,7 +246,7 @@ const ArrayTablePagination: ReactFC<IArrayTablePaginationProps> = (props) => {
   const [current, setCurrent] = useState(1)
   const prefixCls = usePrefixCls('formily-array-table')
   const [wrapSSR, hashId] = useStyle(prefixCls)
-  const pageSize = props.pageSize || 10
+  const [pageSize, setPageSize] = useState(props.pageSize || 10)
   const size = props.size || 'default'
   const dataSource = props.dataSource || []
   const startIndex = (current - 1) * pageSize
@@ -263,6 +263,13 @@ const ArrayTablePagination: ReactFC<IArrayTablePaginationProps> = (props) => {
   const handleChange = (current: number) => {
     setCurrent(current)
   }
+  const handleSizeChange = (_, size: number) => {
+    setPageSize(size)
+  }
+
+  useEffect(() => {
+    setPageSize(props.pageSize || 10)
+  }, [props.pageSize])
 
   useEffect(() => {
     if (totalPage > 0 && totalPage < current) {
@@ -288,7 +295,8 @@ const ArrayTablePagination: ReactFC<IArrayTablePaginationProps> = (props) => {
             current={current}
             total={dataSource.length}
             size={size}
-            showSizeChanger={false}
+            showSizeChanger={true}
+            onShowSizeChange={handleSizeChange}
             onChange={handleChange}
           />
         </Space>

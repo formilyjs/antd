@@ -109,7 +109,7 @@ export default () => {
             x-component-props={{
               header: (
                 <Typography.Text type="danger" style={{ marginLeft: 4 }}>
-                  字符串数组
+                  String Array
                 </Typography.Text>
               ),
             }}

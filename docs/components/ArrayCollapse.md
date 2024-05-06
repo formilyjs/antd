@@ -112,6 +112,7 @@ export default () => {
                   String Array
                 </Typography.Text>
               ),
+              extra: 'extra text',
             }}
           >
             <SchemaField.Void x-component="ArrayCollapse.Index" />

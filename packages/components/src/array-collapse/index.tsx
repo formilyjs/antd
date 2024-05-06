@@ -174,6 +174,7 @@ const InternalArrayCollapse: ReactFC<IArrayCollapseProps> = observer(
 
             const extra = (
               <ArrayBase.Item index={index} record={item}>
+                {panelProps?.extra}
                 <RecursionField
                   schema={items}
                   name={index}
@@ -183,7 +184,6 @@ const InternalArrayCollapse: ReactFC<IArrayCollapseProps> = observer(
                   }}
                   onlyRenderProperties
                 />
-                {panelProps?.extra}
               </ArrayBase.Item>
             )
 

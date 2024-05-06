@@ -112,6 +112,7 @@ export default () => {
                   字符串数组
                 </Typography.Text>
               ),
+              extra: '额外信息',
             }}
           >
             <SchemaField.Void x-component="ArrayCollapse.Index" />

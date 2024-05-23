@@ -134,7 +134,7 @@ const useArrayTableSources = () => {
 
   return parseArrayItems(schema.items)
 }
-
+const indexKey = '__index__'
 const useArrayTableColumns = (
   dataSource: any[],
   field: ArrayField,
@@ -149,9 +149,10 @@ const useArrayTableColumns = (
         key,
         dataIndex: name,
         render: (value: any, record: any) => {
-          const index = dataSource.indexOf(record)
+          const index = record[indexKey]
+
           const children = (
-            <ArrayBase.Item index={index} record={() => field?.value?.[index]}>
+            <ArrayBase.Item index={index} record={record}>
               <RecursionField
                 schema={schema}
                 name={index}
@@ -159,7 +160,8 @@ const useArrayTableColumns = (
               />
             </ArrayBase.Item>
           )
-          return children
+
+          return index > -1 ? children : null
         },
       })
     },
@@ -332,13 +334,15 @@ const InternalArrayTable: ReactFC<TableProps<any>> = observer(
     const field = useField<ArrayField>()
     const prefixCls = usePrefixCls('formily-array-table')
     const [wrapSSR, hashId] = useStyle(prefixCls)
-    const dataSource = Array.isArray(field.value) ? field.value.slice() : []
+    const dataSource = Array.isArray(field.value)
+      ? field.value.slice().map((x, idx) => ({ [indexKey]: idx, ...x }))
+      : []
     const sources = useArrayTableSources()
     const columns = useArrayTableColumns(dataSource, field, sources)
     const pagination = isBool(props.pagination) ? {} : props.pagination
     const addition = useAddition()
     const defaultRowKey = (record: any) => {
-      return dataSource.indexOf(record)
+      return record[indexKey]
     }
     const addTdStyles = (id: number) => {
       const node = ref.current?.querySelector(`.${prefixCls}-row-${id}`)

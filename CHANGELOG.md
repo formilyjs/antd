@@ -14,6 +14,24 @@
 
 ### No Change Log
 
+## v1.2.1(2024-06-04)
+
+### :tada: Enhancements
+
+1. [feat: ArrayCollapse header support ReactNode & update extra position (#38)](https://github.com/formilyjs/antd/commit/64b1d33) :point_right: ( [ove](https://github.com/ove) )
+
+1. [feat(array-collapse): add custom onChange func (#40)](https://github.com/formilyjs/antd/commit/cd951c0) :point_right: ( [JackyChen02](https://github.com/JackyChen02) )
+
+1. [feat: array table support sizeChanger (#39)](https://github.com/formilyjs/antd/commit/378319f) :point_right: ( [ove](https://github.com/ove) )
+
+### :bug: Bug Fixes
+
+1. [fix: upload support more image types & url suffix matching (#35)](https://github.com/formilyjs/antd/commit/f8bb2e8) :point_right: ( [Bob](https://github.com/Bob) )
+
+1. [fix(style): warning feedback 样式问题 (#37)](https://github.com/formilyjs/antd/commit/5203cb5) :point_right: ( [唐吉](https://github.com/唐吉) )
+
+1. [fix: 修复 ArrayTable 筛选后, index 找寻逻辑错误导致过滤后的数据状态异常 (#41)](https://github.com/formilyjs/antd/commit/e8ed05f) :point_right: ( [ove](https://github.com/ove) )
+
 ## v1.2.0(2024-04-10)
 
 ### :tada: Enhancements

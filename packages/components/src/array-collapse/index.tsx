@@ -141,9 +141,8 @@ const InternalArrayCollapse: ReactFC<IArrayCollapseProps> = observer(
               .get('componentProps')
             const props: CollapsePanelProps = items['x-component-props']
             const header = () => {
-              const header = `${
-                panelProps?.header || props.header || field.title
-              }`
+              const header = panelProps?.header || props.header || field.title
+
               const path = field.address.concat(index)
               const errors = field.form.queryFeedbacks({
                 type: 'error',
@@ -180,6 +179,7 @@ const InternalArrayCollapse: ReactFC<IArrayCollapseProps> = observer(
 
             const extra = (
               <ArrayBase.Item index={index} record={item}>
+                {panelProps?.extra}
                 <RecursionField
                   schema={items}
                   name={index}
@@ -189,7 +189,6 @@ const InternalArrayCollapse: ReactFC<IArrayCollapseProps> = observer(
                   }}
                   onlyRenderProperties
                 />
-                {panelProps?.extra}
               </ArrayBase.Item>
             )
 

@@ -17,7 +17,7 @@ import {
 } from '@formily/antd-v5'
 import { createForm } from '@formily/core'
 import { FormProvider, createSchemaField } from '@formily/react'
-import { Button } from 'antd'
+import { Button, Typography } from 'antd'
 
 const SchemaField = createSchemaField({
   components: {
@@ -107,7 +107,12 @@ export default () => {
           <SchemaField.Void
             x-component="ArrayCollapse.CollapsePanel"
             x-component-props={{
-              header: '字符串数组',
+              header: (
+                <Typography.Text type="danger" style={{ marginLeft: 4 }}>
+                  字符串数组
+                </Typography.Text>
+              ),
+              extra: '额外信息',
             }}
           >
             <SchemaField.Void x-component="ArrayCollapse.Index" />

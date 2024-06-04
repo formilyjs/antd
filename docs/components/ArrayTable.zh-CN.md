@@ -83,7 +83,18 @@ export default () => {
             </SchemaField.Void>
             <SchemaField.Void
               x-component="ArrayTable.Column"
-              x-component-props={{ title: 'A2', width: 200 }}
+              x-component-props={{
+                title: 'A2',
+                width: 200,
+                filters: [
+                  { text: 'a', value: 'a' },
+                  { text: 'aa', value: 'aa' },
+                  { text: 'b', value: 'b' },
+                ],
+                onFilter(value, record) {
+                  return record.a2 === value
+                },
+              }}
             >
               <SchemaField.String
                 x-decorator="FormItem"

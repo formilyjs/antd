@@ -134,7 +134,7 @@ const useArrayTableSources = () => {
 
   return parseArrayItems(schema.items)
 }
-const indexKey = '__index__'
+const indexKey = '__DO_NOT_USE_THIS_PROPERTY_index__'
 const useArrayTableColumns = (
   dataSource: any[],
   field: ArrayField,
@@ -152,7 +152,7 @@ const useArrayTableColumns = (
           const index = record[indexKey]
 
           const children = (
-            <ArrayBase.Item index={index} record={record}>
+            <ArrayBase.Item index={index} record={() => field?.value?.[index]}>
               <RecursionField
                 schema={schema}
                 name={index}
@@ -342,9 +342,10 @@ const InternalArrayTable: ReactFC<TableProps<any>> = observer(
     const field = useField<ArrayField>()
     const prefixCls = usePrefixCls('formily-array-table')
     const [wrapSSR, hashId] = useStyle(prefixCls)
-    const dataSource = Array.isArray(field.value)
-      ? field.value.slice().map((x, idx) => ({ [indexKey]: idx, ...x }))
-      : []
+    const dataSource = Array.isArray(field.value) ? field.value.slice() : []
+    dataSource.forEach((item, index) => {
+      item[indexKey] = index
+    })
     const sources = useArrayTableSources()
     const columns = useArrayTableColumns(dataSource, field, sources)
     const pagination = isBool(props.pagination) ? {} : props.pagination

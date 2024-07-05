@@ -14,6 +14,12 @@
 
 ### No Change Log
 
+## v1.2.2(2024-07-05)
+
+### :bug: Bug Fixes
+
+1. [fix(array-table): fix input box will be out of focus after each input (#42)](https://github.com/formilyjs/antd/commit/264dec7) :point_right: ( [caoxm](https://github.com/caoxm) )
+
 ## v1.2.1(2024-06-04)
 
 ### :tada: Enhancements

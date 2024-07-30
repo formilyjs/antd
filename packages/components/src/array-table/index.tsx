@@ -22,6 +22,7 @@ import { ColumnProps, ColumnsType } from 'antd/es/table'
 import cls from 'classnames'
 import React, {
   createContext,
+  forwardRef,
   Fragment,
   useCallback,
   useContext,
@@ -31,6 +32,7 @@ import React, {
 } from 'react'
 import { ArrayBase, ArrayBaseMixins } from '../array-base'
 import {
+  ISortableContainerProps,
   SortableContainer,
   SortableElement,
   usePrefixCls,
@@ -62,12 +64,21 @@ interface IStatusSelectProps extends SelectProps<any> {
 interface PaginationAction {
   totalPage?: number
   pageSize?: number
+  startIndex?: number
   changePage?: (page: number) => void
 }
 
 const SortableRow = SortableElement((props) => <tr {...props} />)
 
-const SortableBody = SortableContainer((props) => <tbody {...props} />)
+const SortableBodyRaw = SortableContainer<
+  React.HTMLAttributes<HTMLTableSectionElement> & {
+    tbodyRef: React.LegacyRef<HTMLTableSectionElement>
+  }
+>(({ tbodyRef, ...props }) => <tbody {...props} ref={tbodyRef} />)
+const SortableBody = forwardRef<
+  HTMLTableSectionElement,
+  React.HTMLAttributes<HTMLTableSectionElement> & ISortableContainerProps
+>((props, ref) => <SortableBodyRaw {...props} tbodyRef={ref} />)
 
 const isColumnComponent = (schema: Schema) => {
   return schema['x-component']?.indexOf('Column') > -1
@@ -309,7 +320,7 @@ const ArrayTablePagination: ReactFC<IArrayTablePaginationProps> = (props) => {
   return wrapSSR(
     <Fragment>
       <PaginationContext.Provider
-        value={{ totalPage, pageSize, changePage: handleChange }}
+        value={{ totalPage, pageSize, startIndex, changePage: handleChange }}
       >
         {props.children?.(
           dataSource?.slice(startIndex, endIndex + 1),
@@ -320,6 +331,48 @@ const ArrayTablePagination: ReactFC<IArrayTablePaginationProps> = (props) => {
         )}
       </PaginationContext.Provider>
     </Fragment>
+  )
+}
+
+const WrapperComp = (props: React.HTMLAttributes<HTMLTableSectionElement>) => {
+  const ref = useRef<HTMLTableSectionElement>(null)
+  const field = useField<ArrayField>()
+  const prefixCls = usePrefixCls('formily-array-table')
+  const { startIndex } = useContext(PaginationContext)
+  const dataSource = Array.isArray(field.value) ? field.value.slice() : []
+
+  const addTdStyles = (id: number) => {
+    const node = ref.current?.querySelector(`.${prefixCls}-row-${id}`)
+    const helper = document.body.querySelector(`.${prefixCls}-sort-helper`)
+    if (!helper) return
+    const tds = node?.querySelectorAll('td')
+    if (!tds) return
+    requestAnimationFrame(() => {
+      helper.querySelectorAll('td').forEach((td, index) => {
+        if (tds[index]) {
+          td.style.width = getComputedStyle(tds[index]).width
+        }
+      })
+    })
+  }
+
+  return (
+    <SortableBody
+      ref={ref}
+      {...props}
+      start={startIndex}
+      list={dataSource.slice()}
+      accessibility={{
+        container: ref.current || undefined,
+      }}
+      onSortStart={(event) => {
+        addTdStyles(event.active.id as number)
+      }}
+      onSortEnd={({ oldIndex, newIndex }) => {
+        field.move(oldIndex, newIndex)
+      }}
+      className={cls(`${prefixCls}-sort-helper`, props.className)}
+    />
   )
 }
 
@@ -353,50 +406,6 @@ const InternalArrayTable: ReactFC<TableProps<any>> = observer(
     const defaultRowKey = (record: any) => {
       return record[indexKey]
     }
-    const addTdStyles = (id: number) => {
-      const node = ref.current?.querySelector(`.${prefixCls}-row-${id}`)
-      const helper = ref.current?.querySelector(`.${prefixCls}-sort-helper`)
-      if (helper) {
-        const tds = node?.querySelectorAll('td')
-        if (tds) {
-          requestAnimationFrame(() => {
-            helper.querySelectorAll('td').forEach((td, index) => {
-              if (tds[index]) {
-                td.style.width = getComputedStyle(tds[index]).width
-              }
-            })
-          })
-        }
-      }
-    }
-    const genWrapperComp = useCallback(
-      (list: any[], start: number) =>
-        (props: React.HTMLAttributes<HTMLTableSectionElement>) => {
-          return (
-            <SortableBody
-              {...props}
-              accessibility={{
-                container: ref.current || undefined,
-              }}
-              start={start}
-              list={list}
-              onSortStart={(event) => {
-                addTdStyles(event.active.id as number)
-              }}
-              onSortEnd={(event) => {
-                const { oldIndex, newIndex } = event
-                window.requestAnimationFrame(() => {
-                  field.move(oldIndex, newIndex)
-                })
-              }}
-              className={cls(`${prefixCls}-sort-helper`, props.className)}
-            >
-              {props.children}
-            </SortableBody>
-          )
-        },
-      [field]
-    )
 
     return wrapSSR(
       <ArrayTablePagination {...pagination} dataSource={dataSource}>
@@ -415,7 +424,7 @@ const InternalArrayTable: ReactFC<TableProps<any>> = observer(
                   dataSource={dataSource}
                   components={{
                     body: {
-                      wrapper: genWrapperComp(dataSource, startIndex),
+                      wrapper: WrapperComp,
                       row: RowComp,
                     },
                   }}

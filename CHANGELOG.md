@@ -14,6 +14,12 @@
 
 ### No Change Log
 
+## v1.2.3(2024-08-13)
+
+### :bug: Bug Fixes
+
+1. [fix(array-table): body wrapper was recreated in every table re-render (#44)](https://github.com/formilyjs/antd/commit/0df4364) :point_right: ( [hmilin](https://github.com/hmilin) )
+
 ## v1.2.2(2024-07-05)
 
 ### :bug: Bug Fixes

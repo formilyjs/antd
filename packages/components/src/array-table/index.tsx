@@ -48,6 +48,7 @@ interface ObservableColumnSource {
 }
 interface IArrayTablePaginationProps extends PaginationProps {
   dataSource?: any[]
+  showPagination: boolean
   children?: (
     dataSource: any[],
     pagination: React.ReactNode,
@@ -262,6 +263,7 @@ const ArrayTablePagination: ReactFC<IArrayTablePaginationProps> = (props) => {
   const [pageSize, setPageSize] = useState(props.pageSize || 10)
   const size = props.size || 'default'
   const dataSource = props.dataSource || []
+  const showPagination = props.showPagination
   const startIndex = (current - 1) * pageSize
   const endIndex = startIndex + pageSize - 1
   const total = dataSource?.length || 0
@@ -291,7 +293,7 @@ const ArrayTablePagination: ReactFC<IArrayTablePaginationProps> = (props) => {
   }, [totalPage, current])
 
   const renderPagination = () => {
-    if (totalPage <= 1) return
+    if (!showPagination || totalPage <= 1) return
     return (
       <div className={cls(`${prefixCls}-pagination`, hashId)}>
         <Space>
@@ -323,7 +325,9 @@ const ArrayTablePagination: ReactFC<IArrayTablePaginationProps> = (props) => {
         value={{ totalPage, pageSize, startIndex, changePage: handleChange }}
       >
         {props.children?.(
-          dataSource?.slice(startIndex, endIndex + 1),
+          showPagination
+            ? dataSource?.slice(startIndex, endIndex + 1)
+            : dataSource,
           renderPagination(),
           {
             startIndex,
@@ -402,13 +406,18 @@ const InternalArrayTable: ReactFC<TableProps<any>> = observer(
     const sources = useArrayTableSources()
     const columns = useArrayTableColumns(dataSource, field, sources)
     const pagination = isBool(props.pagination) ? {} : props.pagination
+    const showPagination = isBool(props.pagination) ? props.pagination : true
     const addition = useAddition()
     const defaultRowKey = (record: any) => {
       return record[indexKey]
     }
 
     return wrapSSR(
-      <ArrayTablePagination {...pagination} dataSource={dataSource}>
+      <ArrayTablePagination
+        {...pagination}
+        dataSource={dataSource}
+        showPagination={showPagination}
+      >
         {(dataSource, pager, { startIndex }) => {
           return (
             <div ref={ref} className={cls(prefixCls, hashId)}>

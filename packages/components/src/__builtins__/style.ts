@@ -71,11 +71,12 @@ export const genStyleHook = <ComponentName extends OverrideComponent>(
 ) => {
   return (prefixCls: string): UseComponentStyleResult => {
     const { theme, token, hashId } = useToken()
-    const { getPrefixCls, iconPrefixCls } = useConfig()
+    const { getPrefixCls, iconPrefixCls, csp } = useConfig()
     const rootPrefixCls = getPrefixCls()
     return [
       useStyleRegister(
         {
+          nonce: csp?.nonce,
           theme,
           token,
           hashId,

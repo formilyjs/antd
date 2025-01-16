@@ -11,8 +11,9 @@ const PortalMap = observable(new Map<string | symbol, React.ReactNode>())
 
 export const createPortalProvider = (id: string | symbol) => {
   const Portal: ReactFC<IPortalProps> = (props) => {
-    if (props.id && !PortalMap.has(props.id)) {
-      PortalMap.set(props.id, null)
+    const portalId = props.id ?? id
+    if (portalId && !PortalMap.has(portalId)) {
+      PortalMap.set(portalId, null)
     }
 
     return (
@@ -20,8 +21,8 @@ export const createPortalProvider = (id: string | symbol) => {
         {props.children}
         <Observer>
           {() => {
-            if (!props.id) return <></>
-            const portal = PortalMap.get(props.id)
+            if (portalId!) return <></>
+            const portal = PortalMap.get(portalId)
             if (portal) return createPortal(portal, document.body)
             return <></>
           }}
@@ -29,9 +30,7 @@ export const createPortalProvider = (id: string | symbol) => {
       </Fragment>
     )
   }
-  Portal.defaultProps = {
-    id,
-  }
+
   return Portal
 }
 

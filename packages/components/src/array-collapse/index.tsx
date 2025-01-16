@@ -79,10 +79,7 @@ const InternalArrayCollapse: ReactFC<IArrayCollapseProps> = observer(
     const field = useField<ArrayField>()
     const dataSource = Array.isArray(field.value) ? field.value : []
     const [activeKeys, setActiveKeys] = useState<number[]>(
-      takeDefaultActiveKeys(
-        dataSource.length,
-        props.defaultOpenPanelCount as number
-      )
+      takeDefaultActiveKeys(dataSource.length, props.defaultOpenPanelCount ?? 5)
     )
     const schema = useFieldSchema()
     const prefixCls = usePrefixCls('formily-array-collapse', props)
@@ -93,7 +90,7 @@ const InternalArrayCollapse: ReactFC<IArrayCollapseProps> = observer(
         setActiveKeys(
           takeDefaultActiveKeys(
             dataSource.length,
-            props.defaultOpenPanelCount as number
+            props.defaultOpenPanelCount ?? 5
           )
         )
       }
@@ -250,9 +247,5 @@ export const ArrayCollapse = Object.assign(
   }
 )
 ArrayCollapse.displayName = 'ArrayCollapse'
-
-ArrayCollapse.defaultProps = {
-  defaultOpenPanelCount: 5,
-}
 
 export default ArrayCollapse

@@ -293,7 +293,7 @@ const ArrayTablePagination: ReactFC<IArrayTablePaginationProps> = (props) => {
   }, [totalPage, current])
 
   const renderPagination = () => {
-    if (!showPagination || totalPage <= 1) return
+    if (!showPagination || totalPage < 1) return
     return (
       <div className={cls(`${prefixCls}-pagination`, hashId)}>
         <Space>

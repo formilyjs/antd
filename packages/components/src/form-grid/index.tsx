@@ -81,17 +81,13 @@ const InternalFormGrid = observer(
 )
 
 export const GridColumn: React.FC<React.PropsWithChildren<IGridColumnProps>> =
-  observer(({ gridSpan, children, ...props }) => {
+  observer(({ gridSpan = 1, children, ...props }) => {
     return (
       <div {...props} style={props.style} data-grid-span={gridSpan}>
         {children}
       </div>
     )
   })
-
-GridColumn.defaultProps = {
-  gridSpan: 1,
-}
 
 export const FormGrid = Object.assign(InternalFormGrid, {
   createFormGrid,

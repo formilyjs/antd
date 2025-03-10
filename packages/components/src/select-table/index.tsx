@@ -147,11 +147,11 @@ const addPrimaryKey = (dataSource, rowKey, primaryKey) =>
 
 const InternalSelectTable: ReactFC<ISelectTableProps> = observer((props) => {
   const {
-    mode,
+    mode = 'multiple',
     dataSource: propsDataSource,
     optionAsValue,
-    valueType,
-    showSearch,
+    valueType = 'all',
+    showSearch = false,
     filterOption,
     filterSort,
     onSearch,
@@ -160,7 +160,7 @@ const InternalSelectTable: ReactFC<ISelectTableProps> = observer((props) => {
     value,
     onChange,
     rowSelection,
-    primaryKey: rowKey,
+    primaryKey: rowKey = 'key',
     ...otherTableProps
   } = props
   const prefixCls = usePrefixCls('formily-select-table', props)
@@ -421,12 +421,5 @@ const TableColumn: React.FC<
 export const SelectTable = Object.assign(InternalSelectTable, {
   Column: TableColumn,
 })
-
-SelectTable.defaultProps = {
-  showSearch: false,
-  valueType: 'all',
-  primaryKey: 'key',
-  mode: 'multiple',
-}
 
 export default SelectTable

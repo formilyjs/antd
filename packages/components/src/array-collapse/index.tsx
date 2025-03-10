@@ -123,9 +123,6 @@ const InternalArrayCollapse: ReactFC<IArrayCollapseProps> = observer(
           {...props}
           activeKey={activeKeys}
           onChange={(keys: string[]) => {
-            if (props.onChange) {
-              props.onChange(keys)
-            }
             setActiveKeys(toArr(keys).map(Number))
           }}
           className={cls(`${prefixCls}-item`, hashId, props.className)}

@@ -14,6 +14,20 @@
 
 ### No Change Log
 
+## v1.2.4(2025-03-21)
+
+### :tada: Enhancements
+
+1. [feat(array-table): 支持 totalPage 为 1 时仍然显示分页 (#50)](https://github.com/formilyjs/antd/commit/c0d8bc5) :point_right: ( [linkzhao](https://github.com/linkzhao) )
+
+### :bug: Bug Fixes
+
+1. [fix(components): fix genStyleHook method for csp (#48)](https://github.com/formilyjs/antd/commit/003d065) :point_right: ( [achu19](https://github.com/achu19) )
+
+1. [fix(components): 🩹 replace defaultProps by default parameters (#49)](https://github.com/formilyjs/antd/commit/a52f786) :point_right: ( [ChaoGPT](https://github.com/ChaoGPT) )
+
+1. [fix(array-collapse): 修复折叠时会删除 item 的 bug (#46)](https://github.com/formilyjs/antd/commit/bdf8e71) :point_right: ( [zhangfeixiang](https://github.com/zhangfeixiang) )
+
 ## v1.2.3(2024-08-13)
 
 ### :bug: Bug Fixes

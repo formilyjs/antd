@@ -1,6 +1,6 @@
 {
   "name": "@formily/antd-v5-settings-form",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "license": "MIT",
   "main": "lib",
   "types": "lib/index.d.ts",
